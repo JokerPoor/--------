@@ -1,0 +1,8 @@
+@import './theme.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body{background-color:var(--el-bg-color);color:var(--el-text-color-primary)}
+.el-button{border-radius:var(--app-button-radius)}
+.el-form-item{margin-bottom:var(--app-form-item-gap)}
+.ep-card{padding:var(--app-card-padding)}

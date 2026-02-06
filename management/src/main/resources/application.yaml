@@ -1,0 +1,79 @@
+server:
+  port: 8000
+  servlet:
+    context-path: /api/system
+
+
+spring:
+  application:
+    name: management
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/managerment
+    username: root
+    password: a123456
+  data:
+    redis:
+      database: 1
+      host: localhost
+      port: 6379
+      timeout: 5000
+      password: 123456
+    # springAI
+  ai:
+    openai:
+      base-url: https://dashscope.aliyuncs.com/compatible-mode
+      api-key: sk-7a1fd5298eff41f590350ade6e642165
+      chat:
+        options:
+          model: qwen-plus
+
+mybatis-plus:
+  configuration:
+    # 驼峰配置
+    map-underscore-to-camel-case: false
+    # 开发环境打印 Sql 日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# Knife4j配置
+# springdoc-openapi配置
+springdoc:
+  # get请求多参数时不需要添加额外的@ParameterObject和@Parameter注解
+  default-flat-param-object: true
+  # 启用swaggerUI
+  swagger-ui:
+    #自定义swagger前端请求路径，输入http://127.0.0.1:8080/api/system/swagger-ui.html会自动重定向到swagger页面
+    path: /swagger-ui.html
+    enabled: true
+    operations-sorter: order
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+# knife4j相关配置 可以不用改
+knife4j:
+  enable: true
+  setting:
+    language: ZH_CN   # 中文:ZH_CN 英文:EN
+    enable-swagger-models: true
+    enable-dynamic-parameter: false
+    enable-footer-custom: true
+    enable-footer: true
+    enable-document-manage: true
+
+store:
+  init:
+    storeName: "qzh的便利店"
+    managerId: 1991058483334778881
+    contactName: "qzh"
+    contactPhone: "13800138000"
+    contactEmail: "qzh@example.com"
+    address: "北京市朝阳区建国路88号"
+    longitude: 116.481028
+    latitude: 39.921983
+
+baidu:
+  weather:
+    base-url: https://api.map.baidu.com/weather/v1/
+    ak: jwE991y5wmyqLVa90OssRsYoqw9WfvRF
+    connect-timeout-ms: 5000
+    read-timeout-ms: 5000

@@ -1,0 +1,314 @@
+package com.qzh.backend.service.Impl;
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.qzh.backend.constants.RoleNameConstant;
+import com.qzh.backend.exception.BusinessException;
+import com.qzh.backend.exception.ErrorCode;
+import com.qzh.backend.mapper.UserMapper;
+import com.qzh.backend.model.dto.user.*;
+import com.qzh.backend.model.entity.Role;
+import com.qzh.backend.model.entity.User;
+import com.qzh.backend.model.entity.UserRelatedRole;
+import com.qzh.backend.model.enums.UserStatusEnum;
+import com.qzh.backend.model.vo.UserVO;
+import com.qzh.backend.service.RoleService;
+import com.qzh.backend.service.UserRelatedRoleService;
+import com.qzh.backend.service.UserService;
+import com.qzh.backend.utils.GetLoginUserUtil;
+import com.qzh.backend.utils.ThrowUtils;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.DigestUtils;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.qzh.backend.constants.UserConstant.USER_LOGIN_EXPIRE_TIME;
+import static com.qzh.backend.constants.UserConstant.USER_LOGIN_STATE;
+
+@Service
+@RequiredArgsConstructor
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+
+    private final UserRelatedRoleService userRelatedRoleService;
+
+    private final RoleService roleService;
+
+    private final GetLoginUserUtil getLoginUserUtil;
+
+    public Page<UserVO> getUserPage(UserQueryDTO queryDTO) {
+        ThrowUtils.throwIf(queryDTO == null, ErrorCode.PARAMS_ERROR);
+        int current = queryDTO.getCurrent();
+        int size = queryDTO.getSize();
+        ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
+        // 查询用户列表并转换为 UserVO
+        Page<User> page = this.page(new Page<>(current, size), UserQueryDTO.getQueryWrapper(queryDTO));
+        Page<UserVO> userVOPage = new Page<>(current, size, page.getTotal());
+        List<UserVO> userVOList = UserVO.toUserVOList(page.getRecords());
+        // 查询用户关联的完整角色信息（替换原角色名称列表）
+        if (!CollectionUtils.isEmpty(userVOList)) {
+            // 提取当前页所有用户ID
+            List<Long> userIds = userVOList.stream()
+                    .map(UserVO::getId)
+                    .collect(Collectors.toList());
+            // 批量查询用户-角色关联关系
+            List<UserRelatedRole> userRoleRelations = userRelatedRoleService.list(
+                    new LambdaQueryWrapper<UserRelatedRole>()
+                            .in(UserRelatedRole::getUserId, userIds)
+            );
+            if (!CollectionUtils.isEmpty(userRoleRelations)) {
+                // 提取所有角色ID（去重），批量查询完整角色信息
+                List<Long> roleIds = userRoleRelations.stream()
+                        .map(UserRelatedRole::getRoleId)
+                        .distinct()
+                        .collect(Collectors.toList());
+
+                // 批量查询角色完整实体
+                List<Role> roleList = roleService.list(
+                        new LambdaQueryWrapper<Role>()
+                                .in(Role::getId, roleIds)
+                );
+                // 构建 角色ID -> 角色实体 的映射（优化匹配效率）
+                Map<Long, Role> roleIdToRoleMap = roleList.stream()
+                        .collect(Collectors.toMap(
+                                Role::getId,
+                                role -> role,
+                                (oldVal, newVal) -> oldVal // 避免角色ID重复（理论上不会）
+                        ));
+                // 构建 用户ID -> 角色实体列表 的映射
+                Map<Long, List<Role>> userIdToRolesMap = userRoleRelations.stream()
+                        .collect(Collectors.groupingBy(
+                                UserRelatedRole::getUserId, // 按用户ID分组
+                                Collectors.mapping(
+                                        relation -> roleIdToRoleMap.get(relation.getRoleId()), // 转换为完整角色实体
+                                        Collectors.filtering(Objects::nonNull, Collectors.toList()) // 过滤无效角色
+                                )
+                        ));
+                // 给每个 UserVO 设置完整角色列表
+                userVOList.forEach(userVO -> {
+                    List<Role> roles = userIdToRolesMap.getOrDefault(userVO.getId(), Collections.emptyList());
+                    userVO.setRoles(roles);
+                });
+            } else {
+                // 无角色关联，设置空列表
+                userVOList.forEach(vo -> vo.setRoles(Collections.emptyList()));
+            }
+        }
+        userVOPage.setRecords(userVOList);
+        return userVOPage;
+    }
+
+    @Override
+    public UserVO getUserDetailById(Long id) {
+        ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR); // 补充参数校验，与列表接口一致
+        User user = this.getById(id);
+        ThrowUtils.throwIf(user == null, ErrorCode.NOT_FOUND_ERROR, "用户不存在");
+        UserVO userVO = UserVO.toUserVO(user);
+        // 查询该用户的角色关联关系
+        List<UserRelatedRole> userRoleRelations = userRelatedRoleService.list(
+                new LambdaQueryWrapper<UserRelatedRole>()
+                        .eq(UserRelatedRole::getUserId, id)
+        );
+        // 填充完整角色列表（替换原角色名称列表）
+        if (!CollectionUtils.isEmpty(userRoleRelations)) {
+            // 提取角色ID列表（去重）
+            List<Long> roleIds = userRoleRelations.stream()
+                    .map(UserRelatedRole::getRoleId)
+                    .distinct()
+                    .collect(Collectors.toList());
+            // 批量查询完整角色实体
+            List<Role> roleList = roleService.list(
+                    new LambdaQueryWrapper<Role>()
+                            .in(Role::getId, roleIds)
+            );
+            // 过滤无效角色（避免关联已删除的角色）
+            List<Role> validRoles = roleList.stream()
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+
+            // 给 UserVO 设置完整角色列表（替换原 setRoleNames）
+            userVO.setRoles(validRoles);
+        } else {
+            // 无角色关联，设置空列表
+            userVO.setRoles(Collections.emptyList());
+        }
+        return userVO;
+    }
+
+    @Override
+    public Long createUser(UserCreateDTO createDTO) {
+        ThrowUtils.throwIf(createDTO == null, ErrorCode.PARAMS_ERROR);
+        // userAccount 唯一性判断
+        boolean accountExists = this.count(new LambdaQueryWrapper<User>()
+                .eq(User::getUserAccount, createDTO.getUserAccount())) > 0;
+        ThrowUtils.throwIf(accountExists, ErrorCode.PARAMS_ERROR, "用户账号已存在");
+        // 密码加密
+        String encryptedPassword = getEncryptPassword(createDTO.getUserPassword());
+        Integer statusValue = createDTO.getStatus() == null ? UserStatusEnum.NORMAL.getValue() : createDTO.getStatus();
+        UserStatusEnum statusEnum = UserStatusEnum.getEnumByValue(statusValue);
+        ThrowUtils.throwIf(statusEnum == null, ErrorCode.PARAMS_ERROR, "用户状态不合法");
+        User user = new User();
+        user.setUserAccount(createDTO.getUserAccount());
+        user.setUserPassword(encryptedPassword);
+        user.setUserName(createDTO.getUserName());
+        user.setPhone(createDTO.getPhone());
+        user.setEmail(createDTO.getEmail());
+        user.setStatus(statusEnum.getValue());
+        boolean success = this.save(user);
+        ThrowUtils.throwIf(!success,ErrorCode.SYSTEM_ERROR);
+        return user.getId();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean updateUser(Long id, UserUpdateDTO updateDTO,HttpServletRequest request) {
+        ThrowUtils.throwIf(updateDTO == null, ErrorCode.PARAMS_ERROR);
+        User user = this.getById(id);
+        ThrowUtils.throwIf(user == null, ErrorCode.NOT_FOUND_ERROR,"用户不存在");
+        user.setUserName(updateDTO.getUserName());
+        user.setPhone(updateDTO.getPhone());
+        user.setStatus(UserStatusEnum.getEnumByValue(updateDTO.getStatus()).getValue());
+        User loginUser = getLoginUserUtil.getLoginUser(request);
+        // 处理角色关联（先删后加，覆盖式更新）
+        List<Long> newRoleIds = updateDTO.getRoleIds();
+        if (!CollectionUtils.isEmpty(newRoleIds)) {
+            // 删除该用户原有所有角色关联（sys_user_role表）
+            userRelatedRoleService.remove(
+                    new LambdaQueryWrapper<UserRelatedRole>()
+                            .eq(UserRelatedRole::getUserId, id)
+            );
+
+            // 批量构建新的角色关联实体
+            List<UserRelatedRole> userRoleList = newRoleIds.stream()
+                    .map(roleId -> {
+                        UserRelatedRole userRelatedRole = new UserRelatedRole();
+                        userRelatedRole.setUserId(id);
+                        userRelatedRole.setRoleId(roleId);
+                        userRelatedRole.setCreateBy(loginUser.getId());
+                        return userRelatedRole;
+                    })
+                    .collect(Collectors.toList());
+            userRelatedRoleService.saveBatch(userRoleList);
+        } else {
+            // 若传入角色ID列表为空，删除该用户所有角色关联（可选：根据业务需求决定是否保留）
+            userRelatedRoleService.remove(
+                    new LambdaQueryWrapper<UserRelatedRole>()
+                            .eq(UserRelatedRole::getUserId, id)
+            );
+        }
+        return this.updateById(user);
+    }
+
+    @Override
+    public Boolean resetPassword(Long id, String newPassword) {
+        User user = this.getById(id);
+        ThrowUtils.throwIf(user == null, ErrorCode.NOT_FOUND_ERROR,"用户不存在");
+        // 密码校验在controller层
+        String encryptPassword = getEncryptPassword(newPassword);
+        user.setUserPassword(encryptPassword);
+        return this.updateById(user);
+    }
+
+    @Override
+    public Boolean batchUpdateStatus(List<Long> ids, Integer status) {
+        // 校验用户ID是否存在（可选：避免更新不存在的用户ID，增强健壮性）
+        List<Long> existingUserIds = this.listByIds(ids).stream()
+                .map(User::getId)
+                .toList();
+        // 对比传入的ID和实际存在的ID，找出不存在的ID
+        List<Long> notExistIds = ids.stream()
+                .filter(id -> !existingUserIds.contains(id))
+                .toList();
+        ThrowUtils.throwIf(!notExistIds.isEmpty(), ErrorCode.NOT_FOUND_ERROR,
+                "以下用户ID不存在：" + notExistIds.stream().map(String::valueOf).collect(Collectors.joining(",")));
+        // 批量更新用户状态和更新时间
+        LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<User>()
+                .in(User::getId, ids)
+                .set(User::getStatus, status);
+        return this.update(updateWrapper);
+    }
+
+    @Override
+    public Boolean deleteUser(Long id) {
+         return this.removeById(id);
+    }
+
+    @Override
+    public void login(UserLoginDTO dto, HttpServletRequest request) {
+        String userAccount = dto.getUserAccount();
+        String userPassword = dto.getUserPassword();
+        String encryptPassword = getEncryptPassword(userPassword);
+        QueryWrapper<User> queryWrapper =new QueryWrapper<>();
+        queryWrapper.eq("userAccount", userAccount);
+        queryWrapper.eq("userPassword", encryptPassword);
+        User user = this.baseMapper.selectOne(queryWrapper);
+        if(user == null){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,"用户不存在或密码错误");
+        }
+        if(user.getStatus().equals(UserStatusEnum.Disable.getValue())){
+            throw new BusinessException(ErrorCode.FORBIDDEN_ERROR,"账号被禁用");
+        }
+        long expireTime = System.currentTimeMillis() + 3600 * 1000; // 1小时后过期（单位：毫秒）
+        request.getSession().setAttribute(USER_LOGIN_STATE,user);
+        request.getSession().setAttribute(USER_LOGIN_EXPIRE_TIME, expireTime);
+    }
+
+    @Override
+    public void logout(HttpServletRequest request) {
+        if (request == null) {
+            return;
+        }
+        request.getSession().removeAttribute(USER_LOGIN_STATE);
+        request.getSession().removeAttribute(USER_LOGIN_EXPIRE_TIME);
+        try {
+            request.getSession().invalidate();
+        } catch (IllegalStateException ignored) {
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void register(UserRegisterDTO dto) {
+        ThrowUtils.throwIf(dto == null, ErrorCode.PARAMS_ERROR);
+        // userAccount 唯一性判断
+        boolean accountExists = this.count(new LambdaQueryWrapper<User>()
+                .eq(User::getUserAccount, dto.getUserAccount())) > 0;
+        ThrowUtils.throwIf(accountExists, ErrorCode.PARAMS_ERROR, "用户账号已存在");
+        // 密码加密
+        String encryptedPassword = getEncryptPassword(dto.getUserPassword());
+        User user = new User();
+        user.setUserAccount(dto.getUserAccount());
+        user.setUserPassword(encryptedPassword);
+        user.setUserName(dto.getUserName());
+        user.setPhone(dto.getPhone());
+        user.setEmail(dto.getEmail());
+        user.setStatus(UserStatusEnum.NORMAL.getValue());
+        boolean success = this.save(user);
+        ThrowUtils.throwIf(!success,ErrorCode.SYSTEM_ERROR);
+        Long roleId = dto.getRoleId();
+        Role role = roleService.getById(roleId);
+        if(role == null){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,"角色不存在");
+        }
+        if (RoleNameConstant.ADMIN.equals(role.getRoleName())) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "禁止注册超级管理员");
+        }
+        UserRelatedRole userRelatedRole = new UserRelatedRole();
+        userRelatedRole.setUserId(user.getId());
+        userRelatedRole.setRoleId(roleId);
+        boolean save = userRelatedRoleService.save(userRelatedRole);
+        ThrowUtils.throwIf(!save,ErrorCode.SYSTEM_ERROR);
+    }
+
+    public String getEncryptPassword(String userPassword) {
+        final String SALT = "qzh";
+        return DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
+    }
+}
