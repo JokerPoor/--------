@@ -3,6 +3,7 @@ package com.qzh.backend.config;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.qzh.backend.config.StoreInitConfig;
+import com.qzh.backend.constants.ButtonPermissionConstant;
 import com.qzh.backend.constants.Interface.*;
 import com.qzh.backend.constants.RoleNameConstant;
 import com.qzh.backend.model.entity.PageInfo;
@@ -241,7 +242,25 @@ public class StoreInitRunner implements ApplicationRunner {
         // 6. 初始化权限（保持原有逻辑）
         List<String> basePermNames = List.of(
                 // 基础角色与权限
-                "角色管理", "权限分配",
+                ButtonPermissionConstant.ROLE_MANAGE, ButtonPermissionConstant.PERM_ASSIGN,
+
+                // 按钮权限 - 用户管理
+                ButtonPermissionConstant.USER_ADD, ButtonPermissionConstant.USER_EDIT, ButtonPermissionConstant.USER_DELETE, ButtonPermissionConstant.USER_RESET_PASSWORD,
+
+                // 按钮权限 - 角色管理
+                ButtonPermissionConstant.ROLE_ADD, ButtonPermissionConstant.ROLE_EDIT, ButtonPermissionConstant.ROLE_DELETE,
+
+                // 按钮权限 - 商品管理
+                ButtonPermissionConstant.PRODUCT_ADD, ButtonPermissionConstant.PRODUCT_EDIT, ButtonPermissionConstant.PRODUCT_DELETE, ButtonPermissionConstant.PRODUCT_UPDATE,
+
+                // 按钮权限 - 仓库管理
+                ButtonPermissionConstant.WAREHOUSE_ADD, ButtonPermissionConstant.WAREHOUSE_EDIT, ButtonPermissionConstant.WAREHOUSE_DELETE,
+
+                // 按钮权限 - 采购管理
+                ButtonPermissionConstant.PURCHASE_ORDER_ADD, ButtonPermissionConstant.PURCHASE_ORDER_SHIP, ButtonPermissionConstant.PURCHASE_ORDER_STOCK_IN,
+
+                // 按钮权限 - 销售管理
+                ButtonPermissionConstant.SALE_ORDER_CREATE, ButtonPermissionConstant.SALE_ORDER_CONFIRM, ButtonPermissionConstant.INVENTORY_SALE_ORDER_SHIP, ButtonPermissionConstant.SALE_RETURN_ADD,
 
                 // 用户接口权限
                 UserInterfaceConstant.USER_LIST_GET,
