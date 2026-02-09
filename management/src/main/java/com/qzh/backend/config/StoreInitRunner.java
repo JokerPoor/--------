@@ -3,6 +3,7 @@ package com.qzh.backend.config;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.qzh.backend.config.StoreInitConfig;
+import com.qzh.backend.constants.Interface.*;
 import com.qzh.backend.constants.RoleNameConstant;
 import com.qzh.backend.model.entity.PageInfo;
 import com.qzh.backend.model.entity.Permission;
@@ -232,24 +233,115 @@ public class StoreInitRunner implements ApplicationRunner {
 
         // 6. 初始化权限（保持原有逻辑）
         List<String> basePermNames = List.of(
-                // 角色与权限
-                "角色管理", "权限分配", "role:add", "role:edit", "role:delete",
-                // 用户
-                "user:add", "user:edit", "user:delete", "user:reset-password",
-                // 商品
-                "product:add", "product:edit", "product:delete",
-                // 仓库
-                "warehouse:add", "warehouse:edit", "warehouse:delete",
-                // 门店
-                "store:update",
-                // 库存
-                "inventory:update",
-                // 采购
-                "purchase:order:add", "purchase:order:ship", "purchase:order:stock-in",
-                "purchase:return:add", "purchase:return:confirm",
-                // 销售
-                "sale:order:create", "sale:order:confirm", "sale:return:add",
-                "inventory:sale-order:ship", "inventory:sale-return:confirm"
+                // 基础角色与权限
+                "角色管理", "权限分配",
+
+                // 用户接口权限
+                UserInterfaceConstant.USER_LIST_GET,
+                UserInterfaceConstant.USER_DETAIL_GET,
+                UserInterfaceConstant.USER_CREATE_POST,
+                UserInterfaceConstant.USER_UPDATE_PUT,
+                UserInterfaceConstant.USER_RESET_PASSWORD_POST,
+                UserInterfaceConstant.USER_BATCH_STATUS_POST,
+                UserInterfaceConstant.USER_DELETE_DELETE,
+                UserInterfaceConstant.USER_LOGIN_POST,
+                UserInterfaceConstant.USER_REGISTER_POST,
+
+                // 仓库接口权限
+                WarehouseInterfaceConstant.WAREHOUSE_ADD_POST,
+                WarehouseInterfaceConstant.WAREHOUSE_DETAIL_GET,
+                WarehouseInterfaceConstant.WAREHOUSE_UPDATE_PUT,
+                WarehouseInterfaceConstant.WAREHOUSE_DELETE_DELETE,
+                WarehouseInterfaceConstant.WAREHOUSE_LIST_GET,
+                WarehouseInterfaceConstant.WAREHOUSE_PAGE_GET,
+
+                // 门店接口权限
+                StoreInterfaceConstant.STORE_DETAIL_GET,
+                StoreInterfaceConstant.STORE_UPDATE_PUT,
+
+                // 销售退货接口权限
+                SaleReturnInterfaceConstant.SALE_RETURN_CREATE_POST,
+                SaleReturnInterfaceConstant.SALE_RETURN_MY_GET,
+                SaleReturnInterfaceConstant.SALE_RETURN_STORE_GET,
+                SaleReturnInterfaceConstant.SALE_RETURN_DETAIL_GET,
+
+                // 销售订单接口权限
+                SaleOrderInterfaceConstant.SALE_ORDER_CREATE_POST,
+                SaleOrderInterfaceConstant.SALE_ORDER_MY_GET,
+                SaleOrderInterfaceConstant.SALE_ORDER_DETAIL_GET,
+                SaleOrderInterfaceConstant.SALE_ORDER_STORE_GET,
+                SaleOrderInterfaceConstant.SALE_ORDER_CONFIRM_POST,
+
+                // 角色接口权限
+                RoleInterfaceConstant.ROLE_LIST_GET,
+                RoleInterfaceConstant.ROLE_CREATE_POST,
+                RoleInterfaceConstant.ROLE_DETAIL_GET,
+                RoleInterfaceConstant.ROLE_UPDATE_PUT,
+                RoleInterfaceConstant.ROLE_DELETE_DELETE,
+                RoleInterfaceConstant.ROLE_ASSIGN_PERMISSION_PUT,
+                RoleInterfaceConstant.ROLE_ASSIGN_PAGE_POST,
+
+                // 采退订单接口权限
+                PurchaseReturnInterfaceConstant.PURCHASE_RETURN_LIST_GET,
+                PurchaseReturnInterfaceConstant.PURCHASE_RETURN_CREATE_POST,
+                PurchaseReturnInterfaceConstant.PURCHASE_RETURN_CONFIRM_POST,
+
+                // 采购订单接口权限
+                PurchaseOrderInterfaceConstant.PURCHASE_ORDER_CREATE_POST,
+                PurchaseOrderInterfaceConstant.PURCHASE_ORDER_LIST_GET,
+                PurchaseOrderInterfaceConstant.PURCHASE_ORDER_DETAIL_GET,
+                PurchaseOrderInterfaceConstant.PURCHASE_ORDER_SHIP_POST,
+
+                // 商品接口权限
+                ProductInterfaceConstant.PRODUCT_ADD_POST,
+                ProductInterfaceConstant.PRODUCT_UPDATE_PUT,
+                ProductInterfaceConstant.PRODUCT_DELETE_DELETE,
+                ProductInterfaceConstant.PRODUCT_DETAIL_GET,
+                ProductInterfaceConstant.PRODUCT_LIST_GET,
+                ProductInterfaceConstant.PRODUCT_LIST_OWN_GET,
+
+                // 权限接口权限
+                PermissionInterfaceConstant.PERMISSION_LIST_GET,
+                PermissionInterfaceConstant.PERMISSION_CREATE_POST,
+                PermissionInterfaceConstant.PERMISSION_UPDATE_PUT,
+                PermissionInterfaceConstant.PERMISSION_DELETE_DELETE,
+                PermissionInterfaceConstant.PERMISSION_DETAIL_GET,
+                PermissionInterfaceConstant.PERMISSION_USER_GET,
+
+                // 页面接口权限
+                PageInterfaceConstant.PAGE_LIST_GET,
+                PageInterfaceConstant.PAGE_DETAIL_GET,
+                PageInterfaceConstant.PAGE_CREATE_POST,
+                PageInterfaceConstant.PAGE_UPDATE_PUT,
+                PageInterfaceConstant.PAGE_DELETE_DELETE,
+                PageInterfaceConstant.PAGE_ALL_GET,
+                PageInterfaceConstant.PAGE_ASSIGN_SINGLE_PERMISSION_POST,
+                PageInterfaceConstant.PAGE_ASSIGN_BATCH_PERMISSION_PUT,
+                PageInterfaceConstant.PAGE_USER_GET,
+
+                // 操作日志接口权限
+                OperationLogInterfaceConstant.OPERATION_LOG_PAGE_POST,
+
+                // 库存接口权限
+                InventoryInterfaceConstant.INVENTORY_LIST_GET,
+                InventoryInterfaceConstant.INVENTORY_DETAIL_GET,
+                InventoryInterfaceConstant.INVENTORY_UPDATE_POST,
+                InventoryInterfaceConstant.INVENTORY_STOCK_IN_POST,
+                InventoryInterfaceConstant.INVENTORY_SALE_ORDER_POST,
+                InventoryInterfaceConstant.INVENTORY_SALE_RETURN_CONFIRM_POST,
+
+                // 库存明细接口权限
+                InventoryDetailInterfaceConstant.INVENTORY_DETAIL_LIST_GET,
+                InventoryDetailInterfaceConstant.INVENTORY_DETAIL_DETAIL_GET,
+
+                // 金额单接口权限
+                AmountOrderInterfaceConstant.AMOUNT_ORDER_LIST_GET,
+                AmountOrderInterfaceConstant.AMOUNT_ORDER_LIST_PAYER_GET,
+                AmountOrderInterfaceConstant.AMOUNT_ORDER_LIST_PAYEE_GET,
+                AmountOrderInterfaceConstant.AMOUNT_ORDER_DETAIL_GET,
+                AmountOrderInterfaceConstant.AMOUNT_ORDER_PAY_POST,
+                AmountOrderInterfaceConstant.AMOUNT_ORDER_CANCEL_POST,
+                AmountOrderInterfaceConstant.AMOUNT_ORDER_NOTIFY_POST
         );
         Map<String, Permission> existingPermsByName = permissionService.list(
                 new LambdaQueryWrapper<Permission>().in(Permission::getName, basePermNames)

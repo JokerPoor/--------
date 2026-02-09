@@ -11,14 +11,14 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/managerment
     username: root
-    password: a123456
+    password: 234182
   data:
     redis:
       database: 1
       host: localhost
       port: 6379
       timeout: 5000
-      password: 123456
+#      password: 123456
     # springAI
   ai:
     openai:
@@ -77,3 +77,9 @@ baidu:
     ak: jwE991y5wmyqLVa90OssRsYoqw9WfvRF
     connect-timeout-ms: 5000
     read-timeout-ms: 5000
+
+alipay:
+  appId: 9021000159653876
+  appPrivateKey: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCOl3o7t25rLYWOEm4rtTLuI5H6tLk1eWS3fAFmZyLB6OxhdgKLnAwiWiAYIhxw+KtGXmWj3ol8MA8HH6FAXEnBoBewb4V+cYazQxh5cG9FsvtF0X/B1kpXQfQXzSjiDDU4gvc3bkNivbaF5lftqqYlXbZJhsXrPOeVVQdYPKlm3oLtji7CVxBCw/VWcuBMD4gwEF3W41H1vsSdFQgRHZljpffEF8Rc42HQqZ0k02sfPcseIkLPqC9YD5jzIwGMgW/CZVmwcxRF9DuMMVTP3RpZRz/wMufSoD88gmx+RY6XOMsmgwzqmkIAg2Je+XTvxC1JnW/jxUJfFg9xFUJb5o9rAgMBAAECggEAV3FxVjmxDy0FYBDRWyBtsThDB1nY0oA1UYhMW34YBI5Ql5wFB5SUpGRcljAk/OqiLi8paYrJCU13icjN3Gg8Gu+QV3SsitQX5MrasW5P7pBKI5DMJhTB1izuAcKgta8C3DsEXAvUazMoQYj2lxs1dGi5pvFtYkshQaS5MlVRFXGmogIp9C7J1lZsux8008ceozZd5ymVZzrK7l76pm/9TceG5QfoOyTt2wCPOpA3ty0X7vJYJPf7jDuJYshx2lzEPJyucXRI+2a9/aYi6ZH2ixTB6670BZAczGQD1QHsRJRkovHn/iMpAtWLiih5bx+sgYgJ715mHtEpOOOggZzPoQKBgQDauoHqH5e2QoXaufbmstSleoOUUcthciHfDUWBm8oFxDCgaI5WMkwRMbGwmGV2wHItkBF9Ytmg/WJwnHIlzTMKh65kO/0cCd6UY8lDOWiaXzgKBxjBVKxk6IOsXG3WuwPEvfhjPu7FlJXGNk+gnka4n+qonMaW7wm5yRXjRs8QmQKBgQCm47BGyVfoJBb/6YU2IV1RWXmrvOvU8NCEH2xnz5GlJCKEfXG6EwQAei/ZUUiZwhgyu+0HrLuYrz833bR8Lum2IQnso2n3XtOxF5bvBwC8R2R+vUkVomY9B8uJTsN+FVotqbaiLfMCzDjvqwbHfgHsWv2GPvrDDIgpg3sTYF+uowKBgQDKfQUOOEcb3MPMNIKlGgMQWrX7FinhQWan9sJU9WN2KSUXKxQyKggPluC36q1r3UcWdRwr5towVsLOG5b09d19rxQ8COkODvj2iNZmnHwBBYt8hQte10Nte2+CnmK0+pbHiVKsljM3yJFLWTYoLL6t5qW3iMO0MQDg9I6FxCSnaQKBgFGUU4MGwTX1Dlkiqb+AJ8GwX02YGCALZ6JuSeulB6kWNNlXCNTQntAs6l7s4PRocLO8MW3i/gDxCZIhiix6MjyZgeRvLUmCzTBwO5O0dKOUsodRt/wfWqLSwKfqHJ3xihdwMpqso3Hmqp5dl/7EleQXxn5tIt9drOG+J9ec8KjJAoGAIDrctSb2wMzK2amOt59nknm4UeLKc05un8fqX4elXKiSkpeT9t9dqFSGAsOaNwZOzC6Gm9MkE6DD0F/EaFYvAvWmBIIbWm20da04HVDRoUf2LBXcfcysqF29/i4oRBZTZo4zbzKx3OZIzooM7pSjT9STBav2H9Iu0GIf2oEk8cA=
+  alipayPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqKK0NZ8kRrXg1mO/rikxwwyNU9kmY0+ZiXTN2Hh5Tqi9sOZqFI9osLE21+i5YqTTaud94fbdAS/viU+3HdVMbOkX9ZvqsELa4k19fKPxxXlg3VzJoNKqXnxoVEJ2EcTd2VK1TBUosi4hXt+Q1F91bwd6nbzs6WP/84ieFwOIP3sr2bczOnXwQIHmGft4Xw25XjgGh4R0uAyFCRzMcZ99om++BPcNOV8PFqM6w7M9cAf11Q/qgZQuCdGTM5qStcdT4Dthzvgs6lD1aFXqVIav26Y6ALRxsHVgWN10P7+5uy1p16L+YRFhwx9QiXYModqUmDQ94g7cmpnaT/f6RaJuTQIDAQAB
+  notifyUrl: http://xxx/api/system/amount/order/notify
