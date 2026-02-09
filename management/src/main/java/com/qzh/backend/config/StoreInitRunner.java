@@ -167,9 +167,13 @@ public class StoreInitRunner implements ApplicationRunner {
                 pageService.save(pageInfo);
                 existingPagesByPath.put(seed.path(), pageInfo); // Add to map for subsequent lookup
             } else {
-                // 如果已存在，更新基本信息（可选）
-                // pageInfo.setName(seed.name());
-                // pageService.updateById(pageInfo);
+                // 如果已存在，更新基本信息（确保数据库与代码同步）
+                pageInfo.setName(seed.name());
+                pageInfo.setComponent(seed.component());
+                pageInfo.setPath(seed.path());
+                pageInfo.setOrderNum(seed.orderNum());
+                pageInfo.setVisible(seed.visible());
+                pageService.updateById(pageInfo);
             }
         }
 

@@ -31,6 +31,7 @@
       </template>
 
       <template #actions="{ row }">
+        <el-button v-if="row.amountOrderStatus === 0" link type="primary" @click="onPay(row.amountOrderId)" v-perm="'POST:/amount/order/payorder/:id'">付款</el-button>
         <el-button v-if="row.purchaseOrderStatus === 0" link type="primary" @click="onShip(row)" v-perm="'purchase:order:ship'">发货</el-button>
         <el-button v-if="row.purchaseOrderStatus === 1" link type="success" @click="openStockIn(row)" v-perm="'purchase:order:stock-in'">入库</el-button>
       </template>
@@ -204,6 +205,33 @@ async function submitCreate() {
     fetch()
   } finally {
     submitting.value = false
+  }
+}
+
+// Pay Logic
+async function onPay(id: number) {
+  if (!id) return ElMessage.error('订单异常，缺少金额单ID')
+  try {
+    const res = await http.post(`/amount/order/payorder/${id}`)
+    console.log(res,'res')
+    // 后端返回的是HTML表单
+    if (typeof res === 'string') {
+      const div = document.createElement('div')
+      div.innerHTML = res
+      document.body.appendChild(div)
+      const form = div.getElementsByTagName('form')[0]
+      if (form) {
+        form.submit()
+      } else {
+        ElMessage.error('支付跳转失败')
+      }
+      // 清理 DOM
+      setTimeout(() => {
+        document.body.removeChild(div)
+      }, 1000)
+    }
+  } catch (e) {
+    console.error(e)
   }
 }
 

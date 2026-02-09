@@ -8,6 +8,25 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Weather Card -->
+      <el-card shadow="hover" class="stat-card" v-if="weather && weather.length > 0">
+        <template #header>
+          <div class="card-header flex justify-between items-center">
+            <span>今日天气</span>
+            <el-tag type="success">{{ weather[0].text_day }}</el-tag>
+          </div>
+        </template>
+        <div class="text-center py-2">
+          <div class="text-3xl font-bold mb-2">{{ weather[0].low }}°C - {{ weather[0].high }}°C</div>
+          <div class="text-sm text-gray-500">
+            {{ weather[0].wd_day }} {{ weather[0].wc_day }}
+          </div>
+          <div class="text-xs text-gray-400 mt-1">
+            {{ weather[0].date }} {{ weather[0].week }}
+          </div>
+        </div>
+      </el-card>
+
       <el-card shadow="hover" class="stat-card">
         <template #header>
           <div class="card-header flex justify-between items-center">
@@ -79,10 +98,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { User, UserFilled, Goods, Shop } from "@element-plus/icons-vue";
 import auth from "../../services/auth";
+import http from "../../services/http";
 import { ElMessageBox } from "element-plus";
 
 const router = useRouter();
@@ -92,6 +112,19 @@ const today = new Date().toLocaleDateString("zh-CN", {
   month: "long",
   day: "numeric",
   weekday: "long",
+});
+
+const weather = ref<any[]>([]);
+
+onMounted(async () => {
+  try {
+    const res = await http.get('/weather');
+    if (res.data) {
+      weather.value = res.data;
+    }
+  } catch (e) {
+    console.error('Failed to fetch weather:', e);
+  }
 });
 
 const isAdmin = computed(() => {
