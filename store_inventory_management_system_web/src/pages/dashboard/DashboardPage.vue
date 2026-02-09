@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-container">
+  <div class="space-y-6">
     <div class="welcome-banner mb-6">
       <h1 class="text-3xl font-bold text-gray-800">
         欢迎回来，{{ user?.userName || user?.userAccount }} 👋
@@ -7,12 +7,27 @@
       <p class="text-gray-500 mt-2">今天是 {{ today }}</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Weather & Role Info -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
       <!-- Weather Card -->
       <el-card shadow="hover" class="stat-card" v-if="weather && weather.length > 0">
         <template #header>
           <div class="card-header flex justify-between items-center">
-            <span>今日天气</span>
+            <div class="flex items-center gap-2">
+              <span>{{ currentCityName }}</span>
+              <el-dropdown @command="handleCityChange" trigger="click">
+                <span class="el-dropdown-link cursor-pointer text-xs text-blue-500">
+                  [切换]
+                </span>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item v-for="city in cities" :key="city.id" :command="city">
+                      {{ city.name }}
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+            </div>
             <el-tag type="success">{{ weather[0].text_day }}</el-tag>
           </div>
         </template>
@@ -27,6 +42,7 @@
         </div>
       </el-card>
 
+      <!-- Role Info Card -->
       <el-card shadow="hover" class="stat-card">
         <template #header>
           <div class="card-header flex justify-between items-center">
@@ -39,49 +55,6 @@
           <div class="text-sm text-gray-500">当前登录身份</div>
         </div>
       </el-card>
-
-      <!-- 管理员可见 -->
-      <template v-if="isAdmin">
-        <el-card shadow="hover" class="stat-card">
-          <template #header>
-            <div class="card-header">系统用户</div>
-          </template>
-          <div class="text-center py-4">
-            <el-icon :size="40" class="text-green-500 mb-2"
-              ><UserFilled
-            /></el-icon>
-            <div class="text-2xl font-bold">管理中心</div>
-            <div class="text-sm text-gray-500">点击侧边栏管理用户</div>
-          </div>
-        </el-card>
-      </template>
-
-      <!-- 门店管理员可见 -->
-      <template v-else-if="isStoreAdmin">
-        <el-card shadow="hover" class="stat-card">
-          <template #header>
-            <div class="card-header">门店运营</div>
-          </template>
-          <div class="text-center py-4">
-            <el-icon :size="40" class="text-purple-500 mb-2"><Shop /></el-icon>
-            <div class="text-2xl font-bold">运营中心</div>
-            <div class="text-sm text-gray-500">管理商品、采购与销售</div>
-          </div>
-        </el-card>
-      </template>
-
-      <!-- 供应商/客户可见 -->
-      <template v-else>
-        <el-card shadow="hover" class="stat-card">
-          <template #header>
-            <div class="card-header">业务中心</div>
-          </template>
-          <div class="text-center py-4">
-            <el-icon :size="40" class="text-orange-500 mb-2"><Goods /></el-icon>
-            <div class="text-sm text-gray-500">查看您的订单与库存</div>
-          </div>
-        </el-card>
-      </template>
     </div>
 
     <el-card shadow="hover">
@@ -91,7 +64,6 @@
       <div class="flex gap-4">
         <el-button type="primary" plain @click="router.push('/users')" v-if="isAdmin">用户管理</el-button>
         <el-button type="success" plain @click="showInfo">个人信息</el-button>
-        <!-- 更多快捷入口待开发 -->
       </div>
     </el-card>
   </div>
@@ -100,7 +72,7 @@
 <script setup lang="ts">
 import { computed, ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { User, UserFilled, Goods, Shop } from "@element-plus/icons-vue";
+import { User, UserFilled, Goods, Shop, ArrowUp, ArrowDown } from "@element-plus/icons-vue";
 import auth from "../../services/auth";
 import http from "../../services/http";
 import { ElMessageBox } from "element-plus";
@@ -115,15 +87,50 @@ const today = new Date().toLocaleDateString("zh-CN", {
 });
 
 const weather = ref<any[]>([]);
+const currentCityName = ref('北京朝阳');
 
-onMounted(async () => {
+const cities = [
+  { name: '北京朝阳', id: '110105' },
+  { name: '北京海淀', id: '110108' },
+  { name: '上海浦东', id: '310115' },
+  { name: '广州天河', id: '440106' },
+  { name: '深圳南山', id: '440305' },
+  { name: '杭州西湖', id: '330106' },
+  { name: '成都武侯', id: '510107' },
+  { name: '武汉武昌', id: '420106' },
+  { name: '南京鼓楼', id: '320106' },
+  { name: '西安雁塔', id: '610113' },
+];
+
+async function fetchWeather(districtId: string) {
   try {
-    const res = await http.get('/weather');
+    const res = await http.get('/weather', { params: { districtId } });
     if (res.data) {
       weather.value = res.data;
     }
   } catch (e) {
     console.error('Failed to fetch weather:', e);
+  }
+}
+
+function handleCityChange(city: { name: string; id: string }) {
+  currentCityName.value = city.name;
+  localStorage.setItem('weather_city', JSON.stringify(city));
+  fetchWeather(city.id);
+}
+
+onMounted(() => {
+  const savedCity = localStorage.getItem('weather_city');
+  if (savedCity) {
+    try {
+      const city = JSON.parse(savedCity);
+      currentCityName.value = city.name;
+      fetchWeather(city.id);
+    } catch {
+      fetchWeather('110105'); // Default
+    }
+  } else {
+    fetchWeather('110105'); // Default
   }
 });
 
@@ -139,24 +146,26 @@ const isStoreAdmin = computed(() => {
 });
 
 const roleName = computed(() => {
-  if (isAdmin.value) return "超级管理员";
-  if (isStoreAdmin.value) return "门店管理员";
-  return user.value?.roles?.[0]?.roleName || "普通用户";
+  if (!user.value) return '未知';
+  if (user.value.userAccount === 'admin' || user.value.id === 1) return '超级管理员';
+  return user.value.roles?.map(r => r.roleName).join(' / ') || '普通用户';
 });
 
 function showInfo() {
-  ElMessageBox.alert(
-    `账号: ${user.value?.userAccount}\n姓名: ${user.value?.userName}`,
-    "个人信息"
-  );
+  ElMessageBox.alert(`
+    <p><strong>账号：</strong>${user.value?.userAccount}</p>
+    <p><strong>昵称：</strong>${user.value?.userName}</p>
+    <p><strong>手机：</strong>${user.value?.phone || '未设置'}</p>
+    <p><strong>邮箱：</strong>${user.value?.email || '未设置'}</p>
+  `, '个人信息', { dangerouslyUseHTMLString: true });
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .stat-card {
   transition: all 0.3s;
-}
-.stat-card:hover {
-  transform: translateY(-5px);
+  &:hover {
+    transform: translateY(-5px);
+  }
 }
 </style>

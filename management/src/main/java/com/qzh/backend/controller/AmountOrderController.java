@@ -73,9 +73,8 @@ public class AmountOrderController {
      * 支付订单
      */
     @PostMapping("/payorder/{id}")
-    public BaseResponse<Void> payOrder(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void payOrder(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
         amountOrderService.payOrder(id,request,response);
-        return ResultUtils.success(null);
     }
 
     /**
