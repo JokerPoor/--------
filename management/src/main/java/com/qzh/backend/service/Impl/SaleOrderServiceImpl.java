@@ -76,13 +76,13 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, SaleOrder
 
         // 5. 创建金额订单（记录交易金额）
         AmountOrder amountOrder = new AmountOrder();
-        amountOrder.setOrderId(saleOrder.getId()); // 关联销售订单ID
+        amountOrder.setOrderId(String.valueOf(saleOrder.getId())); // 关联销售订单ID
         amountOrder.setType(OrderTypeEnum.SALE.getValue()); // 订单类型：销售订单
         amountOrder.setPayerId(loginUser.getId()); // 付款人ID（用户ID）
         amountOrder.setPayeeId(appGlobalConfig.getManagerId()); // 收款人ID（店长ID）
         amountOrder.setAmount(totalAmount); // 交易金额
         amountOrder.setStoreId(inventory.getStoreId()); // 门店ID
-        amountOrder.setPayType(PayTypeEnum.ALIPAY.getValue()); // 支付方式，目前仅支持支付宝
+        amountOrder.setPayType(String.valueOf(PayTypeEnum.ALIPAY.getValue())); // 支付方式，目前仅支持支付宝
         amountOrder.setStatus(PayStatusEnum.PENDING_PAYMENT.getValue()); // 0-待支付
         amountOrder.setCreateBy(loginUser.getId()); // 创建人ID
         boolean b = amountOrderService.save(amountOrder);

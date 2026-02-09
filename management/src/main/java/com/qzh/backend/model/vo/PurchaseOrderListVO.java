@@ -84,7 +84,7 @@ public class PurchaseOrderListVO implements Serializable {
     /**
      * 订单编号
      */
-    private Long orderId;
+    private String orderId;
 
     /**
      * 类型（0-采购，1-采退，2-销售，3-销退）
@@ -114,7 +114,7 @@ public class PurchaseOrderListVO implements Serializable {
     /**
      * 支付方式（alipay-支付宝）
      */
-    private Integer payType;
+    private String payType;
 
     /**
      * 第三方支付流水号

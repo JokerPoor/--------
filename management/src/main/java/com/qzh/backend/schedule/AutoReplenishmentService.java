@@ -73,12 +73,14 @@ public class AutoReplenishmentService {
 
     private AmountOrder getAmountOrder(PurchaseOrder purchaseOrder, Product product) {
         AmountOrder amountOrder = new AmountOrder();
-        amountOrder.setOrderId(purchaseOrder.getId()); // 关联采购订单ID
+        amountOrder.setOrderId(String.valueOf(purchaseOrder.getId())); // 关联采购订单ID
         amountOrder.setType(OrderTypeEnum.PURCHASE.getValue()); // 0 - 采购
         amountOrder.setPayerId(appGlobalConfig.getManagerId());
         amountOrder.setPayeeId(product.getSupplierId());
         amountOrder.setAmount(purchaseOrder.getTotalAmount());
+        amountOrder.setStoreId(purchaseOrder.getStoreId());
         amountOrder.setStatus(PayStatusEnum.PENDING_PAYMENT.getValue());
+        amountOrder.setPayType(String.valueOf(PayTypeEnum.ALIPAY.getValue()));
         amountOrder.setCreateBy(appGlobalConfig.getManagerId());
         return amountOrder;
     }

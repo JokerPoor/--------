@@ -105,7 +105,8 @@ public class AmountOrderServiceImpl extends ServiceImpl<AmountOrderMapper, Amoun
         amountOrderDetailVO.setStoreId(appGlobalConfig.getCurrentStoreId());
         amountOrderDetailVO.setStoreName(appGlobalConfig.getCurrentStoreName());
         amountOrderDetailVO.setTradeNo(amountOrder.getTradeNo());
-        Long orderId = amountOrder.getOrderId();
+        String orderIdStr = amountOrder.getOrderId();
+        Long orderId = Long.valueOf(orderIdStr);
         switch (amountOrder.getType()) {
             case 0:
                 PurchaseOrder purchaseOrder = purchaseOrderService.getById(orderId);
@@ -116,7 +117,7 @@ public class AmountOrderServiceImpl extends ServiceImpl<AmountOrderMapper, Amoun
                 amountOrderDetailVO.setProductQuantity(purchaseOrder.getProductQuantity());
                 amountOrderDetailVO.setProductUrl(purchaseOrder.getProductUrl());
                 amountOrderDetailVO.setPurchaseOrderStatus(purchaseOrder.getStatus());
-                amountOrderDetailVO.setOrderId(orderId);
+                amountOrderDetailVO.setOrderId(orderIdStr);
                 break;
             case 1:
                 PurchaseReturn purchaseReturn = purchaseReturnService.getById(orderId);
@@ -127,7 +128,7 @@ public class AmountOrderServiceImpl extends ServiceImpl<AmountOrderMapper, Amoun
                 amountOrderDetailVO.setProductQuantity(purchaseReturn.getProductQuantity());
                 amountOrderDetailVO.setProductUrl(purchaseReturn.getProductUrl());
                 amountOrderDetailVO.setPurchaseOrderStatus(purchaseReturn.getStatus());
-                amountOrderDetailVO.setOrderId(orderId);
+                amountOrderDetailVO.setOrderId(orderIdStr);
                 break;
             case 2:
                 SaleOrder saleOrder = saleOrderService.getById(orderId);
@@ -138,7 +139,7 @@ public class AmountOrderServiceImpl extends ServiceImpl<AmountOrderMapper, Amoun
                 amountOrderDetailVO.setProductQuantity(saleOrder.getProductQuantity());
                 amountOrderDetailVO.setProductUrl(saleOrder.getProductUrl());
                 amountOrderDetailVO.setPurchaseOrderStatus(saleOrder.getStatus());
-                amountOrderDetailVO.setOrderId(orderId);
+                amountOrderDetailVO.setOrderId(orderIdStr);
                 break;
             case 3:
                 SaleReturn saleReturn = saleReturnService.getById(orderId);
@@ -149,7 +150,7 @@ public class AmountOrderServiceImpl extends ServiceImpl<AmountOrderMapper, Amoun
                 amountOrderDetailVO.setProductQuantity(saleReturn.getProductQuantity());
                 amountOrderDetailVO.setProductUrl(saleReturn.getProductUrl());
                 amountOrderDetailVO.setPurchaseOrderStatus(saleReturn.getStatus());
-                amountOrderDetailVO.setOrderId(orderId);
+                amountOrderDetailVO.setOrderId(orderIdStr);
                 break;
             default:
                 ThrowUtils.throwIf(true, ErrorCode.PARAMS_ERROR, "未知的金额单类型：" + amountOrder.getType());

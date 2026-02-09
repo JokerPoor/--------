@@ -85,14 +85,14 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
         ThrowUtils.throwIf(!saved,ErrorCode.SYSTEM_ERROR,"采购订单创建失败");
         // 创建金额订单（付款单）
         AmountOrder amountOrder = new AmountOrder();
-        amountOrder.setOrderId(purchaseOrder.getId());
+        amountOrder.setOrderId(String.valueOf(purchaseOrder.getId()));
         amountOrder.setType(OrderTypeEnum.PURCHASE.getValue()); // 0-采购
         amountOrder.setPayerId(loginUser.getId()); // 付款人设置为当前发起购买的用户
         amountOrder.setPayeeId(product.getSupplierId());  // 收款人设置为产品供应商
         amountOrder.setAmount(totalAmount);
-        amountOrder.setStoreId(appGlobalConfig.getCurrentStoreId());  // 设置门店ID
+        amountOrder.setStoreId(appGlobalConfig.getCurrentStoreId()); // 设置门店ID
         amountOrder.setStatus(PayStatusEnum.PENDING_PAYMENT.getValue()); // 0-待支付
-        amountOrder.setPayType(PayTypeEnum.ALIPAY.getValue()); // 目前仅支持支付宝沙箱
+        amountOrder.setPayType(String.valueOf(PayTypeEnum.ALIPAY.getValue())); // 目前仅支持支付宝沙箱
         amountOrder.setCreateBy(loginUser.getId());
         boolean amountOrderSaved = amountOrderService.save(amountOrder);
         ThrowUtils.throwIf(!amountOrderSaved,ErrorCode.SYSTEM_ERROR,"采购订单创建失败");
@@ -116,15 +116,15 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
             return new Page<>(current, size, 0);
         }
         // 收集所有采购订单的ID，用于关联查询金额订单
-        List<Long> purchaseOrderIds = purchaseOrderPage.getRecords().stream()
-                .map(PurchaseOrder::getId)
+        List<String> purchaseOrderIds = purchaseOrderPage.getRecords().stream()
+                .map(order -> String.valueOf(order.getId()))
                 .collect(Collectors.toList());
         // 批量查询关联的金额订单
         LambdaQueryWrapper<AmountOrder> amountOrderWrapper = Wrappers.lambdaQuery(AmountOrder.class)
                 .in(AmountOrder::getOrderId, purchaseOrderIds);
         List<AmountOrder> amountOrderList = amountOrderService.list(amountOrderWrapper);
         // 构建金额订单的映射：key为 orderId (采购订单ID的字符串)，value为 AmountOrder 对象
-        Map<Long, AmountOrder> amountOrderMap = amountOrderList.stream()
+        Map<String, AmountOrder> amountOrderMap = amountOrderList.stream()
                 .collect(Collectors.toMap(
                         AmountOrder::getOrderId,
                         Function.identity(), // 直接使用对象本身作为值
@@ -149,7 +149,7 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
                     vo.setCreateTime(purchaseOrder.getCreateTime());
                     vo.setUpdateTime(purchaseOrder.getUpdateTime());
                     vo.setCreateBy(purchaseOrder.getCreateBy());
-                    AmountOrder amountOrder = amountOrderMap.get(purchaseOrder.getId());
+                    AmountOrder amountOrder = amountOrderMap.get(String.valueOf(purchaseOrder.getId()));
                     if (amountOrder != null) {
                         vo.setAmountOrderId(amountOrder.getId());
                         // 注意：这里的 orderId 是金额订单自己的业务编号，不是采购订单ID

@@ -77,13 +77,13 @@ public class SaleReturnServiceImpl extends ServiceImpl<SaleReturnMapper, SaleRet
         }
         // 创建金额订单
         AmountOrder amountOrder = new AmountOrder();
-        amountOrder.setOrderId(saleReturn.getId());
+        amountOrder.setOrderId(String.valueOf(saleReturn.getId()));
         amountOrder.setType(OrderTypeEnum.SALE_RETURN.getValue()); // 3-销退订单类型
         amountOrder.setPayerId(appGlobalConfig.getManagerId()); // 付款人为店长
         amountOrder.setPayeeId(loginUser.getId()); // 收款人为用户
         amountOrder.setAmount(returnAmount);
         amountOrder.setStoreId(saleOrder.getStoreId());
-        amountOrder.setPayType(PayTypeEnum.ALIPAY.getValue());
+        amountOrder.setPayType(String.valueOf(PayTypeEnum.ALIPAY.getValue()));
         amountOrder.setStatus(PayStatusEnum.PENDING_PAYMENT.getValue());
         amountOrder.setCreateBy(loginUser.getId());
         boolean saveAmount = amountOrderService.save(amountOrder);

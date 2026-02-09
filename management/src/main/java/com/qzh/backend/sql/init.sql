@@ -191,6 +191,7 @@ CREATE TABLE `sys_amount_order` (
                                     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '金额订单ID',
                                     `orderId` VARCHAR(64) NOT NULL COMMENT '订单编号',
                                     `type` TINYINT NOT NULL COMMENT '类型（0-采购，1-采退，2-销售，3-销退）',
+                                    `storeId` BIGINT NOT NULL COMMENT '门店ID',
                                     `payerId` BIGINT NOT NULL COMMENT '付款人ID（门店ID）',
                                     `payeeId` BIGINT NOT NULL COMMENT '收款人ID（供应商ID）',
                                     `amount` DECIMAL(12,2) NOT NULL COMMENT '金额',

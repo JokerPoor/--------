@@ -65,7 +65,7 @@ public class AmountOrderDetailVO implements Serializable {
     /**
      * 采购或者采退的订单ID
      */
-    private Long OrderId;
+    private String OrderId;
 
     /**
      * 付款人ID 1
@@ -85,7 +85,7 @@ public class AmountOrderDetailVO implements Serializable {
     /**
      * 支付方式（alipay-支付宝） 1
      */
-    private Integer payType;
+    private String payType;
 
     /**
      * 第三方支付流水号 1

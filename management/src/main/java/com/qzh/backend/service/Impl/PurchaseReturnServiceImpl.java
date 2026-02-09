@@ -97,13 +97,13 @@ public class PurchaseReturnServiceImpl extends ServiceImpl<PurchaseReturnMapper,
         // 7. 创建金额订单
         User loginUser = getLoginUserUtil.getLoginUser(request);
         AmountOrder amountOrder = new AmountOrder();
-        amountOrder.setOrderId(returnOrder.getId());
+        amountOrder.setOrderId(String.valueOf(returnOrder.getId()));
         amountOrder.setType(OrderTypeEnum.PURCHASE_RETURN.getValue());
         amountOrder.setPayerId(purchaseOrder.getSupplierId()); // 供应商为付款人
         amountOrder.setPayeeId(loginUser.getId()); // 当前操作为收款人
         amountOrder.setAmount(totalAmount);
         amountOrder.setStoreId(purchaseOrder.getStoreId());
-        amountOrder.setPayType(PayTypeEnum.ALIPAY.getValue());
+        amountOrder.setPayType(String.valueOf(PayTypeEnum.ALIPAY.getValue()));
         amountOrder.setStatus(PayStatusEnum.PENDING_PAYMENT.getValue());
         amountOrder.setCreateBy(loginUser.getId());
         boolean saveAmountOrder = amountOrderMapper.insert(amountOrder) > 0;
@@ -140,7 +140,7 @@ public class PurchaseReturnServiceImpl extends ServiceImpl<PurchaseReturnMapper,
         // 校验金额订单支付状态（供应商是否已支付）
         AmountOrder amountOrder = amountOrderMapper.selectOne(
                 Wrappers.lambdaQuery(AmountOrder.class)
-                        .eq(AmountOrder::getOrderId, returnId)
+                        .eq(AmountOrder::getOrderId, String.valueOf(returnId))
                         .eq(AmountOrder::getType, OrderTypeEnum.PURCHASE_RETURN.getValue()) // 采退金额订单类型
         );
         if (amountOrder == null) {

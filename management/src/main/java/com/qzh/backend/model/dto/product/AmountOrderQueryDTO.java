@@ -69,6 +69,7 @@ public class AmountOrderQueryDTO extends PageRequest implements Serializable {
         Date endTime = dto.getEndTime();
         String sortField = dto.getSortField();
         String sortOrder = dto.getSortOrder();
+        // 如果传入了 storeId，则直接根据 storeId 字段查询
         queryWrapper.eq(ObjectUtil.isNotNull(storeId), "storeId", storeId);
         queryWrapper.eq(ObjectUtil.isNotNull(type), "type", type);
         queryWrapper.eq(ObjectUtil.isNotNull(status), "status", status);
