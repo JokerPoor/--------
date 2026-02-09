@@ -1,12 +1,11 @@
 package com.qzh.backend.controller;
-
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.qzh.backend.annotation.AuthCheck;
 import com.qzh.backend.annotation.LogInfoRecord;
 import com.qzh.backend.common.BaseResponse;
 import com.qzh.backend.common.ResultUtils;
 import com.qzh.backend.exception.ErrorCode;
 import com.qzh.backend.model.dto.user.*;
+import com.qzh.backend.model.entity.Role;
 import com.qzh.backend.model.vo.UserVO;
 import com.qzh.backend.service.UserService;
 import com.qzh.backend.utils.GetLoginUserUtil;
@@ -16,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.util.List;
 
 import static com.qzh.backend.constants.Interface.UserInterfaceConstant.*;
 import static com.qzh.backend.constants.ModuleConstant.USER_MODULE;
@@ -120,7 +121,10 @@ public class UserController {
      */
     @GetMapping("getLoginUser")
     public BaseResponse<UserVO> getLoginUser(HttpServletRequest request){
-        return ResultUtils.success(UserVO.toUserVO(getLoginUserUtil.getLoginUser(request)));
+        UserVO userVO = UserVO.toUserVO(getLoginUserUtil.getLoginUser(request));
+        List<Role> roleList = getLoginUserUtil.getRoleList(userVO.getId());
+        userVO.setRoles(roleList);
+        return ResultUtils.success(userVO);
     }
 
 }

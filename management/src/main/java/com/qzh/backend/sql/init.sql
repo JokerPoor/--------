@@ -20,6 +20,10 @@ DROP TABLE IF EXISTS `sys_role_permission`;
 DROP TABLE IF EXISTS `sys_permission`;
 DROP TABLE IF EXISTS `sys_role`;
 DROP TABLE IF EXISTS `sys_user`;
+DROP TABLE IF EXISTS `sys_warehouse`;
+DROP TABLE IF EXISTS `sys_transfer_log`;
+DROP TABLE IF EXISTS `sys_sale_order`;
+DROP TABLE IF EXISTS `sys_sale_return`;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -249,18 +253,17 @@ CREATE TABLE `sys_operation_log` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统操作日志表';
 
 CREATE TABLE `sys_warehouse` (
-  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '仓库唯一ID',
-  `name` VARCHAR(100) NOT NULL COMMENT '仓库名称',
-  `address` VARCHAR(255) NOT NULL COMMENT '详细地址',
-  `description` TEXT NULL COMMENT '仓库描述',
-  `createBy` BIGINT NOT NULL COMMENT '创建人ID',
-  `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  PRIMARY KEY (`id`)
+                                 `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '仓库唯一ID',
+                                 `name` VARCHAR(100) NOT NULL COMMENT '仓库名称',
+                                 `address` VARCHAR(255) NOT NULL COMMENT '详细地址',
+                                 `description` TEXT NULL COMMENT '仓库描述',
+                                 `createBy` BIGINT NOT NULL COMMENT '创建人ID',
+                                 `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                 `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                                 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='仓库表';
 
-CREATE TABLE sys_transfer_log
-(
+CREATE TABLE sys_transfer_log(
     id                  BIGINT AUTO_INCREMENT COMMENT '日志ID' PRIMARY KEY,
     transferOrderId     BIGINT COMMENT '调拨订单ID（关联调拨订单表）',
     sourceWarehouseId   BIGINT NOT NULL COMMENT '发货仓库ID',
@@ -272,8 +275,7 @@ CREATE TABLE sys_transfer_log
     updateTime          DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT ='自动调拨日志记录表';
 
-CREATE TABLE sys_sale_order
-(
+CREATE TABLE sys_sale_order(
     id                 BIGINT AUTO_INCREMENT COMMENT '销售订单ID' PRIMARY KEY,
     storeId            BIGINT                             NOT NULL COMMENT '门店ID',
     userId             BIGINT                             NOT NULL COMMENT '购买用户ID',
@@ -290,24 +292,24 @@ CREATE TABLE sys_sale_order
     updateTime         DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     createBy           BIGINT                             NULL COMMENT '创建人ID（店员ID）'
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT ='销售订单表';
-  
-CREATE TABLE `sys_sale_return`
-(
-    `id`                 BIGINT AUTO_INCREMENT COMMENT '销退订单ID' PRIMARY KEY,
-    `saleOrderId`        BIGINT                             NOT NULL COMMENT '关联销售订单ID',
-    `storeId`            BIGINT                             NOT NULL COMMENT '门店ID',
-    `userId`             BIGINT                             NOT NULL COMMENT '退货用户ID',
-    `productId`          BIGINT                             NOT NULL COMMENT '商品ID',
-    `productName`        VARCHAR(128)                       NOT NULL COMMENT '商品名称',
-    `productUrl`         VARCHAR(512)                       NULL COMMENT '商品图片',
-    `productDescription` VARCHAR(200)                       NULL COMMENT '商品描述',
-    `productPrice`       DECIMAL(10, 2)                     NOT NULL COMMENT '退货单价（原销售单价）',
-    `productQuantity`    INT                                NOT NULL COMMENT '退货数量',
-    `totalAmount`        DECIMAL(12, 2)                     NOT NULL COMMENT '退货总金额',
-    `status`             TINYINT                            NOT NULL COMMENT '状态（0-未完成，1-已完成）',
-    `warehouseId`        BIGINT                             NOT NULL COMMENT '入库仓库ID（退货商品入库仓库）',
-    `reason`             VARCHAR(512)                       NULL COMMENT '退货原因',
-    `createTime`         DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '创建时间',
-    `updateTime`         DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    `createBy`           BIGINT                             NULL COMMENT '创建人ID'
+
+CREATE TABLE sys_sale_return(
+    id                 BIGINT AUTO_INCREMENT COMMENT '销退订单ID'
+        PRIMARY KEY,
+    saleOrderId        BIGINT                             NOT NULL COMMENT '关联销售订单ID',
+    storeId            BIGINT                             NOT NULL COMMENT '门店ID',
+    userId             BIGINT                             NOT NULL COMMENT '退货用户ID',
+    productId          BIGINT                             NOT NULL COMMENT '商品ID',
+    productName        VARCHAR(128)                       NOT NULL COMMENT '商品名称',
+    productUrl         VARCHAR(512)                       NULL COMMENT '商品图片',
+    productDescription VARCHAR(200)                       NULL COMMENT '商品描述',
+    productPrice       DECIMAL(10, 2)                     NOT NULL COMMENT '退货单价（原销售单价）',
+    productQuantity    INT                                NOT NULL COMMENT '退货数量',
+    totalAmount        DECIMAL(12, 2)                     NOT NULL COMMENT '退货总金额',
+    status             TINYINT                            NOT NULL COMMENT '状态（0-未完成，1-已完成）',
+    warehouseId        BIGINT                             NOT NULL COMMENT '入库仓库ID（退货商品入库仓库）',
+    reason             VARCHAR(512)                       NULL COMMENT '退货原因',
+    createTime         DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '创建时间',
+    updateTime         DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    createBy           BIGINT                             NULL COMMENT '创建人ID'
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT ='销售退货表';

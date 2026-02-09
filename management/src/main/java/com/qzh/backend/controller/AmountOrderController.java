@@ -1,5 +1,6 @@
 package com.qzh.backend.controller;
 
+import com.alipay.api.AlipayApiException;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qzh.backend.common.BaseResponse;
 import com.qzh.backend.common.ResultUtils;
@@ -10,8 +11,11 @@ import com.qzh.backend.model.vo.AmountOrderDetailVO;
 import com.qzh.backend.service.AmountOrderService;
 import com.qzh.backend.utils.GetLoginUserUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 /**
  * 金额单Controller
@@ -66,20 +70,25 @@ public class AmountOrderController {
     }
 
     /**
-     * 支付订单 TODO 接入支付宝沙箱
+     * 支付订单
      */
     @PostMapping("/payorder/{id}")
-    public BaseResponse<Void> payOrder(@PathVariable Long id,HttpServletRequest request) {
-        amountOrderService.payOrder(id,request);
+    public BaseResponse<Void> payOrder(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        amountOrderService.payOrder(id,request,response);
         return ResultUtils.success(null);
     }
 
     /**
-     * 支付订单 TODO 接入支付宝沙箱
+     * 支付订单
      */
     @PostMapping("/cancelorder/{id}")
-    public BaseResponse<Void> cancelorder(@PathVariable Long id,HttpServletRequest request) {
-        amountOrderService.cancleOrder(id,request);
+    public BaseResponse<Void> cancelorder(@PathVariable Long id,HttpServletRequest request,HttpServletResponse response) throws IOException {
+        amountOrderService.cancleOrder(id,request,response);
         return ResultUtils.success(null);
+    }
+
+    @PostMapping("/notify")
+    public void notifyOrder(HttpServletRequest request) throws AlipayApiException {
+        amountOrderService.notifyOrder(request);
     }
 }
