@@ -17,4 +17,6 @@ public interface PurchaseOrderService extends IService<PurchaseOrder> {
     PurchaseOrderListVO getPurchaseOrderById(Long id);
 
     void shipPurchaseOrder(Long orderId,HttpServletRequest request);
+
+    Page<PurchaseOrderListVO> listSupplierOrders(PurchaseOrderQueryDTO queryDTO, HttpServletRequest request);
 }

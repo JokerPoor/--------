@@ -222,6 +222,15 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
     }
 
     @Override
+    public Page<PurchaseOrderListVO> listSupplierOrders(PurchaseOrderQueryDTO queryDTO, HttpServletRequest request) {
+        ThrowUtils.throwIf(queryDTO == null, ErrorCode.PARAMS_ERROR);
+        // 设置供应商ID过滤
+        User loginUser = getLoginUserUtil.getLoginUser(request);
+        queryDTO.setSupplierId(loginUser.getId());
+        return listPurchaseOrdersWithAmount(queryDTO);
+    }
+
+    @Override
     public void shipPurchaseOrder(Long orderId,HttpServletRequest request) {
         // 根据 amountOrderId 查询金额单，确认其存在
         LambdaQueryWrapper<AmountOrder> amountOrderQueryWrapper = Wrappers.lambdaQuery(AmountOrder.class)

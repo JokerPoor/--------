@@ -133,6 +133,7 @@ public class StoreInitRunner implements ApplicationRunner {
                 new PageSeed("销售退货", "/sale/return", "pages/sale/SaleReturnPage", 5, 1, "/sale"),
                 // 供应商端
                 new PageSeed("我的商品", "/supplier/products", "pages/supplier/MyProductsPage", 100, 1),
+                new PageSeed("采购订单", "/supplier/orders", "pages/supplier/SupplierOrderPage", 90, 1),
 
                 // 客户端
                 new PageSeed("在线商城", "/customer/shopping", "pages/customer/ShoppingPage", 100, 1)
@@ -317,6 +318,7 @@ public class StoreInitRunner implements ApplicationRunner {
                 PurchaseOrderInterfaceConstant.PURCHASE_ORDER_LIST_GET,
                 PurchaseOrderInterfaceConstant.PURCHASE_ORDER_DETAIL_GET,
                 PurchaseOrderInterfaceConstant.PURCHASE_ORDER_SHIP_POST,
+                PurchaseOrderInterfaceConstant.PURCHASE_ORDER_SUPPLIER_LIST_GET,
 
                 // 商品接口权限
                 ProductInterfaceConstant.PRODUCT_ADD_POST,

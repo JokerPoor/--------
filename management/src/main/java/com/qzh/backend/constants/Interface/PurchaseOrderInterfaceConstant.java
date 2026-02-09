@@ -13,4 +13,7 @@ public interface PurchaseOrderInterfaceConstant {
 
     // 供应商设置订单为已发货（POST /purchase/order/ship/{id}）
     String PURCHASE_ORDER_SHIP_POST = "POST:/purchase/order/ship/:id";
+
+    // 供应商查看收到的采购订单（GET /purchase/order/supplier/list）
+    String PURCHASE_ORDER_SUPPLIER_LIST_GET = "GET:/purchase/order/supplier/list";
 }

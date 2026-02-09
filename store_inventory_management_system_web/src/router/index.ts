@@ -18,6 +18,7 @@ const routes = [
   { path: "/supplier", component: () => import("../pages/users/SupplierPage.vue") },
   { path: "/customer", component: () => import("../pages/users/CustomerPage.vue") },
   { path: "/supplier/products", component: () => import("../pages/supplier/MyProductsPage.vue") },
+  { path: "/supplier/orders", component: () => import("../pages/supplier/SupplierOrderPage.vue") },
   { path: "/customer/shopping", component: () => import("../pages/customer/ShoppingPage.vue") },
 ];
 

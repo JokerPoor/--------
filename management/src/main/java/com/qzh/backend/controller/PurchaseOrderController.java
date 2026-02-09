@@ -39,6 +39,15 @@ public class PurchaseOrderController {
     }
 
     /**
+     * 供应商查看收到的采购订单
+     */
+    @GetMapping("/supplier/list")
+    public BaseResponse<Page<PurchaseOrderListVO>> listSupplierOrders(PurchaseOrderQueryDTO queryDTO, HttpServletRequest request) {
+        Page<PurchaseOrderListVO> purchaseOrderPage = purchaseOrderService.listSupplierOrders(queryDTO, request);
+        return ResultUtils.success(purchaseOrderPage);
+    }
+
+    /**
      * 根据采购订单ID查询
      */
     @GetMapping("/{id}")
