@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @Data
 public class PurchaseReturnCreateDTO {
     @NotNull(message = "产品ID不能为空")
-    private Long ProductId;
+    private Long productId;
 
     @NotNull(message = "采退数量不能为空")
     @Min(value = 1, message = "采退数量必须大于0")

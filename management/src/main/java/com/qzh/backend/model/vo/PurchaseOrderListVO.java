@@ -19,7 +19,7 @@ public class PurchaseOrderListVO implements Serializable {
     /**
      * 采购订单ID
      */
-    private Long PurchaseOrderId;
+    private Long purchaseOrderId;
 
     /**
      * 门店ID
@@ -62,19 +62,24 @@ public class PurchaseOrderListVO implements Serializable {
     private Integer productQuantity;
 
     /**
+     * 采购总金额
+     */
+    private BigDecimal totalAmount;
+
+    /**
      * 状态（0-待发货，1-已发货，2-已入库）
      */
-    private Integer PurchaseOrderStatus;
+    private Integer purchaseOrderStatus;
 
     /**
      * 类型（0-手动发起，1-阈值触发）
      */
-    private Integer PurchaseOrderType;
+    private Integer purchaseOrderType;
 
     /**
      * 金额订单ID
      */
-    private Long AmountOrderId;
+    private Long amountOrderId;
 
     /**
      * 订单编号
@@ -84,7 +89,7 @@ public class PurchaseOrderListVO implements Serializable {
     /**
      * 类型（0-采购，1-采退，2-销售，3-销退）
      */
-    private Integer AmountOrderType;
+    private Integer amountOrderType;
 
     /**
      * 付款人ID（门店ID）
@@ -104,7 +109,7 @@ public class PurchaseOrderListVO implements Serializable {
     /**
      * 状态（0-待支付，1-已支付，2-已取消）
      */
-    private Integer AmountOrderStatus;
+    private Integer amountOrderStatus;
 
     /**
      * 支付方式（alipay-支付宝）

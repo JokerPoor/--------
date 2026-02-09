@@ -105,7 +105,7 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
         ThrowUtils.throwIf(queryDTO == null,ErrorCode.PARAMS_ERROR);
         int current = queryDTO.getCurrent();
         int size = queryDTO.getSize();
-        ThrowUtils.throwIf(size <= 0 || size > 20,ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(size <= 0 || size > 1000,ErrorCode.PARAMS_ERROR);
         // 分页查询采购订单列表
         Page<PurchaseOrder> purchaseOrderPage = this.page(
                 new Page<>(current,size),
@@ -143,6 +143,7 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
                     vo.setProductDescription(purchaseOrder.getProductDescription());
                     vo.setProductPrice(purchaseOrder.getProductPrice());
                     vo.setProductQuantity(purchaseOrder.getProductQuantity());
+                    vo.setTotalAmount(purchaseOrder.getTotalAmount());
                     vo.setPurchaseOrderStatus(purchaseOrder.getStatus());
                     vo.setPurchaseOrderType(purchaseOrder.getType());
                     vo.setCreateTime(purchaseOrder.getCreateTime());
@@ -199,6 +200,7 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
         vo.setProductDescription(purchaseOrder.getProductDescription());
         vo.setProductPrice(purchaseOrder.getProductPrice());
         vo.setProductQuantity(purchaseOrder.getProductQuantity());
+        vo.setTotalAmount(purchaseOrder.getTotalAmount());
         vo.setPurchaseOrderStatus(purchaseOrder.getStatus());
         vo.setPurchaseOrderType(purchaseOrder.getType());
         vo.setCreateTime(purchaseOrder.getCreateTime());

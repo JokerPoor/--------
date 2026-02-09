@@ -86,7 +86,10 @@ public class StoreInitRunner implements ApplicationRunner {
         }
     }
 
-    private record PageSeed(String name, String path, String component, int orderNum, int visible) {
+    private record PageSeed(String name, String path, String component, int orderNum, int visible, String parentPath) {
+        public PageSeed(String name, String path, String component, int orderNum, int visible) {
+            this(name, path, component, orderNum, visible, null);
+        }
     }
 
     private void initAdminAccess(Long createBy) {
@@ -98,39 +101,80 @@ public class StoreInitRunner implements ApplicationRunner {
 
         // 2. 定义页面列表（包含首页）
         List<PageSeed> seeds = List.of(
-                new PageSeed("系统首页", "/dashboard", "pages/dashboard/DashboardPage", 100, 1), // orderNum=1 保证排在最前
-                new PageSeed("用户管理", "/users", "pages/users/UsersPage", 95, 1),
-                new PageSeed("角色管理", "/roles", "pages/roles/RolesPage", 90, 1),
-                new PageSeed("权限管理", "/permissions", "pages/permissions/PermissionsPage", 80, 1),
-                new PageSeed("页面管理", "/pages", "pages/pages/PagesPage", 70, 1),
-                new PageSeed("商品管理", "/products", "pages/products/ProductsPage", 60, 1),
-                new PageSeed("仓库管理", "/warehouses", "pages/warehouses/WarehousesPage", 50, 1),
-                new PageSeed("操作日志", "/logs", "pages/logs/OperationLogsPage", 40, 1),
-                new PageSeed("门店设置", "/store", "pages/store/StorePage", 30, 1)
+                new PageSeed("系统首页", "/dashboard", "pages/dashboard/DashboardPage", 100, 1),
+
+                // 系统管理
+                new PageSeed("系统管理", "/system", null, 90, 1),
+                new PageSeed("用户管理", "/users", "pages/users/UsersPage", 95, 1, "/system"),
+                new PageSeed("角色管理", "/roles", "pages/roles/RolesPage", 90, 1, "/system"),
+                new PageSeed("权限管理", "/permissions", "pages/permissions/PermissionsPage", 80, 1, "/system"),
+                new PageSeed("页面管理", "/pages", "pages/pages/PagesPage", 70, 1, "/system"),
+                new PageSeed("操作日志", "/logs", "pages/logs/OperationLogsPage", 40, 1, "/system"),
+                new PageSeed("门店设置", "/store", "pages/store/StorePage", 30, 1, "/system"),
+
+                // 商品库存
+                new PageSeed("商品库存", "/goods", null, 80, 1),
+                new PageSeed("商品管理", "/products", "pages/products/ProductsPage", 60, 1, "/goods"),
+                new PageSeed("仓库管理", "/warehouses", "pages/warehouses/WarehousesPage", 50, 1, "/goods"),
+                new PageSeed("库存管理", "/inventory", "pages/inventory/InventoryPage", 25, 1, "/goods"),
+
+                // 采购管理
+                new PageSeed("采购管理", "/purchase", null, 70, 1),
+                new PageSeed("采购订单", "/purchase/order", "pages/purchase/PurchaseOrderPage", 20, 1, "/purchase"),
+                new PageSeed("采购退货", "/purchase/return", "pages/purchase/PurchaseReturnPage", 15, 1, "/purchase"),
+
+                // 销售管理
+                new PageSeed("销售管理", "/sale", null, 60, 1),
+                new PageSeed("销售订单", "/sale/order", "pages/sale/SaleOrderPage", 10, 1, "/sale"),
+                new PageSeed("销售退货", "/sale/return", "pages/sale/SaleReturnPage", 5, 1, "/sale")
         );
 
-        // 3. 批量创建页面（如果不存在）
+        // 3. 批量创建/更新页面
+        // 先确保所有页面记录存在
         Map<String, PageInfo> existingPagesByPath = pageService.list(
                 new LambdaQueryWrapper<PageInfo>()
                         .in(PageInfo::getPath, seeds.stream().map(PageSeed::path).toList())
         ).stream().collect(Collectors.toMap(PageInfo::getPath, p -> p, (a, b) -> a));
 
         for (PageSeed seed : seeds) {
-            if (existingPagesByPath.containsKey(seed.path())) {
-                continue;
+            PageInfo pageInfo = existingPagesByPath.get(seed.path());
+            if (pageInfo == null) {
+                pageInfo = new PageInfo();
+                pageInfo.setParentId(0L); // 默认无父级
+                pageInfo.setName(seed.name());
+                pageInfo.setPath(seed.path());
+                pageInfo.setComponent(seed.component());
+                pageInfo.setOrderNum(seed.orderNum());
+                pageInfo.setVisible(seed.visible());
+                pageInfo.setCreateBy(createBy);
+                pageService.save(pageInfo);
+                existingPagesByPath.put(seed.path(), pageInfo); // Add to map for subsequent lookup
+            } else {
+                // 如果已存在，更新基本信息（可选）
+                // pageInfo.setName(seed.name());
+                // pageService.updateById(pageInfo);
             }
-            PageInfo pageInfo = new PageInfo();
-            pageInfo.setParentId(0L);
-            pageInfo.setName(seed.name());
-            pageInfo.setPath(seed.path());
-            pageInfo.setComponent(seed.component());
-            pageInfo.setOrderNum(seed.orderNum());
-            pageInfo.setVisible(seed.visible());
-            pageInfo.setCreateBy(createBy);
-            pageService.save(pageInfo);
         }
 
-        // 4. 给管理员分配所有页面
+        // 4. 更新父子关系
+        // 重新获取所有相关页面以确保 ID 存在
+        Map<String, PageInfo> finalPagesByPath = pageService.list(
+                new LambdaQueryWrapper<PageInfo>()
+                        .in(PageInfo::getPath, seeds.stream().map(PageSeed::path).toList())
+        ).stream().collect(Collectors.toMap(PageInfo::getPath, p -> p, (a, b) -> a));
+
+        for (PageSeed seed : seeds) {
+            if (seed.parentPath() != null) {
+                PageInfo parent = finalPagesByPath.get(seed.parentPath());
+                PageInfo child = finalPagesByPath.get(seed.path());
+                if (parent != null && child != null && !parent.getId().equals(child.getParentId())) {
+                    child.setParentId(parent.getId());
+                    pageService.updateById(child);
+                }
+            }
+        }
+
+        // 5. 给管理员分配所有页面
         List<PageInfo> allPages = pageService.list(
                 new LambdaQueryWrapper<PageInfo>()
                         .in(PageInfo::getPath, seeds.stream().map(PageSeed::path).toList())
@@ -197,7 +241,15 @@ public class StoreInitRunner implements ApplicationRunner {
                 // 仓库
                 "warehouse:add", "warehouse:edit", "warehouse:delete",
                 // 门店
-                "store:update"
+                "store:update",
+                // 库存
+                "inventory:update",
+                // 采购
+                "purchase:order:add", "purchase:order:ship", "purchase:order:stock-in",
+                "purchase:return:add", "purchase:return:confirm",
+                // 销售
+                "sale:order:create", "sale:order:confirm", "sale:return:add",
+                "inventory:sale-order:ship", "inventory:sale-return:confirm"
         );
         Map<String, Permission> existingPermsByName = permissionService.list(
                 new LambdaQueryWrapper<Permission>().in(Permission::getName, basePermNames)

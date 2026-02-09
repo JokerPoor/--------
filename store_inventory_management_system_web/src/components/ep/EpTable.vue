@@ -9,7 +9,12 @@
     </div>
     <vxe-table ref="tableRef" :data="rows" border stripe @checkbox-change="onCheckboxChange" @checkbox-all="onCheckboxChange">
       <vxe-column type="checkbox" width="48" />
-      <vxe-column v-for="c in columns" :key="c.prop" :field="c.prop" :title="c.label" :width="c.width" />
+      <vxe-column v-for="c in columns" :key="c.prop" :field="c.prop" :title="c.label" :width="c.width">
+        <template #default="{ row }">
+          <slot v-if="c.slot" :name="c.slot" :row="row"></slot>
+          <span v-else>{{ row[c.prop] }}</span>
+        </template>
+      </vxe-column>
       <vxe-column title="操作" width="200">
         <template #default="scope">
           <el-button link type="primary" @click="$emit('edit', scope.row)" v-perm="editPerm"><el-icon><Edit /></el-icon>编辑</el-button>
@@ -33,7 +38,7 @@ import { Refresh, Edit, Delete, Key } from '@element-plus/icons-vue'
 
 const props = defineProps<{
   rows: any[],
-  columns: { prop: string, label: string, width?: number }[],
+  columns: { prop: string, label: string, width?: number, slot?: string }[],
   loading: boolean,
   pagination: { total: number, current: number, size: number },
   editPerm?: string,

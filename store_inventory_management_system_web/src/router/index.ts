@@ -22,19 +22,40 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(async (to) => {
-  if (to.path.startsWith("/login") || to.path.startsWith("/register"))
-    return true;
+router.beforeEach(async (to, from, next) => {
+  console.log('[Router] Navigating from', from.path, 'to', to.path)
+  
+  if (to.path.startsWith("/login") || to.path.startsWith("/register")) {
+    next();
+    return;
+  }
   try {
-    await auth.ensureInited(router);
-    const menuPaths = auth
-      .getMenuPages()
-      .filter((p) => !!p.path)
-      .map((p) => (p.path.startsWith("/") ? p.path : `/${p.path}`));
-    if (menuPaths.length > 0 && !menuPaths.includes(to.path)) return menuPaths[0];
-    return true;
-  } catch {
-    return "/login";
+    const justInited = await auth.ensureInited(router);
+    if (justInited) {
+      console.log('[Router] Just initialized, replacing route to', to.path)
+      next({ ...to, replace: true });
+      return;
+    }
+    
+    // 如果路由匹配不到（404），尝试跳转到首页或第一个菜单
+    if (to.matched.length === 0) {
+      console.warn('[Router] No route matched for', to.path)
+      const menuPaths = auth
+        .getMenuPages()
+        .filter((p) => !!p.path)
+        .map((p) => (p.path.startsWith("/") ? p.path : `/${p.path}`));
+      if (menuPaths.length > 0) {
+         console.log('[Router] Redirecting to first menu:', menuPaths[0])
+         next(menuPaths[0]);
+         return;
+      }
+    } else {
+      console.log('[Router] Route matched:', to.matched.map(m => m.path))
+    }
+    next();
+  } catch (err) {
+    console.error('[Router] Error in beforeEach:', err)
+    next("/login");
   }
 });
 

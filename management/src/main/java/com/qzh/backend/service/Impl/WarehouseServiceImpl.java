@@ -66,7 +66,7 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
         ThrowUtils.throwIf(queryDTO == null, ErrorCode.PARAMS_ERROR);
         int current = queryDTO.getCurrent();
         int size = queryDTO.getSize();
-        ThrowUtils.throwIf(size <= 0 || size > 20,ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(size <= 0 || size > 1000,ErrorCode.PARAMS_ERROR);
         Page<Warehouse> page = new Page<>(current, size);
         QueryWrapper<Warehouse> queryWrapper = WarehouseQueryDTO.getQueryWrapper(queryDTO);
         return this.page(page, queryWrapper);

@@ -51,9 +51,13 @@
           </el-menu>
         </el-aside>
         <el-main class="p-6">
-          <router-view v-slot="{ Component }">
-            <transition name="route-fade" mode="out-in">
-              <component :is="Component" />
+          <router-view v-slot="{ Component, route: currentRoute }">
+            <transition name="route-fade" mode="out-in" @before-enter="onBeforeEnter" @after-enter="onAfterEnter">
+              <component :is="Component" :key="currentRoute.fullPath" v-if="Component" />
+              <div v-else class="text-center text-gray-400 py-20">
+                <el-icon :size="48"><Warning /></el-icon>
+                <div class="mt-4">组件加载失败</div>
+              </div>
             </transition>
           </router-view>
         </el-main>
@@ -73,11 +77,20 @@ import { gsap } from 'gsap'
 import ThemeSwitcher from './components/ThemeSwitcher.vue'
 import ThemeCustomizer from './components/ThemeCustomizer.vue'
 import { ElMessageBox } from 'element-plus'
-import { Fold, Expand, ArrowDown, Menu as IconMenu } from '@element-plus/icons-vue'
+import { Fold, Expand, ArrowDown, Menu as IconMenu, Warning } from '@element-plus/icons-vue'
 import auth from './services/auth'
 
 const route = useRoute()
 const router = useRouter()
+
+function onBeforeEnter() {
+  console.log('[App] Transition before-enter, route:', route.fullPath)
+}
+
+function onAfterEnter() {
+  console.log('[App] Transition after-enter, route:', route.fullPath)
+}
+
 onMounted(() => { gsap.from('.el-header', { duration: 0.6, opacity: 0, y: -20 }) })
 const globalSize = ref<'small' | 'default' | 'large'>('default')
 function syncSize() {

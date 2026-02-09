@@ -98,7 +98,7 @@ public class SaleReturnServiceImpl extends ServiceImpl<SaleReturnMapper, SaleRet
         ThrowUtils.throwIf(dto == null, ErrorCode.PARAMS_ERROR);
         int current = dto.getCurrent();
         int size = dto.getSize();
-        ThrowUtils.throwIf(size <= 0 || size > 20, ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(size <= 0 || size > 1000,ErrorCode.PARAMS_ERROR);
         Page<SaleReturn> saleOrderPage = new Page<>(current, size);
         User loginUser = getLoginUserUtil.getLoginUser(request);
         dto.setUserId(loginUser.getId());

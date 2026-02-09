@@ -63,6 +63,15 @@ public class WarehouseController {
     /**
      * 分页查询仓库列表
      */
+    @GetMapping("/list")
+    public BaseResponse<Page<Warehouse>> getWarehouseList(@Valid WarehouseQueryDTO queryDTO) {
+        Page<Warehouse> resultPage = warehouseService.getWarehousePage(queryDTO);
+        return ResultUtils.success(resultPage);
+    }
+
+    /**
+     * 分页查询仓库列表（兼容旧接口）
+     */
     @GetMapping("/page")
     public BaseResponse<Page<Warehouse>> getWarehousePage(@Valid WarehouseQueryDTO queryDTO) {
         Page<Warehouse> resultPage = warehouseService.getWarehousePage(queryDTO);

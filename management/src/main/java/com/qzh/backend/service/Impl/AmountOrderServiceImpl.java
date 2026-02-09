@@ -49,7 +49,7 @@ public class AmountOrderServiceImpl extends ServiceImpl<AmountOrderMapper, Amoun
         ThrowUtils.throwIf(queryDTO == null, ErrorCode.PARAMS_ERROR);
         int current = queryDTO.getCurrent();
         int size = queryDTO.getSize();
-        ThrowUtils.throwIf(size > 20,ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(size <= 0 || size > 1000,ErrorCode.PARAMS_ERROR);
         Page<AmountOrder> page = new Page<>(current, size);
         queryDTO.setStoreId(appGlobalConfig.getCurrentStoreId());
         return this.page(page, AmountOrderQueryDTO.getQueryWrapper(queryDTO));

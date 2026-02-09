@@ -47,7 +47,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         ThrowUtils.throwIf(queryDTO == null, ErrorCode.PARAMS_ERROR);
         int current = queryDTO.getCurrent();
         int size = queryDTO.getSize();
-        ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(size <= 0 || size > 1000, ErrorCode.PARAMS_ERROR);
         // 查询用户列表并转换为 UserVO
         Page<User> page = this.page(new Page<>(current, size), UserQueryDTO.getQueryWrapper(queryDTO));
         Page<UserVO> userVOPage = new Page<>(current, size, page.getTotal());

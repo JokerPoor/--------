@@ -163,13 +163,11 @@ function applySize() {
   window.dispatchEvent(new CustomEvent('size-change'))
 }
 onMounted(() => {
-  try {
     const saved = localStorage.getItem('app-theme-custom')
     if (saved) Object.assign(custom, JSON.parse(saved))
     apply(custom)
     const savedSize = localStorage.getItem('app-size') as CustomTheme['size'] | null
     if (savedSize) custom.size = savedSize
-  } catch {}
 })
 watch(custom, () => apply(custom), { deep: true })
 watch(shadowPreset, (p) => {

@@ -68,7 +68,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         ThrowUtils.throwIf(productQueryDTO==null,ErrorCode.PARAMS_ERROR);
         int current = productQueryDTO.getCurrent();
         int size = productQueryDTO.getSize();
-        ThrowUtils.throwIf(size > 20 ,ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(size <= 0 || size > 1000,ErrorCode.PARAMS_ERROR);
         Page<Product> page = new Page<>(current, size);
         return this.page(page, ProductQueryDTO.getQueryWrapper(productQueryDTO));
     }
@@ -78,7 +78,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         ThrowUtils.throwIf(productQueryDTO==null,ErrorCode.PARAMS_ERROR);
         int current = productQueryDTO.getCurrent();
         int size = productQueryDTO.getSize();
-        ThrowUtils.throwIf(size > 20 ,ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(size <= 0 || size > 1000,ErrorCode.PARAMS_ERROR);
         // 根据登录用户设置供应商ID
         User loginUser = getLoginUserUtil.getLoginUser(request);
         productQueryDTO.setSupplierId(loginUser.getId());

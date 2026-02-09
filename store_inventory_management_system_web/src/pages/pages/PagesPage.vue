@@ -108,11 +108,9 @@ async function submit() {
   fetch()
 }
 async function remove(row: any) {
-  try {
     await ElMessageBox.confirm('确定要删除该页面吗？', '提示', { type: 'warning' })
     await http.delete(`/page/${row.id}`)
     fetch()
-  } catch {}
 }
 async function openPerm(row: any) {
   currentPageId.value = row.id

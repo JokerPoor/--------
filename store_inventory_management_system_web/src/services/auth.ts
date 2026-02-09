@@ -59,25 +59,51 @@ function normalizeComponentKey(raw: string) {
 async function ensureDynamicRoutes(r: any) {
   if (state.routesInjected) return
   const modules = import.meta.glob('../pages/**/*.vue')
+  console.log('[Auth] Available modules:', Object.keys(modules))
+  console.log('[Auth] Pages from backend:', state.pages)
+  
   state.pages.forEach(p => {
-    if (!p.path || !p.component) return
+    if (!p.path || !p.component) {
+      console.warn('[Auth] Skipping page (no path or component):', p)
+      return
+    }
     const key1 = normalizeComponentKey(p.component)
     const normalizedComponent = p.component.replace(/\\/g, '/')
     const key2 = normalizedComponent.endsWith('.vue') ? `../${normalizedComponent}` : `../${normalizedComponent}.vue`
-    const comp = (modules as any)[key1] || (modules as any)[key2]
-    if (!comp) return
+    const key3 = `../pages/${normalizedComponent}.vue`
+    const key4 = `../pages/${normalizedComponent}`
+    
+    const comp = (modules as any)[key1] || (modules as any)[key2] || (modules as any)[key3] || (modules as any)[key4]
+    
+    if (!comp) {
+      console.error('[Auth] Component not found for page:', p.name, 'tried keys:', [key1, key2, key3, key4])
+      return
+    }
+    
     const path = p.path.startsWith('/') ? p.path : `/${p.path}`
     const exists = r.getRoutes().some((rt: any) => rt.path === path)
-    if (!exists) r.addRoute({ path, component: comp })
+    if (!exists) {
+      console.log('[Auth] Adding route:', path, '→', p.component, 'using key:', key1)
+      // 使用 defineAsyncComponent 确保组件正确加载
+      r.addRoute({ 
+        path, 
+        component: comp,
+        name: p.name // 添加路由名称
+      })
+    } else {
+      console.log('[Auth] Route already exists:', path)
+    }
   })
   state.routesInjected = true
+  console.log('[Auth] All routes after injection:', r.getRoutes().map((rt: any) => ({ path: rt.path, name: rt.name })))
 }
 
 async function ensureInited(r: any) {
-  if (state.inited) return
+  if (state.inited) return false
   await refreshAccess()
   await ensureDynamicRoutes(r)
   state.inited = true
+  return true
 }
 
 async function login(payload: { userAccount: string; userPassword: string }) {

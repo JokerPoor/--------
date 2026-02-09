@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.qzh.backend.model.dto.product.PurchaseReturnQueryDTO;
+
 @Service
 @RequiredArgsConstructor
 public class PurchaseReturnServiceImpl extends ServiceImpl<PurchaseReturnMapper, PurchaseReturn> implements PurchaseReturnService {
@@ -36,8 +39,19 @@ public class PurchaseReturnServiceImpl extends ServiceImpl<PurchaseReturnMapper,
     private final PurchaseOrderMapper purchaseOrderMapper;
 
     @Override
+    public Page<PurchaseReturn> listPurchaseReturns(PurchaseReturnQueryDTO queryDTO, HttpServletRequest request) {
+        ThrowUtils.throwIf(queryDTO == null, ErrorCode.PARAMS_ERROR);
+        int current = queryDTO.getCurrent();
+        int size = queryDTO.getSize();
+        ThrowUtils.throwIf(size <= 0 || size > 1000, ErrorCode.PARAMS_ERROR);
+        Page<PurchaseReturn> page = new Page<>(current, size);
+        return this.page(page, PurchaseReturnQueryDTO.getQueryWrapper(queryDTO));
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public Long createPurchaseReturn(PurchaseReturnCreateDTO createDTO, HttpServletRequest request) {
+        ThrowUtils.throwIf(createDTO == null, ErrorCode.PARAMS_ERROR);
         Long productId = createDTO.getProductId();
         Long warehouseId = createDTO.getWarehouseId();
         Integer returnQuantity = createDTO.getReturnQuantity();
