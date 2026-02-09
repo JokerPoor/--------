@@ -15,6 +15,10 @@ const routes = [
     component: () => import("../pages/permissions/PermissionsPage.vue"),
   },
   { path: "/pages", component: () => import("../pages/pages/PagesPage.vue") },
+  { path: "/supplier", component: () => import("../pages/users/SupplierPage.vue") },
+  { path: "/customer", component: () => import("../pages/users/CustomerPage.vue") },
+  { path: "/supplier/products", component: () => import("../pages/supplier/MyProductsPage.vue") },
+  { path: "/customer/shopping", component: () => import("../pages/customer/ShoppingPage.vue") },
 ];
 
 const router = createRouter({

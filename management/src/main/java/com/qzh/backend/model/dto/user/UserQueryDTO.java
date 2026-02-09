@@ -36,6 +36,16 @@ public class UserQueryDTO extends PageRequest implements Serializable{
      */
     private Integer status;
 
+    /**
+     * 角色ID
+     */
+    private Long roleId;
+
+    /**
+     * 角色名称
+     */
+    private String roleName;
+
     private Date startTime;
 
     private Date endTime;
@@ -52,6 +62,7 @@ public class UserQueryDTO extends PageRequest implements Serializable{
         Date startTime = userQueryDTO.getStartTime();
         Date endTime = userQueryDTO.getEndTime();
         Integer status = userQueryDTO.getStatus();
+        // roleId filtering is handled in Service layer, not here directly on User table
         queryWrapper.like(ObjUtil.isNotNull(userName),"UserName",userName);
         queryWrapper.like(ObjUtil.isNotNull(userAccount),"UserAccount",userAccount);
         queryWrapper.eq(ObjUtil.isNotNull(status),"status",status);

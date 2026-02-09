@@ -112,6 +112,8 @@ public class StoreInitRunner implements ApplicationRunner {
                 new PageSeed("页面管理", "/pages", "pages/pages/PagesPage", 70, 1, "/system"),
                 new PageSeed("操作日志", "/logs", "pages/logs/OperationLogsPage", 40, 1, "/system"),
                 new PageSeed("门店设置", "/store", "pages/store/StorePage", 30, 1, "/system"),
+                new PageSeed("供应商管理", "/supplier", "pages/users/SupplierPage", 25, 1, "/system"),
+                new PageSeed("客户管理", "/customer", "pages/users/CustomerPage", 20, 1, "/system"),
 
                 // 商品库存
                 new PageSeed("商品库存", "/goods", null, 80, 1),
@@ -127,7 +129,12 @@ public class StoreInitRunner implements ApplicationRunner {
                 // 销售管理
                 new PageSeed("销售管理", "/sale", null, 60, 1),
                 new PageSeed("销售订单", "/sale/order", "pages/sale/SaleOrderPage", 10, 1, "/sale"),
-                new PageSeed("销售退货", "/sale/return", "pages/sale/SaleReturnPage", 5, 1, "/sale")
+                new PageSeed("销售退货", "/sale/return", "pages/sale/SaleReturnPage", 5, 1, "/sale"),
+                // 供应商端
+                new PageSeed("我的商品", "/supplier/products", "pages/supplier/MyProductsPage", 100, 1),
+
+                // 客户端
+                new PageSeed("在线商城", "/customer/shopping", "pages/customer/ShoppingPage", 100, 1)
         );
 
         // 3. 批量创建/更新页面

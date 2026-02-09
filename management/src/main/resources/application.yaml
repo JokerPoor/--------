@@ -11,14 +11,14 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/managerment
     username: root
-    password: 234182
+    password: a123456
   data:
     redis:
       database: 1
       host: localhost
       port: 6379
       timeout: 5000
-#      password: 123456
+      password: 123456
     # springAI
   ai:
     openai:

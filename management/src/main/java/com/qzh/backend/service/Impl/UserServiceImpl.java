@@ -1,5 +1,6 @@
 package com.qzh.backend.service.Impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -48,8 +49,39 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         int current = queryDTO.getCurrent();
         int size = queryDTO.getSize();
         ThrowUtils.throwIf(size <= 0 || size > 1000, ErrorCode.PARAMS_ERROR);
+
+        // 如果传入了 roleId 或 roleName，先查询该角色下的所有用户ID
+        List<Long> userIdsByRole = null;
+        Long targetRoleId = queryDTO.getRoleId();
+
+        if (targetRoleId == null && StrUtil.isNotBlank(queryDTO.getRoleName())) {
+            Role role = roleService.getOne(new LambdaQueryWrapper<Role>().eq(Role::getRoleName, queryDTO.getRoleName()));
+            if (role != null) {
+                targetRoleId = role.getId();
+            } else {
+                // 角色名不存在，直接返回空
+                return new Page<>(current, size, 0);
+            }
+        }
+
+        if (targetRoleId != null) {
+            List<UserRelatedRole> userRoles = userRelatedRoleService.list(
+                    new LambdaQueryWrapper<UserRelatedRole>()
+                            .eq(UserRelatedRole::getRoleId, targetRoleId)
+            );
+            if (CollectionUtils.isEmpty(userRoles)) {
+                // 该角色下无用户，直接返回空分页
+                return new Page<>(current, size, 0);
+            }
+            userIdsByRole = userRoles.stream().map(UserRelatedRole::getUserId).collect(Collectors.toList());
+        }
+
         // 查询用户列表并转换为 UserVO
-        Page<User> page = this.page(new Page<>(current, size), UserQueryDTO.getQueryWrapper(queryDTO));
+        QueryWrapper<User> queryWrapper = UserQueryDTO.getQueryWrapper(queryDTO);
+        if (userIdsByRole != null) {
+            queryWrapper.in("id", userIdsByRole);
+        }
+        Page<User> page = this.page(new Page<>(current, size), queryWrapper);
         Page<UserVO> userVOPage = new Page<>(current, size, page.getTotal());
         List<UserVO> userVOList = UserVO.toUserVOList(page.getRecords());
         // 查询用户关联的完整角色信息（替换原角色名称列表）
