@@ -33,10 +33,20 @@
           <el-menu :default-active="route.path" router :collapse="isCollapsed" :collapse-transition="false">
             <template v-for="r in menuTree" :key="r.id">
               <el-sub-menu v-if="r.children.length" :index="'group-'+r.id">
-                <template #title>{{ r.name }}</template>
-                <el-menu-item v-for="c in r.children" :key="c.id" v-show="!!c.pathNorm" :index="c.pathNorm">{{ c.name }}</el-menu-item>
+                <template #title>
+                  <el-icon><IconMenu /></el-icon>
+                  <span>{{ r.name }}</span>
+                </template>
+                <el-menu-item v-for="c in r.children" :key="c.id" v-show="!!c.pathNorm" :index="c.pathNorm">
+                  <span>{{ c.name }}</span>
+                </el-menu-item>
               </el-sub-menu>
-              <el-menu-item v-else-if="!!r.pathNorm" :index="r.pathNorm">{{ r.name }}</el-menu-item>
+              <el-menu-item v-else-if="!!r.pathNorm" :index="r.pathNorm">
+                <el-icon><IconMenu /></el-icon>
+                <template #title>
+                  <span>{{ r.name }}</span>
+                </template>
+              </el-menu-item>
             </template>
           </el-menu>
         </el-aside>
@@ -63,7 +73,7 @@ import { gsap } from 'gsap'
 import ThemeSwitcher from './components/ThemeSwitcher.vue'
 import ThemeCustomizer from './components/ThemeCustomizer.vue'
 import { ElMessageBox } from 'element-plus'
-import { Fold, Expand, ArrowDown } from '@element-plus/icons-vue'
+import { Fold, Expand, ArrowDown, Menu as IconMenu } from '@element-plus/icons-vue'
 import auth from './services/auth'
 
 const route = useRoute()
