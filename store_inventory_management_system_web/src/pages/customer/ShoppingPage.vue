@@ -6,12 +6,6 @@
         <h1 class="text-2xl font-bold text-gray-800">在线商城</h1>
         <p class="text-gray-500 mt-1">浏览门店精选商品，随时随地下单采购</p>
       </div>
-      <div class="flex items-center gap-4">
-        <el-badge :value="cartCount" :hidden="cartCount === 0" class="cursor-pointer" @click="goToMyOrders">
-             <el-button icon="ShoppingCart" circle size="large" />
-        </el-badge>
-        <el-button type="primary" plain @click="goToMyOrders">我的订单</el-button>
-      </div>
     </div>
 
     <!-- Filter -->
@@ -191,15 +185,6 @@ async function confirmBuy() {
   } finally {
     buying.value = false;
   }
-}
-
-function goToMyOrders() {
-   // 跳转到我的订单页面 (需要确认路由是否存在，假设复用 SaleOrderPage 但只看自己的?)
-   // 或者专门的 MyOrdersPage.vue
-   // 目前后端 SaleOrderController 支持 /sale/order/my
-   // 我们暂时跳转到现有的 sale 页面，但需要传参或修改页面逻辑以只显示自己的
-   // 为了简单，我们暂时不跳转，或者弹窗提示
-   ElMessage.info("请前往销售订单管理页面查看您的订单");
 }
 
 onMounted(() => {
