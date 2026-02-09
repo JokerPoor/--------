@@ -29,7 +29,7 @@
           v-perm="'role:delete'"
           link
           type="danger"
-          :disabled="row.roleName === 'admin' || row.id === 1"
+          :disabled="['超级管理员', '门店管理员', '供应商', '客户', 'admin'].includes(row.roleName) || row.id === 1"
           @click="remove(row)"
           ><el-icon><Delete /></el-icon>删除</el-button
         >

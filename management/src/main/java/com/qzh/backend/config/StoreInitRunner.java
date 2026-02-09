@@ -74,7 +74,12 @@ public class StoreInitRunner implements ApplicationRunner {
     }
 
     private void initDefaultRoles(Long createBy) {
-        List<String> roleNames = List.of(RoleNameConstant.ADMIN, RoleNameConstant.SUPPLIER, RoleNameConstant.CUSTOMER);
+        List<String> roleNames = List.of(
+            RoleNameConstant.ADMIN, 
+            RoleNameConstant.STORE_ADMIN, 
+            RoleNameConstant.SUPPLIER, 
+            RoleNameConstant.CUSTOMER
+        );
         for (String roleName : roleNames) {
             boolean exists = roleService.count(new LambdaQueryWrapper<Role>().eq(Role::getRoleName, roleName)) > 0;
             if (exists) {
@@ -97,6 +102,8 @@ public class StoreInitRunner implements ApplicationRunner {
     private void initAdminAccess(Long createBy) {
         // 1. 获取管理员角色
         Role adminRole = roleService.getOne(new LambdaQueryWrapper<Role>().eq(Role::getRoleName, RoleNameConstant.ADMIN));
+        Role storeAdminRole = roleService.getOne(new LambdaQueryWrapper<Role>().eq(Role::getRoleName, RoleNameConstant.STORE_ADMIN));
+        
         if (adminRole == null) {
             return;
         }
@@ -184,34 +191,29 @@ public class StoreInitRunner implements ApplicationRunner {
             }
         }
 
-        // 5. 给管理员分配所有页面
+        // 5. 给超级管理员分配所有页面
         List<PageInfo> allPages = pageService.list(
                 new LambdaQueryWrapper<PageInfo>()
                         .in(PageInfo::getPath, seeds.stream().map(PageSeed::path).toList())
         );
-        Set<Long> allPageIds = allPages.stream().map(PageInfo::getId).collect(Collectors.toSet());
+        assignPagesToRole(adminRole, allPages, createBy);
 
-        Set<Long> existingRolePageIds = roleRelatedPageService.list(
-                new LambdaQueryWrapper<RoleRelatedPage>()
-                        .eq(RoleRelatedPage::getRoleId, adminRole.getId())
-                        .in(RoleRelatedPage::getPageId, allPageIds)
-        ).stream().map(RoleRelatedPage::getPageId).collect(Collectors.toSet());
-
-        List<RoleRelatedPage> toSaveAdminPages = allPageIds.stream()
-                .filter(pid -> !existingRolePageIds.contains(pid))
-                .map(pid -> {
-                    RoleRelatedPage rp = new RoleRelatedPage();
-                    rp.setRoleId(adminRole.getId());
-                    rp.setPageId(pid);
-                    rp.setCreateBy(createBy);
-                    return rp;
-                })
-                .toList();
-        if (!toSaveAdminPages.isEmpty()) {
-            roleRelatedPageService.saveBatch(toSaveAdminPages);
+        // 5.1 给门店管理员分配业务页面
+        if (storeAdminRole != null) {
+            List<String> storeAdminPagePaths = List.of(
+                "/dashboard",
+                "/system", "/supplier", "/customer", // 供应商和客户管理
+                "/goods", "/products", "/warehouses", "/inventory", // 商品库存
+                "/purchase", "/purchase/order", "/purchase/return", // 采购
+                "/sale", "/sale/order", "/sale/return" // 销售
+            );
+            List<PageInfo> storeAdminPages = allPages.stream()
+                .filter(p -> storeAdminPagePaths.contains(p.getPath()))
+                .collect(Collectors.toList());
+            assignPagesToRole(storeAdminRole, storeAdminPages, createBy);
         }
 
-        // 5. 给其他角色（供应商、客户）分配首页
+        // 5.2 给其他角色（供应商、客户）分配首页
         // 获取首页ID
         Long dashboardPageId = allPages.stream()
                 .filter(p -> "/dashboard".equals(p.getPath()))
@@ -389,26 +391,153 @@ public class StoreInitRunner implements ApplicationRunner {
         List<Permission> perms = permissionService.list(
                 new LambdaQueryWrapper<Permission>().in(Permission::getName, basePermNames)
         );
-        Set<Long> permIds = perms.stream().map(Permission::getId).collect(Collectors.toSet());
+        
+        // 7. 分配权限给超级管理员
+        assignPermissionsToRole(adminRole, perms, createBy);
 
+        // 8. 分配权限给门店管理员
+        if (storeAdminRole != null) {
+            List<String> storeAdminPermNames = List.of(
+                // 按钮权限 - 用户管理
+                ButtonPermissionConstant.USER_ADD, ButtonPermissionConstant.USER_EDIT, ButtonPermissionConstant.USER_DELETE, ButtonPermissionConstant.USER_RESET_PASSWORD,
+
+                // 按钮权限 - 商品管理
+                ButtonPermissionConstant.PRODUCT_ADD, ButtonPermissionConstant.PRODUCT_EDIT, ButtonPermissionConstant.PRODUCT_DELETE, ButtonPermissionConstant.PRODUCT_UPDATE,
+
+                // 按钮权限 - 仓库管理
+                ButtonPermissionConstant.WAREHOUSE_ADD, ButtonPermissionConstant.WAREHOUSE_EDIT, ButtonPermissionConstant.WAREHOUSE_DELETE,
+
+                // 按钮权限 - 采购管理
+                ButtonPermissionConstant.PURCHASE_ORDER_ADD, ButtonPermissionConstant.PURCHASE_ORDER_STOCK_IN,
+
+                // 按钮权限 - 销售管理
+                ButtonPermissionConstant.SALE_ORDER_CREATE, ButtonPermissionConstant.SALE_ORDER_CONFIRM, ButtonPermissionConstant.INVENTORY_SALE_ORDER_SHIP, ButtonPermissionConstant.SALE_RETURN_ADD,
+
+                // 用户接口权限
+                UserInterfaceConstant.USER_LIST_GET,
+                UserInterfaceConstant.USER_DETAIL_GET,
+                UserInterfaceConstant.USER_CREATE_POST,
+                UserInterfaceConstant.USER_UPDATE_PUT,
+                UserInterfaceConstant.USER_RESET_PASSWORD_POST,
+                UserInterfaceConstant.USER_BATCH_STATUS_POST,
+                UserInterfaceConstant.USER_DELETE_DELETE,
+
+                // 仓库接口权限
+                WarehouseInterfaceConstant.WAREHOUSE_ADD_POST,
+                WarehouseInterfaceConstant.WAREHOUSE_DETAIL_GET,
+                WarehouseInterfaceConstant.WAREHOUSE_UPDATE_PUT,
+                WarehouseInterfaceConstant.WAREHOUSE_DELETE_DELETE,
+                WarehouseInterfaceConstant.WAREHOUSE_LIST_GET,
+                WarehouseInterfaceConstant.WAREHOUSE_PAGE_GET,
+
+                // 门店接口权限
+                StoreInterfaceConstant.STORE_DETAIL_GET,
+                // StoreInterfaceConstant.STORE_UPDATE_PUT, // 门店管理员暂时不修改门店信息，或者可以？先不给
+
+                // 销售退货接口权限
+                SaleReturnInterfaceConstant.SALE_RETURN_CREATE_POST,
+                SaleReturnInterfaceConstant.SALE_RETURN_MY_GET,
+                SaleReturnInterfaceConstant.SALE_RETURN_STORE_GET,
+                SaleReturnInterfaceConstant.SALE_RETURN_DETAIL_GET,
+
+                // 销售订单接口权限
+                SaleOrderInterfaceConstant.SALE_ORDER_CREATE_POST,
+                SaleOrderInterfaceConstant.SALE_ORDER_MY_GET,
+                SaleOrderInterfaceConstant.SALE_ORDER_DETAIL_GET,
+                SaleOrderInterfaceConstant.SALE_ORDER_STORE_GET,
+                SaleOrderInterfaceConstant.SALE_ORDER_CONFIRM_POST,
+
+                // 采退订单接口权限
+                PurchaseReturnInterfaceConstant.PURCHASE_RETURN_LIST_GET,
+                PurchaseReturnInterfaceConstant.PURCHASE_RETURN_CREATE_POST,
+                PurchaseReturnInterfaceConstant.PURCHASE_RETURN_CONFIRM_POST,
+
+                // 采购订单接口权限
+                PurchaseOrderInterfaceConstant.PURCHASE_ORDER_CREATE_POST,
+                PurchaseOrderInterfaceConstant.PURCHASE_ORDER_LIST_GET,
+                PurchaseOrderInterfaceConstant.PURCHASE_ORDER_DETAIL_GET,
+                PurchaseOrderInterfaceConstant.PURCHASE_ORDER_SUPPLIER_LIST_GET,
+
+                // 商品接口权限
+                ProductInterfaceConstant.PRODUCT_ADD_POST,
+                ProductInterfaceConstant.PRODUCT_UPDATE_PUT,
+                ProductInterfaceConstant.PRODUCT_DELETE_DELETE,
+                ProductInterfaceConstant.PRODUCT_DETAIL_GET,
+                ProductInterfaceConstant.PRODUCT_LIST_GET,
+                ProductInterfaceConstant.PRODUCT_LIST_OWN_GET,
+
+                // 库存接口权限
+                InventoryInterfaceConstant.INVENTORY_LIST_GET,
+                InventoryInterfaceConstant.INVENTORY_DETAIL_GET,
+                InventoryInterfaceConstant.INVENTORY_UPDATE_POST,
+                InventoryInterfaceConstant.INVENTORY_STOCK_IN_POST,
+                InventoryInterfaceConstant.INVENTORY_SALE_ORDER_POST,
+                InventoryInterfaceConstant.INVENTORY_SALE_RETURN_CONFIRM_POST,
+
+                // 库存明细接口权限
+                InventoryDetailInterfaceConstant.INVENTORY_DETAIL_LIST_GET,
+                InventoryDetailInterfaceConstant.INVENTORY_DETAIL_DETAIL_GET,
+
+                // 金额单接口权限
+                AmountOrderInterfaceConstant.AMOUNT_ORDER_LIST_GET,
+                AmountOrderInterfaceConstant.AMOUNT_ORDER_LIST_PAYER_GET,
+                AmountOrderInterfaceConstant.AMOUNT_ORDER_LIST_PAYEE_GET,
+                AmountOrderInterfaceConstant.AMOUNT_ORDER_DETAIL_GET,
+                AmountOrderInterfaceConstant.AMOUNT_ORDER_PAY_POST,
+                AmountOrderInterfaceConstant.AMOUNT_ORDER_CANCEL_POST,
+                AmountOrderInterfaceConstant.AMOUNT_ORDER_NOTIFY_POST
+            );
+
+            List<Permission> storeAdminPerms = perms.stream()
+                .filter(p -> storeAdminPermNames.contains(p.getName()))
+                .collect(Collectors.toList());
+            assignPermissionsToRole(storeAdminRole, storeAdminPerms, createBy);
+        }
+    }
+
+    private void assignPagesToRole(Role role, List<PageInfo> pages, Long createBy) {
+        Set<Long> pageIds = pages.stream().map(PageInfo::getId).collect(Collectors.toSet());
+        Set<Long> existingRolePageIds = roleRelatedPageService.list(
+                new LambdaQueryWrapper<RoleRelatedPage>()
+                        .eq(RoleRelatedPage::getRoleId, role.getId())
+                        .in(RoleRelatedPage::getPageId, pageIds)
+        ).stream().map(RoleRelatedPage::getPageId).collect(Collectors.toSet());
+
+        List<RoleRelatedPage> toSave = pageIds.stream()
+                .filter(pid -> !existingRolePageIds.contains(pid))
+                .map(pid -> {
+                    RoleRelatedPage rp = new RoleRelatedPage();
+                    rp.setRoleId(role.getId());
+                    rp.setPageId(pid);
+                    rp.setCreateBy(createBy);
+                    return rp;
+                })
+                .toList();
+        if (!toSave.isEmpty()) {
+            roleRelatedPageService.saveBatch(toSave);
+        }
+    }
+
+    private void assignPermissionsToRole(Role role, List<Permission> perms, Long createBy) {
+        Set<Long> permIds = perms.stream().map(Permission::getId).collect(Collectors.toSet());
         Set<Long> existingRolePermIds = roleRelatedPermissionService.list(
                 new LambdaQueryWrapper<RoleRelatedPermission>()
-                        .eq(RoleRelatedPermission::getRoleId, adminRole.getId())
+                        .eq(RoleRelatedPermission::getRoleId, role.getId())
                         .in(RoleRelatedPermission::getPermissionId, permIds)
         ).stream().map(RoleRelatedPermission::getPermissionId).collect(Collectors.toSet());
 
-        List<RoleRelatedPermission> toSaveRolePerms = permIds.stream()
+        List<RoleRelatedPermission> toSave = permIds.stream()
                 .filter(pid -> !existingRolePermIds.contains(pid))
                 .map(pid -> {
                     RoleRelatedPermission rp = new RoleRelatedPermission();
-                    rp.setRoleId(adminRole.getId());
+                    rp.setRoleId(role.getId());
                     rp.setPermissionId(pid);
                     rp.setCreateBy(createBy);
                     return rp;
                 })
                 .toList();
-        if (!toSaveRolePerms.isEmpty()) {
-            roleRelatedPermissionService.saveBatch(toSaveRolePerms);
+        if (!toSave.isEmpty()) {
+            roleRelatedPermissionService.saveBatch(toSave);
         }
     }
 }

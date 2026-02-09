@@ -196,7 +196,7 @@ public class RoleSerciceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public Boolean deleteRole(Long id) {
         Role role = this.getById(id);
-        if(ADMIN.equals(role.getRoleName()) || CUSTOMER.equals(role.getRoleName()) || SUPPLIER.equals(role.getRoleName())) {
+        if(ADMIN.equals(role.getRoleName()) || CUSTOMER.equals(role.getRoleName()) || SUPPLIER.equals(role.getRoleName()) || STORE_ADMIN.equals(role.getRoleName())) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR,"该角色不可删除");
         }
         return this.removeById(id);

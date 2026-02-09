@@ -1,6 +1,13 @@
 import { reactive } from 'vue'
 import http from './http'
 
+type Role = {
+  id: number
+  roleName: string
+  roleKey?: string
+  status?: number
+}
+
 type LoginUser = {
   id: number
   userAccount: string
@@ -8,6 +15,7 @@ type LoginUser = {
   phone: string
   email: string
   status: number
+  roles?: Role[]
 }
 
 type PageItem = {

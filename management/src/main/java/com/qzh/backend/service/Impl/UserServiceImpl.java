@@ -329,8 +329,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if(role == null){
             throw new BusinessException(ErrorCode.PARAMS_ERROR,"角色不存在");
         }
-        if (RoleNameConstant.ADMIN.equals(role.getRoleName())) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "禁止注册超级管理员");
+        if (RoleNameConstant.ADMIN.equals(role.getRoleName()) || RoleNameConstant.STORE_ADMIN.equals(role.getRoleName())) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "禁止注册该角色");
         }
         UserRelatedRole userRelatedRole = new UserRelatedRole();
         userRelatedRole.setUserId(user.getId());

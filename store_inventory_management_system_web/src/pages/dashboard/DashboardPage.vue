@@ -37,6 +37,20 @@
         </el-card>
       </template>
 
+      <!-- 门店管理员可见 -->
+      <template v-else-if="isStoreAdmin">
+        <el-card shadow="hover" class="stat-card">
+          <template #header>
+            <div class="card-header">门店运营</div>
+          </template>
+          <div class="text-center py-4">
+            <el-icon :size="40" class="text-purple-500 mb-2"><Shop /></el-icon>
+            <div class="text-2xl font-bold">运营中心</div>
+            <div class="text-sm text-gray-500">管理商品、采购与销售</div>
+          </div>
+        </el-card>
+      </template>
+
       <!-- 供应商/客户可见 -->
       <template v-else>
         <el-card shadow="hover" class="stat-card">
@@ -67,7 +81,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
-import { User, UserFilled, Goods } from "@element-plus/icons-vue";
+import { User, UserFilled, Goods, Shop } from "@element-plus/icons-vue";
 import auth from "../../services/auth";
 import { ElMessageBox } from "element-plus";
 
@@ -81,17 +95,20 @@ const today = new Date().toLocaleDateString("zh-CN", {
 });
 
 const isAdmin = computed(() => {
-  return (
-    user.value?.userAccount === "admin" ||
-    auth.state.user?.id === 1 ||
-    // 假设有角色判断逻辑，这里简单判断
-    false
-  );
+  if (!user.value) return false;
+  if (user.value.userAccount === 'admin' || user.value.id === 1) return true;
+  return user.value.roles?.some(r => r.roleName === '超级管理员');
+});
+
+const isStoreAdmin = computed(() => {
+  if (!user.value) return false;
+  return user.value.roles?.some(r => r.roleName === '门店管理员');
 });
 
 const roleName = computed(() => {
-  // 暂时无法直接获取角色名，需要从用户信息接口扩展，或者简单显示
-  return isAdmin.value ? "管理员" : "普通用户";
+  if (isAdmin.value) return "超级管理员";
+  if (isStoreAdmin.value) return "门店管理员";
+  return user.value?.roles?.[0]?.roleName || "普通用户";
 });
 
 function showInfo() {

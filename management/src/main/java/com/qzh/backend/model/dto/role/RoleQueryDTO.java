@@ -43,7 +43,10 @@ public class RoleQueryDTO extends PageRequest implements Serializable {
         Boolean excludeAdmin = roleQueryDTO.getExcludeAdmin();
         queryWrapper.like(ObjUtil.isNotNull(roleName),"roleName",roleName);
         queryWrapper.like(ObjUtil.isNotNull(description),"description",description);
-        queryWrapper.ne(Boolean.TRUE.equals(excludeAdmin), "roleName", RoleNameConstant.ADMIN);
+        if (Boolean.TRUE.equals(excludeAdmin)) {
+            queryWrapper.ne("roleName", RoleNameConstant.ADMIN);
+            queryWrapper.ne("roleName", RoleNameConstant.STORE_ADMIN);
+        }
         queryWrapper.ge(ObjUtil.isNotEmpty(startTime), "createTime", startTime);
         queryWrapper.orderBy(StrUtil.isNotEmpty(sortField), sortOrder.equals("ascend"), sortField);
         queryWrapper.lt(ObjUtil.isNotEmpty(endTime), "createTime", endTime);
