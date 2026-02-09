@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from "vue";
+import { reactive, ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import http from "../../services/http";
 import auth from "../../services/auth";
@@ -48,6 +48,21 @@ const form = reactive({ userAccount: "", userPassword: "" });
 const sliderVisible = ref(false);
 const sliderPassed = ref(false);
 const remember = ref(true);
+const REMEMBER_KEY = "REMEMBER_ME_INFO";
+
+onMounted(() => {
+  const stored = localStorage.getItem(REMEMBER_KEY);
+  if (stored) {
+    try {
+      const { u, p } = JSON.parse(stored);
+      form.userAccount = u;
+      form.userPassword = p;
+      remember.value = true;
+    } catch (e) {
+      localStorage.removeItem(REMEMBER_KEY);
+    }
+  }
+});
 
 function normalizeMenuPath(path?: string) {
   if (!path) return "";
@@ -56,6 +71,14 @@ function normalizeMenuPath(path?: string) {
 
 async function submit() {
   await http.post("/user/login", { ...form });
+  if (remember.value) {
+    localStorage.setItem(
+      REMEMBER_KEY,
+      JSON.stringify({ u: form.userAccount, p: form.userPassword })
+    );
+  } else {
+    localStorage.removeItem(REMEMBER_KEY);
+  }
   await auth.refreshAccess();
   await auth.ensureDynamicRoutes(router);
   const first = auth.getMenuPages()[0];

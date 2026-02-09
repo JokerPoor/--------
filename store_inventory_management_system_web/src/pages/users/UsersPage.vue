@@ -41,8 +41,8 @@
         <el-form-item label="登录密码" v-if="!form.id"
           ><el-input v-model="form.userPassword" type="password"
         /></el-form-item>
-        <el-form-item label="邮箱" v-if="!form.id"
-          ><el-input v-model="form.email"
+        <el-form-item label="邮箱"
+          ><el-input v-model="form.email" :disabled="!!form.id"
         /></el-form-item>
         <el-form-item label="真实姓名"
           ><el-input v-model="form.userName"
@@ -51,7 +51,9 @@
           ><el-input v-model="form.phone"
         /></el-form-item>
         <el-form-item label="状态"
-          ><el-switch v-model="switchStatus"
+          ><el-switch
+            v-model="switchStatus"
+            :disabled="form.id === 1 || form.userAccount === 'admin'"
         /></el-form-item>
         <el-form-item label="角色">
           <el-select v-model="form.roleIds" multiple style="width: 100%">
@@ -118,6 +120,8 @@ const roleOptions = ref<any[]>([]);
 const keyword = ref("");
 const selectedIds = ref<any[]>([]);
 
+const selectedRows = ref<any[]>([]);
+
 async function fetch() {
   loading.value = true;
   const res = await http.get("/user/list", {
@@ -151,10 +155,20 @@ function onSizeChange(s: number) {
   fetch();
 }
 function onSelectionChange(rows: any[]) {
+  selectedRows.value = rows;
   selectedIds.value = rows.map((r) => String(r.id));
 }
 async function batchStatus(status: number) {
   if (selectedIds.value.length === 0) return;
+  if (status === 0) {
+    const hasAdmin = selectedRows.value.some(
+      (r) => r.id === 1 || r.userAccount === "admin"
+    );
+    if (hasAdmin) {
+      ElMessageBox.alert("管理员账号不能被禁用", "提示", { type: "warning" });
+      return;
+    }
+  }
   await http.post("/user/batch-status", { ids: selectedIds.value, status });
   fetch();
 }
@@ -191,6 +205,8 @@ function openCreate() {
 function openEdit(row: any) {
   Object.assign(form, {
     id: row.id,
+    userAccount: row.userAccount,
+    email: row.email,
     userName: row.userName,
     phone: row.phone,
     status: row.status ?? 1,

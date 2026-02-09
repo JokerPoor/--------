@@ -90,18 +90,22 @@ public class StoreInitRunner implements ApplicationRunner {
     }
 
     private void initAdminAccess(Long createBy) {
+        // 1. 获取管理员角色
         Role adminRole = roleService.getOne(new LambdaQueryWrapper<Role>().eq(Role::getRoleName, RoleNameConstant.ADMIN));
         if (adminRole == null) {
             return;
         }
 
+        // 2. 定义页面列表（包含首页）
         List<PageSeed> seeds = List.of(
+                new PageSeed("系统首页", "/dashboard", "pages/dashboard/DashboardPage", 1, 1), // orderNum=1 保证排在最前
                 new PageSeed("用户管理", "/users", "pages/users/UsersPage", 100, 1),
                 new PageSeed("角色管理", "/roles", "pages/roles/RolesPage", 90, 1),
                 new PageSeed("权限管理", "/permissions", "pages/permissions/PermissionsPage", 80, 1),
                 new PageSeed("页面管理", "/pages", "pages/pages/PagesPage", 70, 1)
         );
 
+        // 3. 批量创建页面（如果不存在）
         Map<String, PageInfo> existingPagesByPath = pageService.list(
                 new LambdaQueryWrapper<PageInfo>()
                         .in(PageInfo::getPath, seeds.stream().map(PageSeed::path).toList())
@@ -122,19 +126,20 @@ public class StoreInitRunner implements ApplicationRunner {
             pageService.save(pageInfo);
         }
 
-        List<PageInfo> pages = pageService.list(
+        // 4. 给管理员分配所有页面
+        List<PageInfo> allPages = pageService.list(
                 new LambdaQueryWrapper<PageInfo>()
                         .in(PageInfo::getPath, seeds.stream().map(PageSeed::path).toList())
         );
-        Set<Long> pageIds = pages.stream().map(PageInfo::getId).collect(Collectors.toSet());
+        Set<Long> allPageIds = allPages.stream().map(PageInfo::getId).collect(Collectors.toSet());
 
         Set<Long> existingRolePageIds = roleRelatedPageService.list(
                 new LambdaQueryWrapper<RoleRelatedPage>()
                         .eq(RoleRelatedPage::getRoleId, adminRole.getId())
-                        .in(RoleRelatedPage::getPageId, pageIds)
+                        .in(RoleRelatedPage::getPageId, allPageIds)
         ).stream().map(RoleRelatedPage::getPageId).collect(Collectors.toSet());
 
-        List<RoleRelatedPage> toSaveRolePages = pageIds.stream()
+        List<RoleRelatedPage> toSaveAdminPages = allPageIds.stream()
                 .filter(pid -> !existingRolePageIds.contains(pid))
                 .map(pid -> {
                     RoleRelatedPage rp = new RoleRelatedPage();
@@ -144,10 +149,40 @@ public class StoreInitRunner implements ApplicationRunner {
                     return rp;
                 })
                 .toList();
-        if (!toSaveRolePages.isEmpty()) {
-            roleRelatedPageService.saveBatch(toSaveRolePages);
+        if (!toSaveAdminPages.isEmpty()) {
+            roleRelatedPageService.saveBatch(toSaveAdminPages);
         }
 
+        // 5. 给其他角色（供应商、客户）分配首页
+        // 获取首页ID
+        Long dashboardPageId = allPages.stream()
+                .filter(p -> "/dashboard".equals(p.getPath()))
+                .findFirst()
+                .map(PageInfo::getId)
+                .orElse(null);
+
+        if (dashboardPageId != null) {
+            List<String> otherRoles = List.of(RoleNameConstant.SUPPLIER, RoleNameConstant.CUSTOMER);
+            for (String rName : otherRoles) {
+                Role role = roleService.getOne(new LambdaQueryWrapper<Role>().eq(Role::getRoleName, rName));
+                if (role != null) {
+                    boolean hasDashboard = roleRelatedPageService.count(
+                            new LambdaQueryWrapper<RoleRelatedPage>()
+                                    .eq(RoleRelatedPage::getRoleId, role.getId())
+                                    .eq(RoleRelatedPage::getPageId, dashboardPageId)
+                    ) > 0;
+                    if (!hasDashboard) {
+                        RoleRelatedPage rp = new RoleRelatedPage();
+                        rp.setRoleId(role.getId());
+                        rp.setPageId(dashboardPageId);
+                        rp.setCreateBy(createBy);
+                        roleRelatedPageService.save(rp);
+                    }
+                }
+            }
+        }
+
+        // 6. 初始化权限（保持原有逻辑）
         List<String> basePermNames = List.of("角色管理", "权限分配");
         Map<String, Permission> existingPermsByName = permissionService.list(
                 new LambdaQueryWrapper<Permission>().in(Permission::getName, basePermNames)
