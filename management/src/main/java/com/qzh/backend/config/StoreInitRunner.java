@@ -143,7 +143,14 @@ public class StoreInitRunner implements ApplicationRunner {
                 new PageSeed("采购订单", "/supplier/orders", "pages/supplier/SupplierOrderPage", 90, 1),
 
                 // 客户端
-                new PageSeed("在线商城", "/customer/shopping", "pages/customer/ShoppingPage", 100, 1)
+                new PageSeed("在线商城", "/customer/shopping", "pages/customer/ShoppingPage", 100, 1),
+
+                // AI 智能决策
+                new PageSeed("智能决策", "/ai", null, 55, 1),
+                new PageSeed("智能问答", "/ai/chat", "pages/ai/AIChatPage", 100, 1, "/ai"),
+                new PageSeed("库存预警", "/ai/inventory-warning", "pages/ai/InventoryWarningPage", 90, 1, "/ai"),
+                new PageSeed("销量预测", "/ai/sales-forecast", "pages/ai/SalesForecastPage", 80, 1, "/ai"),
+                new PageSeed("销售统计", "/ai/sales-stats", "pages/ai/SalesStatsPage", 70, 1, "/ai")
         );
 
         // 3. 批量创建/更新页面
@@ -209,7 +216,8 @@ public class StoreInitRunner implements ApplicationRunner {
                 "/system", "/supplier", "/customer", // 供应商和客户管理
                 "/goods", "/products", "/warehouses", "/inventory", // 商品库存
                 "/purchase", "/purchase/order", "/purchase/return", // 采购
-                "/sale", "/sale/order", "/sale/return" // 销售
+                "/sale", "/sale/order", "/sale/return", // 销售
+                "/ai", "/ai/chat", "/ai/inventory-warning", "/ai/sales-forecast", "/ai/sales-stats" // AI 智能决策
             );
             List<PageInfo> storeAdminPages = allPages.stream()
                 .filter(p -> storeAdminPagePaths.contains(p.getPath()))
