@@ -7,33 +7,45 @@
       </div>
       <el-button type="primary" @click="$emit('refresh')"><el-icon><Refresh /></el-icon><span>刷新</span></el-button>
     </div>
-    <vxe-table ref="tableRef" :data="rows" border stripe @checkbox-change="onCheckboxChange" @checkbox-all="onCheckboxChange">
-      <vxe-column type="checkbox" width="48" />
-      <vxe-column v-for="c in columns" :key="c.prop" :field="c.prop" :title="c.label" :width="c.width">
+    <el-table ref="tableRef" :data="rows" border stripe @selection-change="onSelectionChange">
+      <el-table-column type="selection" width="48" />
+      <el-table-column v-for="c in columns" :key="c.prop" :prop="c.prop" :label="c.label" :width="c.width">
         <template #default="{ row }">
           <slot v-if="c.slot" :name="c.slot" :row="row"></slot>
           <span v-else>{{ row[c.prop] }}</span>
         </template>
-      </vxe-column>
-      <vxe-column title="操作" width="200">
+      </el-table-column>
+      <el-table-column v-if="hasDefaultActions" label="操作" width="200" fixed="right">
         <template #default="scope">
-          <el-button link type="primary" @click="$emit('edit', scope.row)" v-perm="editPerm"><el-icon><Edit /></el-icon>编辑</el-button>
-          <el-button link type="danger" @click="$emit('remove', scope.row)" v-perm="removePerm"><el-icon><Delete /></el-icon>删除</el-button>
-          <el-button link type="warning" @click="$emit('reset', scope.row)" v-perm="resetPerm"><el-icon><Key /></el-icon>重置密码</el-button>
-      </template>
-      </vxe-column>
-    </vxe-table>
+          <el-button v-if="editPerm" link type="primary" @click="$emit('edit', scope.row)" v-perm="editPerm"><el-icon><Edit /></el-icon>编辑</el-button>
+          <el-button v-if="removePerm" link type="danger" @click="$emit('remove', scope.row)" v-perm="removePerm"><el-icon><Delete /></el-icon>删除</el-button>
+          <el-button v-if="resetPerm" link type="warning" @click="$emit('reset', scope.row)" v-perm="resetPerm"><el-icon><Key /></el-icon>重置密码</el-button>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="$slots.actions" label="操作" width="200" fixed="right">
+        <template #default="{ row }">
+          <slot name="actions" :row="row"></slot>
+        </template>
+      </el-table-column>
+    </el-table>
     <div class="mt-3 flex justify-end">
-      <vxe-pager :current-page="pagination.current" :page-size="pagination.size" :total="pagination.total" @page-change="onPageChange" />
+      <el-pagination
+        v-model:current-page="pagination.current"
+        v-model:page-size="pagination.size"
+        :total="pagination.total"
+        :page-sizes="[10, 20, 50, 100]"
+        layout="total, sizes, prev, pager, next, jumper"
+        @size-change="onSizeChange"
+        @current-change="onCurrentChange"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { debounce } from 'lodash-es'
-import type { VxeTableInstance } from 'vxe-table'
-import { ElIcon } from 'element-plus'
+import { ElTable, ElIcon } from 'element-plus'
 import { Refresh, Edit, Delete, Key } from '@element-plus/icons-vue'
 
 const props = defineProps<{
@@ -48,14 +60,23 @@ const props = defineProps<{
 const emit = defineEmits(['refresh','edit','remove','reset','search','update:current','update:size','selection-change'])
 const keyword = ref('')
 const onSearch = debounce(() => { emit('search', keyword.value) }, 300)
-const tableRef = ref<VxeTableInstance>()
-function onCheckboxChange() {
-  const records = tableRef.value?.getCheckboxRecords() || []
-  emit('selection-change', records)
+const tableRef = ref<InstanceType<typeof ElTable>>()
+
+// 只有当至少有一个权限被定义时才显示默认操作列
+const hasDefaultActions = computed(() => {
+  return !!(props.editPerm || props.removePerm || props.resetPerm)
+})
+
+function onSelectionChange(selection: any[]) {
+  emit('selection-change', selection)
 }
-function onPageChange(e: any) {
-  emit('update:current', e.currentPage)
-  emit('update:size', e.pageSize)
+
+function onSizeChange(size: number) {
+  emit('update:size', size)
+}
+
+function onCurrentChange(current: number) {
+  emit('update:current', current)
 }
 </script>
 

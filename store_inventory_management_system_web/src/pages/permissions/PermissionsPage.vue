@@ -6,36 +6,32 @@
         ><el-icon><Plus /></el-icon>新建权限</el-button
       >
     </div>
-    <vxe-table :data="rows" :loading="loading" border stripe>
-      <vxe-column field="id" title="ID" width="80" />
-      <vxe-column field="name" title="权限名称" />
-      <vxe-column field="description" title="描述" />
-      <vxe-column title="操作" width="200">
-        <template #default="scope">
+    <EpTable
+      :rows="rows"
+      :columns="cols"
+      :loading="loading"
+      :pagination="page"
+      @refresh="fetch"
+      @update:current="onPager"
+      @update:size="onSizeChange"
+    >
+      <template #row-actions="{ row }">
           <el-button
             v-perm="'权限分配'"
             link
             type="primary"
-            @click="openEdit(scope.row)"
+            @click="openEdit(row)"
             ><el-icon><Edit /></el-icon>编辑</el-button
           >
           <el-button
             v-perm="'权限分配'"
             link
             type="danger"
-            @click="remove(scope.row)"
+            @click="remove(row)"
             ><el-icon><Delete /></el-icon>删除</el-button
           >
-        </template>
-      </vxe-column>
-    </vxe-table>
-    <vxe-pager
-      class="mt-3 flex justify-end"
-      :total="page.total"
-      :current-page="page.current"
-      :page-size="page.size"
-      @page-change="onPager"
-    />
+      </template>
+    </EpTable>
     <el-dialog
       v-model="visible"
       :title="form.id ? '编辑权限' : '新建权限'"
@@ -58,7 +54,8 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from "vue";
+import { reactive, ref, onMounted } from "vue";
+import EpTable from "../../components/ep/EpTable.vue";
 import http from "../../services/http";
 import { ElIcon, ElMessageBox } from "element-plus";
 import { Plus, Edit, Delete } from "@element-plus/icons-vue";
@@ -69,6 +66,17 @@ const page = reactive({ total: 0, current: 1, size: 10 });
 const visible = ref(false);
 const form = reactive<any>({ id: 0, name: "", description: "" });
 
+const cols = [
+  { prop: "id", label: "ID", width: 80 },
+  { prop: "name", label: "权限名称" },
+  { prop: "description", label: "描述" },
+  { prop: "actions", label: "操作", width: 200, slot: "row-actions" },
+];
+
+onMounted(() => {
+  fetch();
+});
+
 async function fetch() {
   loading.value = true;
   const res = await http.get("/permission/list", {
@@ -78,9 +86,12 @@ async function fetch() {
   page.total = res.data.total;
   loading.value = false;
 }
-function onPager(e: any) {
-  page.current = e.currentPage;
-  page.size = e.pageSize;
+function onPager(current: number) {
+  page.current = current;
+  fetch();
+}
+function onSizeChange(size: number) {
+  page.size = size;
   fetch();
 }
 function openCreate() {

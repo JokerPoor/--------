@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed } from "vue";
+import { reactive, ref, computed, onMounted } from "vue";
 import EpTable from "../../components/ep/EpTable.vue";
 import http from "../../services/http";
 import { Plus } from "@element-plus/icons-vue";
@@ -199,6 +199,10 @@ async function remove(row: any) {
     }
   }
 }
+
+onMounted(() => {
+  fetch();
+});
 </script>
 
 <style scoped>

@@ -142,8 +142,7 @@ const cols = [
   { prop: 'productQuantity', label: '数量', width: 100 },
   { prop: 'totalAmount', label: '总金额', width: 120 },
   { prop: 'status', label: '状态', width: 100, slot: 'status' },
-  { prop: 'createTime', label: '创建时间', width: 180 },
-  { prop: 'actions', label: '操作', width: 150, slot: 'actions' }
+  { prop: 'createTime', label: '创建时间', width: 180 }
 ]
 
 async function fetchMy() {

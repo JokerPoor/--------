@@ -6,40 +6,36 @@
         ><el-icon><Plus /></el-icon>新建角色</el-button
       >
     </div>
-    <vxe-table :data="rows" :loading="loading" border stripe>
-      <vxe-column field="id" title="ID" width="80" />
-      <vxe-column field="roleName" title="角色名称" />
-      <vxe-column field="description" title="描述" />
-      <vxe-column field="updateTime" title="更新时间" />
-      <vxe-column title="操作" width="240">
-        <template #default="scope">
-          <el-button link type="primary" @click="openEdit(scope.row)" v-perm="'role:edit'"
-            ><el-icon><Edit /></el-icon>编辑</el-button
-          >
-          <el-button link type="primary" @click="openAssignPages(scope.row)" v-perm="'role:edit'"
-            ><el-icon><Edit /></el-icon>页面分配</el-button
-          >
-          <el-button link type="primary" @click="openAssignPerms(scope.row)" v-perm="'权限分配'"
-            ><el-icon><Key /></el-icon>权限分配</el-button
-          >
-          <el-button
-            v-perm="'role:delete'"
-            link
-            type="danger"
-            :disabled="scope.row.roleName === 'admin' || scope.row.id === 1"
-            @click="remove(scope.row)"
-            ><el-icon><Delete /></el-icon>删除</el-button
-          >
-        </template>
-      </vxe-column>
-    </vxe-table>
-    <vxe-pager
-      class="mt-3 flex justify-end"
-      :total="page.total"
-      :current-page="page.current"
-      :page-size="page.size"
-      @page-change="onPager"
-    />
+    <EpTable
+      :rows="rows"
+      :columns="cols"
+      :loading="loading"
+      :pagination="page"
+      @refresh="fetch"
+      @update:current="onPageChange"
+      @update:size="onSizeChange"
+    >
+      <template #row-actions="{ row }">
+        <el-button link type="primary" @click="openEdit(row)" v-perm="'role:edit'"
+          ><el-icon><Edit /></el-icon>编辑</el-button
+        >
+        <el-button link type="primary" @click="openAssignPages(row)" v-perm="'role:edit'"
+          ><el-icon><Edit /></el-icon>页面分配</el-button
+        >
+        <el-button link type="primary" @click="openAssignPerms(row)" v-perm="'权限分配'"
+          ><el-icon><Key /></el-icon>权限分配</el-button
+        >
+        <el-button
+          v-perm="'role:delete'"
+          link
+          type="danger"
+          :disabled="row.roleName === 'admin' || row.id === 1"
+          @click="remove(row)"
+          ><el-icon><Delete /></el-icon>删除</el-button
+        >
+      </template>
+    </EpTable>
+
     <el-dialog
       v-model="visible"
       :title="form.id ? '编辑角色' : '新建角色'"
@@ -84,7 +80,8 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from "vue";
+import { reactive, ref, onMounted } from "vue";
+import EpTable from "../../components/ep/EpTable.vue";
 import http from "../../services/http";
 import { ElIcon, ElMessageBox } from "element-plus";
 import { Plus, Edit, Delete, Key } from "@element-plus/icons-vue";
@@ -92,6 +89,14 @@ import { Plus, Edit, Delete, Key } from "@element-plus/icons-vue";
 const loading = ref(false);
 const rows = ref<any[]>([]);
 const page = reactive({ total: 0, current: 1, size: 10 });
+
+const cols = [
+  { prop: "id", label: "ID", width: 80 },
+  { prop: "roleName", label: "角色名称" },
+  { prop: "description", label: "描述" },
+  { prop: "updateTime", label: "更新时间" },
+  { prop: "actions", label: "操作", width: 340, slot: "row-actions" },
+];
 
 const visible = ref(false);
 const form = reactive<any>({ id: 0, roleName: "", description: "" });
@@ -105,18 +110,28 @@ const assignPermIds = ref<number[]>([]);
 
 async function fetch() {
   loading.value = true;
-  const res = await http.get("/role/list", {
-    params: { current: page.current, size: page.size },
-  });
-  rows.value = res.data.records;
-  page.total = res.data.total;
-  loading.value = false;
+  try {
+    const res = await http.get("/role/list", {
+      params: { current: page.current, size: page.size },
+    });
+    rows.value = res.data.records;
+    page.total = res.data.total;
+  } finally {
+    loading.value = false;
+  }
 }
-function onPager(e: any) {
-  page.current = e.currentPage;
-  page.size = e.pageSize;
+
+function onPageChange(current: number) {
+  page.current = current;
   fetch();
 }
+
+function onSizeChange(size: number) {
+  page.size = size;
+  page.current = 1;
+  fetch();
+}
+
 function openCreate() {
   Object.assign(form, { id: 0, roleName: "", description: "" });
   visible.value = true;
@@ -174,7 +189,10 @@ async function assignPerms() {
   assignPermVisible.value = false;
   fetch();
 }
-fetch();
+
+onMounted(() => {
+  fetch();
+});
 </script>
 
 <style scoped lang="scss"></style>

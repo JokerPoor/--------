@@ -4,23 +4,24 @@
       <div class="text-lg font-medium">页面管理</div>
       <el-button type="primary" @click="openCreate"><el-icon><Plus /></el-icon>新建页面</el-button>
     </div>
-    <vxe-table :data="rows" :loading="loading" border stripe>
-      <vxe-column field="id" title="ID" width="80" />
-      <vxe-column field="parentId" title="父ID" width="100" />
-      <vxe-column field="name" title="名称" />
-      <vxe-column field="path" title="路径" />
-      <vxe-column field="component" title="组件" />
-      <vxe-column field="orderNum" title="排序" width="100" />
-      <vxe-column field="visible" title="可见" :formatter="visibleText" width="100" />
-      <vxe-column title="操作" width="280">
-        <template #default="scope">
-          <el-button link type="primary" @click="openEdit(scope.row)"><el-icon><Edit /></el-icon>编辑</el-button>
-          <el-button link type="primary" @click="openPerm(scope.row)"><el-icon><Key /></el-icon>权限设置</el-button>
-          <el-button link type="danger" @click="remove(scope.row)"><el-icon><Delete /></el-icon>删除</el-button>
-        </template>
-      </vxe-column>
-    </vxe-table>
-    <vxe-pager class="mt-3 flex justify-end" :total="page.total" :current-page="page.current" :page-size="page.size" @page-change="onPager" />
+    <EpTable
+      :rows="rows"
+      :columns="cols"
+      :loading="loading"
+      :pagination="page"
+      @refresh="fetch"
+      @update:current="onPager"
+      @update:size="onSizeChange"
+    >
+      <template #row-visible="{ row }">
+        {{ visibleText(row.visible) }}
+      </template>
+      <template #row-actions="{ row }">
+          <el-button link type="primary" @click="openEdit(row)"><el-icon><Edit /></el-icon>编辑</el-button>
+          <el-button link type="primary" @click="openPerm(row)"><el-icon><Key /></el-icon>权限设置</el-button>
+          <el-button link type="danger" @click="remove(row)"><el-icon><Delete /></el-icon>删除</el-button>
+      </template>
+    </EpTable>
 
     <el-dialog v-model="visible" :title="form.id ? '编辑页面' : '新建页面'" width="640px">
       <el-form :model="form" label-width="110px">
@@ -61,7 +62,8 @@
   </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
+import EpTable from "../../components/ep/EpTable.vue";
 import http from '../../services/http'
 import { ElIcon, ElMessageBox } from 'element-plus'
 import { Plus, Edit, Delete, Key } from '@element-plus/icons-vue'
@@ -69,6 +71,17 @@ import { Plus, Edit, Delete, Key } from '@element-plus/icons-vue'
 const loading = ref(false)
 const rows = ref<any[]>([])
 const page = reactive({ total: 0, current: 1, size: 10 })
+
+const cols = [
+  { prop: "id", label: "ID", width: 80 },
+  { prop: "parentId", label: "父ID", width: 100 },
+  { prop: "name", label: "名称" },
+  { prop: "path", label: "路径" },
+  { prop: "component", label: "组件" },
+  { prop: "orderNum", label: "排序", width: 100 },
+  { prop: "visible", label: "可见", width: 100, slot: "row-visible" },
+  { prop: "actions", label: "操作", width: 280, slot: "row-actions" },
+];
 
 const visible = ref(false)
 const visibleSwitch = ref(true)
@@ -80,7 +93,11 @@ const permList = ref<any[]>([])
 const assignIds = ref<number[]>([])
 const newPermId = ref<number | null>(null)
 
-function visibleText({ cellValue }: any) { return cellValue === 1 ? '是' : '否' }
+function visibleText(value: number) { return value === 1 ? '是' : '否' }
+
+onMounted(() => {
+  fetch();
+});
 
 async function fetch() {
   loading.value = true
@@ -89,7 +106,9 @@ async function fetch() {
   page.total = res.data.total
   loading.value = false
 }
-function onPager(e: any) { page.current = e.currentPage; page.size = e.pageSize; fetch() }
+function onPager(current: number) { page.current = current; fetch() }
+function onSizeChange(size: number) { page.size = size; fetch() }
+
 function openCreate() {
   Object.assign(form, { id: 0, parentId: 0, name: '', path: '', component: '', icon: '', orderNum: 0, visible: 1, meta: '' })
   visibleSwitch.value = true
