@@ -52,6 +52,15 @@ public class WarehouseController {
     }
 
     /**
+     * 删除仓库
+     */
+    @DeleteMapping("/delete/{id}")
+    public BaseResponse<Boolean> deleteWarehouse(@PathVariable Long id) {
+        boolean success = warehouseService.removeById(id);
+        return ResultUtils.success(success);
+    }
+
+    /**
      * 分页查询仓库列表
      */
     @GetMapping("/page")

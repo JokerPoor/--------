@@ -2,7 +2,7 @@
   <div class="space-y-4">
     <div class="flex justify-between">
       <div class="text-lg font-medium">用户管理</div>
-      <el-button type="primary" @click="openCreate"
+      <el-button type="primary" @click="openCreate" v-perm="'user:add'"
         ><el-icon><Plus /></el-icon><span>新建用户</span></el-button
       >
     </div>
@@ -11,6 +11,9 @@
       :columns="cols"
       :loading="loading"
       :pagination="page"
+      edit-perm="user:edit"
+      remove-perm="user:delete"
+      reset-perm="user:reset-password"
       @refresh="fetch"
       @edit="openEdit"
       @remove="remove"
@@ -21,10 +24,10 @@
       @selection-change="onSelectionChange"
     >
       <template #toolbar>
-        <el-button @click="batchStatus(1)" :disabled="selectedIds.length === 0"
+        <el-button @click="batchStatus(1)" :disabled="selectedIds.length === 0" v-perm="'user:edit'"
           ><el-icon><Unlock /></el-icon>批量启用</el-button
         >
-        <el-button @click="batchStatus(0)" :disabled="selectedIds.length === 0"
+        <el-button @click="batchStatus(0)" :disabled="selectedIds.length === 0" v-perm="'user:edit'"
           ><el-icon><Lock /></el-icon>批量禁用</el-button
         >
       </template>

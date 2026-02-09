@@ -98,11 +98,15 @@ public class StoreInitRunner implements ApplicationRunner {
 
         // 2. 定义页面列表（包含首页）
         List<PageSeed> seeds = List.of(
-                new PageSeed("系统首页", "/dashboard", "pages/dashboard/DashboardPage", 1, 1), // orderNum=1 保证排在最前
-                new PageSeed("用户管理", "/users", "pages/users/UsersPage", 100, 1),
+                new PageSeed("系统首页", "/dashboard", "pages/dashboard/DashboardPage", 100, 1), // orderNum=1 保证排在最前
+                new PageSeed("用户管理", "/users", "pages/users/UsersPage", 95, 1),
                 new PageSeed("角色管理", "/roles", "pages/roles/RolesPage", 90, 1),
                 new PageSeed("权限管理", "/permissions", "pages/permissions/PermissionsPage", 80, 1),
-                new PageSeed("页面管理", "/pages", "pages/pages/PagesPage", 70, 1)
+                new PageSeed("页面管理", "/pages", "pages/pages/PagesPage", 70, 1),
+                new PageSeed("商品管理", "/products", "pages/products/ProductsPage", 60, 1),
+                new PageSeed("仓库管理", "/warehouses", "pages/warehouses/WarehousesPage", 50, 1),
+                new PageSeed("操作日志", "/logs", "pages/logs/OperationLogsPage", 40, 1),
+                new PageSeed("门店设置", "/store", "pages/store/StorePage", 30, 1)
         );
 
         // 3. 批量创建页面（如果不存在）
@@ -183,7 +187,18 @@ public class StoreInitRunner implements ApplicationRunner {
         }
 
         // 6. 初始化权限（保持原有逻辑）
-        List<String> basePermNames = List.of("角色管理", "权限分配");
+        List<String> basePermNames = List.of(
+                // 角色与权限
+                "角色管理", "权限分配", "role:add", "role:edit", "role:delete",
+                // 用户
+                "user:add", "user:edit", "user:delete", "user:reset-password",
+                // 商品
+                "product:add", "product:edit", "product:delete",
+                // 仓库
+                "warehouse:add", "warehouse:edit", "warehouse:delete",
+                // 门店
+                "store:update"
+        );
         Map<String, Permission> existingPermsByName = permissionService.list(
                 new LambdaQueryWrapper<Permission>().in(Permission::getName, basePermNames)
         ).stream().collect(Collectors.toMap(Permission::getName, p -> p, (a, b) -> a));

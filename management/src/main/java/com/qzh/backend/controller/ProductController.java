@@ -36,6 +36,13 @@ public class ProductController {
         return ResultUtils.success(null);
     }
 
+    @DeleteMapping("/{id}")
+    public BaseResponse<Void> deleteProduct(@PathVariable Long id) {
+        boolean result = productService.removeById(id);
+        ThrowUtils.throwIf(!result, ErrorCode.SYSTEM_ERROR, "商品删除失败");
+        return ResultUtils.success(null);
+    }
+
     @GetMapping("/{id}")
     public BaseResponse<Product> getProductById(@PathVariable Long id) {
         Product product = productService.getById(id);

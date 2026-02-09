@@ -12,9 +12,9 @@
       <vxe-column v-for="c in columns" :key="c.prop" :field="c.prop" :title="c.label" :width="c.width" />
       <vxe-column title="操作" width="200">
         <template #default="scope">
-          <el-button link type="primary" @click="$emit('edit', scope.row)"><el-icon><Edit /></el-icon>编辑</el-button>
-          <el-button link type="danger" @click="$emit('remove', scope.row)"><el-icon><Delete /></el-icon>删除</el-button>
-          <el-button link type="warning" @click="$emit('reset', scope.row)"><el-icon><Key /></el-icon>重置密码</el-button>
+          <el-button link type="primary" @click="$emit('edit', scope.row)" v-perm="editPerm"><el-icon><Edit /></el-icon>编辑</el-button>
+          <el-button link type="danger" @click="$emit('remove', scope.row)" v-perm="removePerm"><el-icon><Delete /></el-icon>删除</el-button>
+          <el-button link type="warning" @click="$emit('reset', scope.row)" v-perm="resetPerm"><el-icon><Key /></el-icon>重置密码</el-button>
       </template>
       </vxe-column>
     </vxe-table>
@@ -35,7 +35,10 @@ const props = defineProps<{
   rows: any[],
   columns: { prop: string, label: string, width?: number }[],
   loading: boolean,
-  pagination: { total: number, current: number, size: number }
+  pagination: { total: number, current: number, size: number },
+  editPerm?: string,
+  removePerm?: string,
+  resetPerm?: string
 }>()
 const emit = defineEmits(['refresh','edit','remove','reset','search','update:current','update:size','selection-change'])
 const keyword = ref('')

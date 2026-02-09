@@ -2,7 +2,7 @@
   <div class="space-y-4">
     <div class="flex justify-between">
       <div class="text-lg font-medium">角色管理</div>
-      <el-button type="primary" @click="openCreate"
+      <el-button type="primary" @click="openCreate" v-perm="'role:add'"
         ><el-icon><Plus /></el-icon>新建角色</el-button
       >
     </div>
@@ -13,17 +13,17 @@
       <vxe-column field="updateTime" title="更新时间" />
       <vxe-column title="操作" width="240">
         <template #default="scope">
-          <el-button link type="primary" @click="openEdit(scope.row)"
+          <el-button link type="primary" @click="openEdit(scope.row)" v-perm="'role:edit'"
             ><el-icon><Edit /></el-icon>编辑</el-button
           >
-          <el-button link type="primary" @click="openAssignPages(scope.row)"
+          <el-button link type="primary" @click="openAssignPages(scope.row)" v-perm="'role:edit'"
             ><el-icon><Edit /></el-icon>页面分配</el-button
           >
-          <el-button link type="primary" @click="openAssignPerms(scope.row)"
+          <el-button link type="primary" @click="openAssignPerms(scope.row)" v-perm="'权限分配'"
             ><el-icon><Key /></el-icon>权限分配</el-button
           >
           <el-button
-            v-perm="'角色管理'"
+            v-perm="'role:delete'"
             link
             type="danger"
             :disabled="scope.row.roleName === 'admin' || scope.row.id === 1"
