@@ -1,62 +1,64 @@
 <template>
-  <EpTable
-    :rows="rows"
-    :columns="cols"
-    :loading="loading"
-    :pagination="pagination"
-    @refresh="fetch"
-    @search="onSearch"
-    @update:current="pagination.current = $event; fetch()"
-    @update:size="pagination.size = $event; fetch()"
-  >
-    <template #toolbar>
-      <el-button type="primary" @click="openCreate" v-perm="'purchase:return:add'">新建采退单</el-button>
-    </template>
-    
-    <template #url="{ row }">
-      <el-image :src="row.productUrl" class="w-10 h-10 object-cover rounded" :preview-src-list="[row.productUrl]" preview-teleported />
-    </template>
+  <div>
+    <EpTable
+      :rows="rows"
+      :columns="cols"
+      :loading="loading"
+      :pagination="pagination"
+      @refresh="fetch"
+      @search="onSearch"
+      @update:current="pagination.current = $event; fetch()"
+      @update:size="pagination.size = $event; fetch()"
+    >
+      <template #toolbar>
+        <el-button type="primary" @click="openCreate" v-perm="'purchase:return:add'">新建采退单</el-button>
+      </template>
+      
+      <template #url="{ row }">
+        <el-image :src="row.productUrl" class="w-10 h-10 object-cover rounded" :preview-src-list="[row.productUrl]" preview-teleported />
+      </template>
 
-    <template #status="{ row }">
-      <el-tag v-if="row.status === 0">待确认</el-tag>
-      <el-tag v-else-if="row.status === 1" type="success">已完成</el-tag>
-      <el-tag v-else-if="row.status === 2" type="info">已取消</el-tag>
-    </template>
+      <template #status="{ row }">
+        <el-tag v-if="row.status === 0">待确认</el-tag>
+        <el-tag v-else-if="row.status === 1" type="success">已完成</el-tag>
+        <el-tag v-else-if="row.status === 2" type="info">已取消</el-tag>
+      </template>
 
-    <template #actions="{ row }">
-      <el-button v-if="row.status === 0" link type="primary" @click="onConfirm(row)" v-perm="'purchase:return:confirm'">确认退货</el-button>
-    </template>
-  </EpTable>
+      <template #actions="{ row }">
+        <el-button v-if="row.status === 0" link type="primary" @click="onConfirm(row)" v-perm="'purchase:return:confirm'">确认退货</el-button>
+      </template>
+    </EpTable>
 
-  <!-- Create Dialog -->
-  <el-dialog v-model="createVisible" title="新建采退订单" width="500px">
-    <el-form :model="createForm" label-width="100px">
-      <el-form-item label="选择商品" required>
-        <el-select
-          v-model="createForm.productId"
-          filterable
-          remote
-          :remote-method="searchProducts"
-          placeholder="搜索商品名称"
-          :loading="productLoading"
-        >
-          <el-option v-for="p in products" :key="p.id" :label="p.name" :value="p.id" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="选择仓库" required>
-        <el-select v-model="createForm.warehouseId" placeholder="选择仓库">
-          <el-option v-for="w in warehouses" :key="w.id" :label="w.name" :value="w.id" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="退货数量" required>
-        <el-input-number v-model="createForm.returnQuantity" :min="1" style="width: 100%" />
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <el-button @click="createVisible = false">取消</el-button>
-      <el-button type="primary" @click="submitCreate" :loading="submitting">创建</el-button>
-    </template>
-  </el-dialog>
+    <!-- Create Dialog -->
+    <el-dialog v-model="createVisible" title="新建采退订单" width="500px">
+      <el-form :model="createForm" label-width="100px">
+        <el-form-item label="选择商品" required>
+          <el-select
+            v-model="createForm.productId"
+            filterable
+            remote
+            :remote-method="searchProducts"
+            placeholder="搜索商品名称"
+            :loading="productLoading"
+          >
+            <el-option v-for="p in products" :key="p.id" :label="p.name" :value="p.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="选择仓库" required>
+          <el-select v-model="createForm.warehouseId" placeholder="选择仓库">
+            <el-option v-for="w in warehouses" :key="w.id" :label="w.name" :value="w.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="退货数量" required>
+          <el-input-number v-model="createForm.returnQuantity" :min="1" style="width: 100%" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="createVisible = false">取消</el-button>
+        <el-button type="primary" @click="submitCreate" :loading="submitting">创建</el-button>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -65,9 +67,7 @@ import EpTable from '../../components/ep/EpTable.vue'
 import http from '../../services/http'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
-console.log('[PurchaseReturnPage] Component script loaded')
-
-const rows = ref([])
+const rows = ref<any[]>([])
 const loading = ref(false)
 const pagination = reactive({ current: 1, size: 10, total: 0 })
 const keyword = ref('')

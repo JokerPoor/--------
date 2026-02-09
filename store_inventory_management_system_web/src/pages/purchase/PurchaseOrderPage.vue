@@ -1,100 +1,102 @@
 <template>
-  <EpTable
-    :rows="rows"
-    :columns="cols"
-    :loading="loading"
-    :pagination="pagination"
-    @refresh="fetch"
-    @search="onSearch"
-    @update:current="pagination.current = $event; fetch()"
-    @update:size="pagination.size = $event; fetch()"
-  >
-    <template #toolbar>
-      <el-button type="primary" @click="openCreate" v-perm="'purchase:order:add'">新建采购单</el-button>
-    </template>
-    
-    <template #url="{ row }">
-      <el-image :src="row.productUrl" class="w-10 h-10 object-cover rounded" :preview-src-list="[row.productUrl]" preview-teleported />
-    </template>
+  <div>
+    <EpTable
+      :rows="rows"
+      :columns="cols"
+      :loading="loading"
+      :pagination="pagination"
+      @refresh="fetch"
+      @search="onSearch"
+      @update:current="pagination.current = $event; fetch()"
+      @update:size="pagination.size = $event; fetch()"
+    >
+      <template #toolbar>
+        <el-button type="primary" @click="openCreate" v-perm="'purchase:order:add'">新建采购单</el-button>
+      </template>
+      
+      <template #url="{ row }">
+        <el-image :src="row.productUrl" class="w-10 h-10 object-cover rounded" :preview-src-list="[row.productUrl]" preview-teleported />
+      </template>
 
-    <template #status="{ row }">
-      <el-tag v-if="row.purchaseOrderStatus === 0">待发货</el-tag>
-      <el-tag v-else-if="row.purchaseOrderStatus === 1" type="warning">已发货</el-tag>
-      <el-tag v-else-if="row.purchaseOrderStatus === 2" type="success">已入库</el-tag>
-    </template>
+      <template #status="{ row }">
+        <el-tag v-if="row.purchaseOrderStatus === 0">待发货</el-tag>
+        <el-tag v-else-if="row.purchaseOrderStatus === 1" type="warning">已发货</el-tag>
+        <el-tag v-else-if="row.purchaseOrderStatus === 2" type="success">已入库</el-tag>
+      </template>
 
-    <template #payStatus="{ row }">
-      <el-tag v-if="row.amountOrderStatus === 0" type="danger">待支付</el-tag>
-      <el-tag v-else-if="row.amountOrderStatus === 1" type="success">已支付</el-tag>
-      <el-tag v-else-if="row.amountOrderStatus === 2" type="info">已取消</el-tag>
-    </template>
+      <template #payStatus="{ row }">
+        <el-tag v-if="row.amountOrderStatus === 0" type="danger">待支付</el-tag>
+        <el-tag v-else-if="row.amountOrderStatus === 1" type="success">已支付</el-tag>
+        <el-tag v-else-if="row.amountOrderStatus === 2" type="info">已取消</el-tag>
+      </template>
 
-    <template #actions="{ row }">
-      <el-button v-if="row.purchaseOrderStatus === 0" link type="primary" @click="onShip(row)" v-perm="'purchase:order:ship'">发货</el-button>
-      <el-button v-if="row.purchaseOrderStatus === 1" link type="success" @click="openStockIn(row)" v-perm="'purchase:order:stock-in'">入库</el-button>
-    </template>
-  </EpTable>
+      <template #actions="{ row }">
+        <el-button v-if="row.purchaseOrderStatus === 0" link type="primary" @click="onShip(row)" v-perm="'purchase:order:ship'">发货</el-button>
+        <el-button v-if="row.purchaseOrderStatus === 1" link type="success" @click="openStockIn(row)" v-perm="'purchase:order:stock-in'">入库</el-button>
+      </template>
+    </EpTable>
 
-  <!-- Create Dialog -->
-  <el-dialog v-model="createVisible" title="新建采购订单" width="500px">
-    <el-form :model="createForm" label-width="100px">
-      <el-form-item label="选择商品" required>
-        <el-select
-          v-model="createForm.productId"
-          filterable
-          remote
-          :remote-method="searchProducts"
-          placeholder="搜索商品名称"
-          :loading="productLoading"
-          @change="onProductSelect"
-        >
-          <el-option v-for="p in products" :key="p.id" :label="p.name" :value="p.id">
-            <span class="float-left">{{ p.name }}</span>
-            <span class="float-right text-gray-400 text-xs">¥{{ p.price }}</span>
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="采购数量" required>
-        <el-input-number v-model="createForm.quantity" :min="1" style="width: 100%" />
-      </el-form-item>
-      <el-form-item label="预估总价">
-        <span class="text-red-500 font-bold">¥{{ estimatedTotal }}</span>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <el-button @click="createVisible = false">取消</el-button>
-      <el-button type="primary" @click="submitCreate" :loading="submitting">创建</el-button>
-    </template>
-  </el-dialog>
+    <!-- Create Dialog -->
+    <el-dialog v-model="createVisible" title="新建采购订单" width="500px">
+      <el-form :model="createForm" label-width="100px">
+        <el-form-item label="选择商品" required>
+          <el-select
+            v-model="createForm.productId"
+            filterable
+            remote
+            :remote-method="searchProducts"
+            placeholder="搜索商品名称"
+            :loading="productLoading"
+            @change="onProductSelect"
+          >
+            <el-option v-for="p in products" :key="p.id" :label="p.name" :value="p.id">
+              <span class="float-left">{{ p.name }}</span>
+              <span class="float-right text-gray-400 text-xs">¥{{ p.price }}</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="采购数量" required>
+          <el-input-number v-model="createForm.quantity" :min="1" style="width: 100%" />
+        </el-form-item>
+        <el-form-item label="预估总价">
+          <span class="text-red-500 font-bold">¥{{ estimatedTotal }}</span>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="createVisible = false">取消</el-button>
+        <el-button type="primary" @click="submitCreate" :loading="submitting">创建</el-button>
+      </template>
+    </el-dialog>
 
-  <!-- Stock In Dialog -->
-  <el-dialog v-model="stockInVisible" title="入库分配" width="600px">
-    <div class="mb-4">
-      <div class="font-bold text-lg mb-2">订单商品: {{ currentOrder?.productName }}</div>
-      <div class="flex gap-4 text-sm text-gray-600">
-        <span>待入库总数: {{ currentOrder?.productQuantity }}</span>
-        <span :class="{'text-green-500': remainingQty === 0, 'text-red-500': remainingQty !== 0}">
-          剩余分配: {{ remainingQty }}
-        </span>
+    <!-- Stock In Dialog -->
+    <el-dialog v-model="stockInVisible" title="入库分配" width="600px">
+      <div class="mb-4">
+        <div class="font-bold text-lg mb-2">订单商品: {{ currentOrder?.productName }}</div>
+        <div class="flex gap-4 text-sm text-gray-600">
+          <span>待入库总数: {{ currentOrder?.productQuantity }}</span>
+          <span :class="{'text-green-500': remainingQty === 0, 'text-red-500': remainingQty !== 0}">
+            剩余分配: {{ remainingQty }}
+          </span>
+        </div>
       </div>
-    </div>
-    
-    <div v-for="(item, idx) in stockInItems" :key="idx" class="flex gap-2 mb-2 items-center">
-      <el-select v-model="item.warehouseId" placeholder="选择仓库" style="width: 200px">
-        <el-option v-for="w in warehouses" :key="w.id" :label="w.name" :value="w.id" />
-      </el-select>
-      <el-input-number v-model="item.quantity" :min="1" placeholder="数量" />
-      <el-button type="danger" circle @click="stockInItems.splice(idx, 1)" :disabled="stockInItems.length === 1">
-        <el-icon><Delete /></el-icon>
-      </el-button>
-    </div>
-    <el-button type="primary" link @click="addStockInItem">+ 添加仓库分配</el-button>
+      
+      <div v-for="(item, idx) in stockInItems" :key="idx" class="flex gap-2 mb-2 items-center">
+        <el-select v-model="item.warehouseId" placeholder="选择仓库" style="width: 200px">
+          <el-option v-for="w in warehouses" :key="w.id" :label="w.name" :value="w.id" />
+        </el-select>
+        <el-input-number v-model="item.quantity" :min="1" placeholder="数量" />
+        <el-button type="danger" circle @click="stockInItems.splice(idx, 1)" :disabled="stockInItems.length === 1">
+          <el-icon><Delete /></el-icon>
+        </el-button>
+      </div>
+      <el-button type="primary" link @click="addStockInItem">+ 添加仓库分配</el-button>
 
-    <template #footer>
-      <el-button @click="stockInVisible = false">取消</el-button>
-      <el-button type="primary" @click="submitStockIn" :loading="submitting" :disabled="remainingQty !== 0">确认入库</el-button>
-    </template>
-  </el-dialog>
+      <template #footer>
+        <el-button @click="stockInVisible = false">取消</el-button>
+        <el-button type="primary" @click="submitStockIn" :loading="submitting" :disabled="remainingQty !== 0">确认入库</el-button>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 <script setup lang="ts">

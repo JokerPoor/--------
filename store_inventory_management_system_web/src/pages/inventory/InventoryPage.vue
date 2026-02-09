@@ -1,67 +1,69 @@
 <template>
-  <EpTable
-    :rows="rows"
-    :columns="cols"
-    :loading="loading"
-    :pagination="pagination"
-    edit-perm="inventory:update"
-    @refresh="fetch"
-    @search="onSearch"
-    @update:current="
-      pagination.current = $event;
-      fetch();
-    "
-    @update:size="
-      pagination.size = $event;
-      fetch();
-    "
-    @edit="onEdit"
-  >
-    <template #url="{ row }">
-      <el-image
-        :src="row.productUrl"
-        class="w-10 h-10 object-cover rounded"
-        :preview-src-list="[row.productUrl]"
-        preview-teleported
-      />
-    </template>
-  </EpTable>
+  <div>
+    <EpTable
+      :rows="rows"
+      :columns="cols"
+      :loading="loading"
+      :pagination="pagination"
+      edit-perm="inventory:update"
+      @refresh="fetch"
+      @search="onSearch"
+      @update:current="
+        pagination.current = $event;
+        fetch();
+      "
+      @update:size="
+        pagination.size = $event;
+        fetch();
+      "
+      @edit="onEdit"
+    >
+      <template #url="{ row }">
+        <el-image
+          :src="row.productUrl"
+          class="w-10 h-10 object-cover rounded"
+          :preview-src-list="[row.productUrl]"
+          preview-teleported
+        />
+      </template>
+    </EpTable>
 
-  <el-dialog v-model="editVisible" title="编辑库存商品信息" width="500px">
-    <el-form :model="editForm" label-width="100px">
-      <el-form-item label="商品名称">
-        <el-input v-model="editForm.productName" />
-      </el-form-item>
-      <el-form-item label="商品描述">
-        <el-input v-model="editForm.productDescription" type="textarea" />
-      </el-form-item>
-      <el-form-item label="图片URL">
-        <el-input v-model="editForm.productUrl" />
-      </el-form-item>
-      <el-form-item label="出售单价">
-        <el-input-number
-          v-model="editForm.productPrice"
-          :precision="2"
-          :step="0.1"
-          :min="0"
-          style="width: 100%"
-        />
-      </el-form-item>
-      <el-form-item label="预警阈值">
-        <el-input-number
-          v-model="editForm.warningThreshold"
-          :min="0"
-          style="width: 100%"
-        />
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <el-button @click="editVisible = false">取消</el-button>
-      <el-button type="primary" @click="submitEdit" :loading="submitting"
-        >确定</el-button
-      >
-    </template>
-  </el-dialog>
+    <el-dialog v-model="editVisible" title="编辑库存商品信息" width="500px">
+      <el-form :model="editForm" label-width="100px">
+        <el-form-item label="商品名称">
+          <el-input v-model="editForm.productName" />
+        </el-form-item>
+        <el-form-item label="商品描述">
+          <el-input v-model="editForm.productDescription" type="textarea" />
+        </el-form-item>
+        <el-form-item label="图片URL">
+          <el-input v-model="editForm.productUrl" />
+        </el-form-item>
+        <el-form-item label="出售单价">
+          <el-input-number
+            v-model="editForm.productPrice"
+            :precision="2"
+            :step="0.1"
+            :min="0"
+            style="width: 100%"
+          />
+        </el-form-item>
+        <el-form-item label="预警阈值">
+          <el-input-number
+            v-model="editForm.warningThreshold"
+            :min="0"
+            style="width: 100%"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="editVisible = false">取消</el-button>
+        <el-button type="primary" @click="submitEdit" :loading="submitting"
+          >确定</el-button
+        >
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 <script setup lang="ts">
