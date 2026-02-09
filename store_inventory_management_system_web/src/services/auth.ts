@@ -1,3 +1,4 @@
+import { reactive } from 'vue'
 import http from './http'
 
 type LoginUser = {
@@ -10,8 +11,8 @@ type LoginUser = {
 }
 
 type PageItem = {
-  id: number
-  parentId: number | null
+  id: number | string
+  parentId: number | string | null
   name: string
   path: string
   component: string
@@ -27,13 +28,13 @@ type PermissionItem = {
   description?: string
 }
 
-const state = {
+const state = reactive({
   user: null as LoginUser | null,
   pages: [] as PageItem[],
   permissionNames: [] as string[],
   routesInjected: false,
   inited: false
-}
+})
 
 async function refreshAccess() {
   const [userRes, pagesRes, permsRes] = await Promise.all([
@@ -113,7 +114,7 @@ function hasPermission(name: string) {
 
 function getMenuPages() {
   return state.pages
-    .filter(p => p.visible === 1)
+    .filter(p => p.visible == 1)
     .sort((a, b) => (b.orderNum || 0) - (a.orderNum || 0))
 }
 

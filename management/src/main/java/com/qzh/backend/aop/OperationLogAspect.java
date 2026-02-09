@@ -19,6 +19,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Arrays;
+import java.util.Date;
 
 import static com.qzh.backend.constants.OperationStatusConstant.OPERATION_STATUS_FAILURE;
 import static com.qzh.backend.constants.OperationStatusConstant.OPERATION_STATUS_SUCCESS;
@@ -54,6 +55,7 @@ public class OperationLogAspect {
         operationLog.setOperatorId(loginUser.getId());
         operationLog.setOperatorDevice(String.format("%s/%s/%s", device, os, browser));
         operationLog.setOperatorIp(ipAddress);
+        operationLog.setOperationTime(new Date());
         operationLog.setSystemModule(logInfoRecord.SystemModule());
         operationLog.setOperationContent(String.format("方法入参:%s", Arrays.toString(joinPoint.getArgs())));
         operationLog.setOperationResult(OPERATION_STATUS_SUCCESS);
@@ -84,6 +86,7 @@ public class OperationLogAspect {
         operationLog.setOperatorId(loginUser.getId());
         operationLog.setOperatorDevice(String.format("%s/%s/%s", device, os, browser));
         operationLog.setOperatorIp(ipAddress);
+        operationLog.setOperationTime(new Date());
         operationLog.setSystemModule(logInfoRecord.SystemModule());
         operationLog.setOperationContent(String.format("方法入参:%s", Arrays.toString(joinPoint.getArgs())));
         operationLog.setOperationResult(OPERATION_STATUS_FAILURE);

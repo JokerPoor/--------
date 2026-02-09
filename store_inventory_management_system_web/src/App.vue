@@ -92,12 +92,12 @@ function descOrder(a: any, b: any) {
 const menuTree = computed(() => {
   const all = (menus.value || []).map(p => ({ ...p, pathNorm: p?.path ? normalizeMenuPath(p.path) : '' }))
   const roots = all
-    .filter(p => p.parentId === null || p.parentId === 0)
+    .filter(p => p.parentId === null || p.parentId === 0 || p.parentId === '0')
     .sort(descOrder)
   return roots.map(r => ({
     ...r,
     children: all
-      .filter(p => p.parentId === r.id)
+      .filter(p => p.parentId == r.id)
       .sort(descOrder)
   }))
 })

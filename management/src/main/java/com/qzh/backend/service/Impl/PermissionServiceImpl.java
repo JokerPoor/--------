@@ -47,7 +47,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         ThrowUtils.throwIf(dto == null, ErrorCode.PARAMS_ERROR);
         int current = dto.getCurrent();
         int size = dto.getSize();
-        ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(size > 1000, ErrorCode.PARAMS_ERROR);
         // 查询权限列表并转换为 PermissionVO
         Page<Permission> permissionPage = this.page(new Page<>(current, size), PermissionQueryDto.getQueryWrapper(dto));
         List<Permission> permissionList = permissionPage.getRecords();

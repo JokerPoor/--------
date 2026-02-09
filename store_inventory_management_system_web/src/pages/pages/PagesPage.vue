@@ -63,7 +63,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import http from '../../services/http'
-import { ElIcon } from 'element-plus'
+import { ElIcon, ElMessageBox } from 'element-plus'
 import { Plus, Edit, Delete, Key } from '@element-plus/icons-vue'
 
 const loading = ref(false)
@@ -107,7 +107,13 @@ async function submit() {
   visible.value = false
   fetch()
 }
-async function remove(row: any) { await http.delete(`/page/${row.id}`); fetch() }
+async function remove(row: any) {
+  try {
+    await ElMessageBox.confirm('确定要删除该页面吗？', '提示', { type: 'warning' })
+    await http.delete(`/page/${row.id}`)
+    fetch()
+  } catch {}
+}
 async function openPerm(row: any) {
   currentPageId.value = row.id
   const resAll = await http.get('/permission/list', { params: { current: 1, size: 200 } })

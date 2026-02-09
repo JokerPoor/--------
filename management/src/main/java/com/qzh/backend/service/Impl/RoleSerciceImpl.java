@@ -45,7 +45,7 @@ public class RoleSerciceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         ThrowUtils.throwIf(queryDTO==null, ErrorCode.PARAMS_ERROR);
         int current = queryDTO.getCurrent();
         int size = queryDTO.getSize();
-        ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(size > 1000, ErrorCode.PARAMS_ERROR);
         Page<Role> rolePage = this.page(new Page<>(current, size), RoleQueryDTO.getQueryWrapper(queryDTO));
         List<Role> roleList = rolePage.getRecords();
         Page<RoleVO> roleVOPage = new Page<>(current, size, rolePage.getTotal());

@@ -47,7 +47,7 @@ public class PageServiceImpl extends ServiceImpl<PageMapper, PageInfo> implement
         ThrowUtils.throwIf(queryDTO == null, ErrorCode.PARAMS_ERROR);
         int current = queryDTO.getCurrent();
         int size = queryDTO.getSize();
-        ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(size > 1000, ErrorCode.PARAMS_ERROR);
         Page<PageInfo> pagePage = this.page(new Page<>(current, size), PageQueryDTO.getQueryWrapper(queryDTO));
         List<PageInfo> pageList = pagePage.getRecords();
         Page<PageVO> pageVOPage = new Page<>(current, size, pagePage.getTotal());
