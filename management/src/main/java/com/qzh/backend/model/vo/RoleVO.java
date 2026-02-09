@@ -28,6 +28,9 @@ public class RoleVO implements Serializable {
     private List<Permission> permissions;
 
 
+    private List<PageVO> pages;
+
+
     private Date createTime;
 
 

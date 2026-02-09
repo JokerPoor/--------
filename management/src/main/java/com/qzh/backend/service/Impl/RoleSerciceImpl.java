@@ -9,6 +9,7 @@ import com.qzh.backend.exception.ErrorCode;
 import com.qzh.backend.mapper.RoleMapper;
 import com.qzh.backend.model.dto.role.*;
 import com.qzh.backend.model.entity.*;
+import com.qzh.backend.model.vo.PageVO;
 import com.qzh.backend.model.vo.RoleVO;
 import com.qzh.backend.service.*;
 import com.qzh.backend.utils.GetLoginUserUtil;
@@ -146,6 +147,23 @@ public class RoleSerciceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
             //无权限关联时，设置空列表（避免前端null异常）
             roleVO.setPermissions(Collections.emptyList());
         }
+
+        // 填充页面列表
+        List<RoleRelatedPage> pageRelations = roleRelatedPageService.list(new LambdaQueryWrapper<RoleRelatedPage>()
+                .eq(RoleRelatedPage::getRoleId, roleVO.getId())
+        );
+        if (!CollectionUtils.isEmpty(pageRelations)) {
+            List<Long> pageIds = pageRelations.stream()
+                    .map(RoleRelatedPage::getPageId)
+                    .distinct()
+                    .collect(Collectors.toList());
+            List<PageInfo> pageList = pageService.list(new LambdaQueryWrapper<PageInfo>()
+                    .in(PageInfo::getId, pageIds));
+            roleVO.setPages(PageVO.toPageVOList(pageList));
+        } else {
+            roleVO.setPages(Collections.emptyList());
+        }
+
         return roleVO;
     }
 

@@ -144,7 +144,9 @@ async function openAssignPages(row: any) {
     params: { current: 1, size: 200 },
   });
   pageList.value = resPages.data.records;
-  assignPageIds.value = [];
+  // 获取角色详情以回显已分配页面
+  const resRole = await http.get(`/role/${row.id}`);
+  assignPageIds.value = (resRole.data.pages || []).map((p: any) => p.id);
   assignPageVisible.value = true;
 }
 async function assignPages() {
@@ -153,6 +155,7 @@ async function assignPages() {
     pageIds: assignPageIds.value,
   });
   assignPageVisible.value = false;
+  fetch();
 }
 async function openAssignPerms(row: any) {
   currentRoleId.value = row.id;
@@ -169,6 +172,7 @@ async function assignPerms() {
     permissionIds: assignPermIds.value,
   });
   assignPermVisible.value = false;
+  fetch();
 }
 fetch();
 </script>
