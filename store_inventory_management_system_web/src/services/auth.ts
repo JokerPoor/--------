@@ -58,8 +58,9 @@ function normalizeComponentKey(raw: string) {
 
 async function ensureDynamicRoutes(r: any) {
   if (state.routesInjected) return
-  const modules = import.meta.glob('../pages/**/*.vue')
-  console.log('[Auth] Available modules:', Object.keys(modules))
+  // 使用 eager: true 直接导入所有组件，不使用懒加载
+  const modules = import.meta.glob('../pages/**/*.vue', { eager: true })
+  console.log('[Auth] Available modules (eager):', Object.keys(modules))
   console.log('[Auth] Pages from backend:', state.pages)
   
   state.pages.forEach(p => {
@@ -73,22 +74,25 @@ async function ensureDynamicRoutes(r: any) {
     const key3 = `../pages/${normalizedComponent}.vue`
     const key4 = `../pages/${normalizedComponent}`
     
-    const comp = (modules as any)[key1] || (modules as any)[key2] || (modules as any)[key3] || (modules as any)[key4]
+    const moduleObj = (modules as any)[key1] || (modules as any)[key2] || (modules as any)[key3] || (modules as any)[key4]
     
-    if (!comp) {
+    if (!moduleObj) {
       console.error('[Auth] Component not found for page:', p.name, 'tried keys:', [key1, key2, key3, key4])
       return
     }
     
+    // eager 模式返回的是模块对象，需要取 .default
+    const comp = moduleObj.default || moduleObj
+    console.log('[Auth] Component for', p.name, ':', typeof comp, comp)
+    
     const path = p.path.startsWith('/') ? p.path : `/${p.path}`
     const exists = r.getRoutes().some((rt: any) => rt.path === path)
     if (!exists) {
-      console.log('[Auth] Adding route:', path, '→', p.component, 'using key:', key1)
-      // 使用 defineAsyncComponent 确保组件正确加载
+      console.log('[Auth] Adding route:', path, '→', p.component)
       r.addRoute({ 
         path, 
         component: comp,
-        name: p.name // 添加路由名称
+        name: p.name
       })
     } else {
       console.log('[Auth] Route already exists:', path)
