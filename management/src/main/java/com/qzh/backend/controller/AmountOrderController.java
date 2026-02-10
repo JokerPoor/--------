@@ -90,4 +90,13 @@ public class AmountOrderController {
     public void notifyOrder(HttpServletRequest request) throws AlipayApiException {
         amountOrderService.notifyOrder(request);
     }
+
+    /**
+     * 模拟支付（一键支付）
+     */
+    @PostMapping("/mock-pay/{id}")
+    public BaseResponse<Void> mockPay(@PathVariable Long id) {
+        amountOrderService.mockPay(id);
+        return ResultUtils.success(null);
+    }
 }

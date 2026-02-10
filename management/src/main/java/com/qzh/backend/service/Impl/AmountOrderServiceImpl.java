@@ -31,6 +31,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -78,7 +79,7 @@ public class AmountOrderServiceImpl extends ServiceImpl<AmountOrderMapper, Amoun
     }
 
     @Override
-    public void payOrder(Long id,HttpServletRequest request, HttpServletResponse response) throws IOException{
+    public void payOrder(Long id,HttpServletRequest request, HttpServletResponse response) throws IOException {
         payMoney(id,request,response);
     }
 
@@ -224,6 +225,25 @@ public class AmountOrderServiceImpl extends ServiceImpl<AmountOrderMapper, Amoun
             }else {
                 throw new BusinessException(ErrorCode.OPERATION_ERROR,"订单支付失败");
             }
+        }
+    }
+
+    @Override
+    public void mockPay(Long id) {
+        AmountOrder amountOrder = this.getById(id);
+        if (amountOrder == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "订单不存在");
+        }
+        if (amountOrder.getStatus().equals(PayStatusEnum.PAID.getValue())) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "订单已支付");
+        }
+        amountOrder.setStatus(PayStatusEnum.PAID.getValue());
+        amountOrder.setPayType("mock_pay");
+        amountOrder.setTradeNo("MOCK_" + System.currentTimeMillis());
+        amountOrder.setUpdateTime(new Date());
+        boolean update = this.updateById(amountOrder);
+        if (!update) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "支付失败");
         }
     }
 }

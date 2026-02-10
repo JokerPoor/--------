@@ -32,6 +32,7 @@
 
       <template #actions="{ row }">
         <el-button v-if="row.amountOrderStatus === 0" link type="primary" @click="onPay(row.amountOrderId)" v-perm="'POST:/amount/order/payorder/:id'">付款</el-button>
+        <el-button v-if="row.amountOrderStatus === 0" link type="warning" @click="onMockPay(row.amountOrderId)">一键支付</el-button>
         <el-button v-if="row.purchaseOrderStatus === 0" link type="primary" @click="onShip(row)" v-perm="'purchase:order:ship'">发货</el-button>
         <el-button v-if="row.purchaseOrderStatus === 1" link type="success" @click="openStockIn(row)" v-perm="'purchase:order:stock-in'">入库</el-button>
       </template>
@@ -230,6 +231,19 @@ async function onPay(id: number) {
         document.body.removeChild(div)
       }, 1000)
     }
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+// Mock Pay Logic
+async function onMockPay(id: number) {
+  if (!id) return ElMessage.error('订单异常，缺少金额单ID')
+  try {
+    await ElMessageBox.confirm('确定使用模拟支付直接完成订单？', '一键支付', { type: 'warning' })
+    await http.post(`/amount/order/mock-pay/${id}`)
+    ElMessage.success('支付成功')
+    fetch()
   } catch (e) {
     console.error(e)
   }

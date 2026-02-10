@@ -25,4 +25,6 @@ public interface AmountOrderService extends IService<AmountOrder> {
     AmountOrderDetailVO getAmountOrderDetail(Long id,HttpServletRequest request);
 
     void notifyOrder(HttpServletRequest request) throws AlipayApiException;
+
+    void mockPay(Long id);
 }
