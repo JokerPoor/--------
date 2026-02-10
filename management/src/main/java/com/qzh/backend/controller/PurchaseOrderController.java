@@ -1,6 +1,7 @@
 package com.qzh.backend.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.qzh.backend.annotation.LogInfoRecord;
 import com.qzh.backend.common.BaseResponse;
 import com.qzh.backend.common.ResultUtils;
 import com.qzh.backend.model.dto.product.PurchaseOrderCreateDTO;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static com.qzh.backend.constants.Interface.PurchaseOrderInterfaceConstant.*;
+import static com.qzh.backend.constants.ModuleConstant.PURCHASE_ORDER_MODULE;
+
 @RestController
 @RequestMapping("/purchase/order")
 @RequiredArgsConstructor
@@ -24,6 +28,7 @@ public class PurchaseOrderController {
      * 创建采购订单
      */
     @PostMapping
+    @LogInfoRecord(SystemModule = PURCHASE_ORDER_MODULE + ":" + PURCHASE_ORDER_CREATE_POST)
     public BaseResponse<Long> createPurchaseOrder(@Valid @RequestBody PurchaseOrderCreateDTO createDTO, HttpServletRequest request) {
         Long purchaseOrderId = purchaseOrderService.createPurchaseOrder(createDTO,request);
         return ResultUtils.success(purchaseOrderId);
@@ -60,6 +65,7 @@ public class PurchaseOrderController {
      * 供应商设置订单为已发货
      */
     @PostMapping("/ship/{id}")
+    @LogInfoRecord(SystemModule = PURCHASE_ORDER_MODULE + ":" + PURCHASE_ORDER_SHIP_POST)
     public BaseResponse<Void> shipPurchaseOrder(@PathVariable("id") Long orderId,HttpServletRequest request) {
         purchaseOrderService.shipPurchaseOrder(orderId,request);
         return ResultUtils.success(null);

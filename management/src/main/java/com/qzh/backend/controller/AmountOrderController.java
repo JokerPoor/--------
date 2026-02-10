@@ -2,6 +2,7 @@ package com.qzh.backend.controller;
 
 import com.alipay.api.AlipayApiException;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.qzh.backend.annotation.LogInfoRecord;
 import com.qzh.backend.common.BaseResponse;
 import com.qzh.backend.common.ResultUtils;
 import com.qzh.backend.model.dto.product.AmountOrderQueryDTO;
@@ -16,6 +17,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+
+import static com.qzh.backend.constants.Interface.AmountOrderInterfaceConstant.*;
+import static com.qzh.backend.constants.ModuleConstant.AMOUNT_ORDER_MODULE;
 
 /**
  * 金额单Controller
@@ -75,6 +79,7 @@ public class AmountOrderController {
      * 支付订单
      */
     @PostMapping("/payorder/{id}")
+    @LogInfoRecord(SystemModule = AMOUNT_ORDER_MODULE + ":" + AMOUNT_ORDER_PAY_POST)
     public void payOrder(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
         amountOrderService.payOrder(id,request,response);
     }
@@ -83,6 +88,7 @@ public class AmountOrderController {
      * 支付订单
      */
     @PostMapping("/cancelorder/{id}")
+    @LogInfoRecord(SystemModule = AMOUNT_ORDER_MODULE + ":" + AMOUNT_ORDER_CANCEL_POST)
     public BaseResponse<Void> cancelorder(@PathVariable Long id,HttpServletRequest request,HttpServletResponse response) throws IOException {
         amountOrderService.cancleOrder(id,request,response);
         return ResultUtils.success(null);
@@ -97,6 +103,7 @@ public class AmountOrderController {
      * 模拟支付（一键支付）
      */
     @PostMapping("/mock-pay/{id}")
+    @LogInfoRecord(SystemModule = AMOUNT_ORDER_MODULE + ":" + AMOUNT_ORDER_MOCK_PAY_POST)
     public BaseResponse<Void> mockPay(@PathVariable Long id) {
         amountOrderService.mockPay(id);
         return ResultUtils.success(null);

@@ -1,6 +1,7 @@
 package com.qzh.backend.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.qzh.backend.annotation.LogInfoRecord;
 import com.qzh.backend.common.BaseResponse;
 import com.qzh.backend.common.ResultUtils;
 import com.qzh.backend.model.dto.product.InventoryQueryDTO;
@@ -13,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import static com.qzh.backend.constants.Interface.InventoryInterfaceConstant.*;
+import static com.qzh.backend.constants.ModuleConstant.INVENTORY_MODULE;
 
 @RestController
 @RequestMapping("inventory")
@@ -42,6 +46,7 @@ public class InventoryController {
     /**
      * 根据库存ID编辑库存中商品信息
      */
+    @LogInfoRecord(SystemModule = INVENTORY_MODULE + ":" + INVENTORY_UPDATE_POST)
     @PostMapping("/update")
     public BaseResponse<Void> updateInventory(@Valid @RequestBody InventoryUpdateDTO updateDTO) {
         inventoryService.updateInventory(updateDTO);
@@ -50,18 +55,21 @@ public class InventoryController {
 
 
     @PostMapping("/stock-in")
+    @LogInfoRecord(SystemModule = INVENTORY_MODULE + ":" + INVENTORY_STOCK_IN_POST)
     public BaseResponse<Void> stockIn(@Valid @RequestBody MultiWarehouseStockInDTO stockInDTO, HttpServletRequest request) {
         inventoryService.stockInNew(stockInDTO, request);
         return ResultUtils.success(null);
     }
 
     @PostMapping("/sale-order")
+    @LogInfoRecord(SystemModule = INVENTORY_MODULE + ":" + INVENTORY_SALE_ORDER_POST)
     public BaseResponse<Void>  saleOrder(@RequestBody Long saleOrderId,HttpServletRequest request) {
         inventoryService.saleOrder(saleOrderId, request);
         return ResultUtils.success(null);
     }
 
     @PostMapping("/sale-return/confirm")
+    @LogInfoRecord(SystemModule = INVENTORY_MODULE + ":" + INVENTORY_SALE_RETURN_CONFIRM_POST)
     public BaseResponse<Void> confirmSaleReturn(@RequestBody Long saleReturnId, HttpServletRequest request) {
         inventoryService.confirmSaleReturn(saleReturnId, request);
         return ResultUtils.success(null);

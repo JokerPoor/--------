@@ -1,6 +1,7 @@
 package com.qzh.backend.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.qzh.backend.annotation.LogInfoRecord;
 import com.qzh.backend.common.BaseResponse;
 import com.qzh.backend.common.ResultUtils;
 import com.qzh.backend.exception.BusinessException;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static com.qzh.backend.constants.Interface.StoreInterfaceConstant.*;
+import static com.qzh.backend.constants.ModuleConstant.STORE_MODULE;
 
 @RequiredArgsConstructor
 @RestController
@@ -26,13 +29,20 @@ public class StoreController {
 
     private final UserService userService;
 
+    /**
+     * 查询门店信息
+     */
     @GetMapping
     public BaseResponse<Store> getStore() {
         Store store = storeService.getOne(new QueryWrapper<>());
         return ResultUtils.success(store);
     }
 
+    /**
+     * 更新门店信息
+     */
     @PutMapping
+    @LogInfoRecord(SystemModule = STORE_MODULE + ":" + STORE_UPDATE_PUT)
     public BaseResponse<Void> updateStore(@RequestBody @Valid StoreUpdateDTO storeUpdateDTO) {
         ThrowUtils.throwIf(storeUpdateDTO == null, ErrorCode.PARAMS_ERROR);
         Long userId = storeUpdateDTO.getManagerId();
