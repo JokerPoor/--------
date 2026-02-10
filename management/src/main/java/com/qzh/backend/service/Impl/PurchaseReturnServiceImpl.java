@@ -26,6 +26,9 @@ import java.util.stream.Collectors;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qzh.backend.model.dto.product.PurchaseReturnQueryDTO;
 
+import com.qzh.backend.model.vo.PurchaseReturnVO;
+import org.springframework.beans.BeanUtils;
+
 @Service
 @RequiredArgsConstructor
 public class PurchaseReturnServiceImpl extends ServiceImpl<PurchaseReturnMapper, PurchaseReturn> implements PurchaseReturnService {
@@ -39,13 +42,46 @@ public class PurchaseReturnServiceImpl extends ServiceImpl<PurchaseReturnMapper,
     private final PurchaseOrderMapper purchaseOrderMapper;
 
     @Override
-    public Page<PurchaseReturn> listPurchaseReturns(PurchaseReturnQueryDTO queryDTO, HttpServletRequest request) {
+    public Page<PurchaseReturnVO> listPurchaseReturns(PurchaseReturnQueryDTO queryDTO, HttpServletRequest request) {
         ThrowUtils.throwIf(queryDTO == null, ErrorCode.PARAMS_ERROR);
         int current = queryDTO.getCurrent();
         int size = queryDTO.getSize();
         ThrowUtils.throwIf(size <= 0 || size > 1000, ErrorCode.PARAMS_ERROR);
+        
         Page<PurchaseReturn> page = new Page<>(current, size);
-        return this.page(page, PurchaseReturnQueryDTO.getQueryWrapper(queryDTO));
+        Page<PurchaseReturn> purchaseReturnPage = this.page(page, PurchaseReturnQueryDTO.getQueryWrapper(queryDTO));
+        
+        Page<PurchaseReturnVO> voPage = new Page<>(current, size, purchaseReturnPage.getTotal());
+        if (CollectionUtils.isEmpty(purchaseReturnPage.getRecords())) {
+            return voPage;
+        }
+
+        // 收集ID并批量查询金额单
+        List<PurchaseReturn> records = purchaseReturnPage.getRecords();
+        List<String> orderIdStrs = records.stream().map(r -> String.valueOf(r.getId())).collect(Collectors.toList());
+        
+        List<AmountOrder> amountOrders = amountOrderMapper.selectList(
+                Wrappers.lambdaQuery(AmountOrder.class)
+                        .in(AmountOrder::getOrderId, orderIdStrs)
+                        .eq(AmountOrder::getType, OrderTypeEnum.PURCHASE_RETURN.getValue())
+        );
+        Map<String, AmountOrder> amountOrderMap = amountOrders.stream()
+                .collect(Collectors.toMap(AmountOrder::getOrderId, ao -> ao, (a, b) -> a));
+
+        // 转换VO
+        List<PurchaseReturnVO> voList = records.stream().map(record -> {
+            PurchaseReturnVO vo = new PurchaseReturnVO();
+            BeanUtils.copyProperties(record, vo);
+            AmountOrder ao = amountOrderMap.get(String.valueOf(record.getId()));
+            if (ao != null) {
+                vo.setAmountOrderStatus(ao.getStatus());
+                vo.setAmountOrderId(ao.getId());
+            }
+            return vo;
+        }).collect(Collectors.toList());
+
+        voPage.setRecords(voList);
+        return voPage;
     }
 
     @Override

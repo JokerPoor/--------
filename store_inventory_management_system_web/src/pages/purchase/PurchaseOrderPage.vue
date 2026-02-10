@@ -18,6 +18,12 @@
         <el-image :src="row.productUrl" class="w-10 h-10 object-cover rounded" :preview-src-list="[row.productUrl]" preview-teleported />
       </template>
 
+      <template #type="{ row }">
+        <el-tag v-if="row.purchaseOrderType === 0">手动</el-tag>
+        <el-tag v-else-if="row.purchaseOrderType === 1" type="warning">自动</el-tag>
+        <el-tag v-else type="info">未知</el-tag>
+      </template>
+
       <template #status="{ row }">
         <el-tag v-if="row.purchaseOrderStatus === 0">待发货</el-tag>
         <el-tag v-else-if="row.purchaseOrderStatus === 1" type="warning">已发货</el-tag>
@@ -141,6 +147,7 @@ const cols = [
   { prop: 'purchaseOrderId', label: 'ID', width: 80 },
   { prop: 'productUrl', label: '图片', width: 80, slot: 'url' },
   { prop: 'productName', label: '商品名称' },
+  { prop: 'purchaseOrderType', label: '类型', width: 100, slot: 'type' },
   { prop: 'productPrice', label: '单价', width: 100 },
   { prop: 'productQuantity', label: '数量', width: 100 },
   { prop: 'amount', label: '总金额', width: 120 },

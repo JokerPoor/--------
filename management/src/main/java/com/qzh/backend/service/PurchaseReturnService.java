@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.qzh.backend.model.dto.product.PurchaseReturnCreateDTO;
 import com.qzh.backend.model.dto.product.PurchaseReturnQueryDTO;
 import com.qzh.backend.model.entity.PurchaseReturn;
+import com.qzh.backend.model.vo.PurchaseReturnVO;
 import jakarta.servlet.http.HttpServletRequest;
 
 public interface PurchaseReturnService extends IService<PurchaseReturn> {
@@ -17,5 +18,5 @@ public interface PurchaseReturnService extends IService<PurchaseReturn> {
 
     void confirmPurchaseReturn(Long returnId, HttpServletRequest request);
 
-    Page<PurchaseReturn> listPurchaseReturns(PurchaseReturnQueryDTO queryDTO, HttpServletRequest request);
+    Page<PurchaseReturnVO> listPurchaseReturns(PurchaseReturnQueryDTO queryDTO, HttpServletRequest request);
 }

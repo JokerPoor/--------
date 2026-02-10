@@ -5,6 +5,7 @@ import com.qzh.backend.common.ResultUtils;
 import com.qzh.backend.model.dto.product.PurchaseReturnCreateDTO;
 import com.qzh.backend.model.entity.PurchaseReturn;
 import com.qzh.backend.service.PurchaseReturnService;
+import com.qzh.backend.model.vo.PurchaseReturnVO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +26,8 @@ public class PurchaseReturnController {
     private final PurchaseReturnService purchaseReturnService;
 
     @GetMapping("/list")
-    public BaseResponse<Page<PurchaseReturn>> listPurchaseReturns(PurchaseReturnQueryDTO queryDTO, HttpServletRequest request) {
-        Page<PurchaseReturn> returnPage = purchaseReturnService.listPurchaseReturns(queryDTO, request);
+    public BaseResponse<Page<PurchaseReturnVO>> listPurchaseReturns(PurchaseReturnQueryDTO queryDTO, HttpServletRequest request) {
+        Page<PurchaseReturnVO> returnPage = purchaseReturnService.listPurchaseReturns(queryDTO, request);
         return ResultUtils.success(returnPage);
     }
 

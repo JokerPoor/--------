@@ -39,6 +39,7 @@ public interface ButtonPermissionConstant {
     String PURCHASE_ORDER_SHIP = "purchase:order:ship";
     String PURCHASE_ORDER_STOCK_IN = "purchase:order:stock-in";
     String PURCHASE_RETURN_ADD = "purchase:return:add";
+    String PURCHASE_RETURN_CONFIRM = "purchase:return:confirm";
 
     // 销售管理
     String SALE_ORDER_CREATE = "sale:order:create";

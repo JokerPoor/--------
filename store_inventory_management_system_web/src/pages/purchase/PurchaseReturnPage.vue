@@ -24,7 +24,15 @@
         <el-tag v-else-if="row.status === 2" type="info">已取消</el-tag>
       </template>
 
+      <template #payStatus="{ row }">
+        <el-tag v-if="row.amountOrderStatus === 0" type="danger">待退款</el-tag>
+        <el-tag v-else-if="row.amountOrderStatus === 1" type="success">已退款</el-tag>
+        <el-tag v-else-if="row.amountOrderStatus === 2" type="info">已取消</el-tag>
+      </template>
+
       <template #actions="{ row }">
+        <el-button v-if="row.amountOrderStatus === 0" link type="primary" @click="onPay(row.amountOrderId)" v-perm="'POST:/amount/order/payorder/:id'">退款</el-button>
+        <el-button v-if="row.amountOrderStatus === 0" link type="warning" @click="onMockPay(row.amountOrderId)">一键退款</el-button>
         <el-button v-if="row.status === 0" link type="primary" @click="onConfirm(row)" v-perm="'purchase:return:confirm'">确认退货</el-button>
       </template>
     </EpTable>
@@ -80,6 +88,7 @@ const cols = [
   { prop: 'productQuantity', label: '退货数量', width: 100 },
   { prop: 'totalAmount', label: '退款金额', width: 120 },
   { prop: 'status', label: '状态', width: 100, slot: 'status' },
+  { prop: 'amountOrderStatus', label: '退款状态', width: 100, slot: 'payStatus' },
   { prop: 'createTime', label: '创建时间', width: 180 }
 ]
 
@@ -160,6 +169,43 @@ async function submitCreate() {
     fetch()
   } finally {
     submitting.value = false
+  }
+}
+
+// Pay Logic
+async function onPay(id: number) {
+  if (!id) return ElMessage.error('订单异常，缺少金额单ID')
+  try {
+    const res = await http.post(`/amount/order/payorder/${id}`)
+    // 后端返回的是HTML表单
+    if (typeof res === 'string') {
+      const div = document.createElement('div')
+      div.innerHTML = res
+      document.body.appendChild(div)
+      const form = div.getElementsByTagName('form')[0]
+      if (form) {
+        form.submit()
+      } else {
+        ElMessage.error('支付跳转失败')
+      }
+    } else {
+       ElMessage.success('支付请求已发送')
+       fetch()
+    }
+  } catch (e) {
+    // error handled by interceptor
+  }
+}
+
+async function onMockPay(id: number) {
+  if (!id) return
+  try {
+    await ElMessageBox.confirm('是否确认模拟退款（仅用于测试）？', '提示')
+    await http.post(`/amount/order/mock-pay/${id}`)
+    ElMessage.success('模拟退款成功')
+    fetch()
+  } catch (e) {
+    // cancelled
   }
 }
 
