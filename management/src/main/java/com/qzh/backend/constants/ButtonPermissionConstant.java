@@ -46,5 +46,6 @@ public interface ButtonPermissionConstant {
     String SALE_ORDER_CONFIRM = "sale:order:confirm";
     String INVENTORY_SALE_ORDER_SHIP = "inventory:sale-order:ship";
     String SALE_RETURN_ADD = "sale:return:add";
+    String INVENTORY_SALE_RETURN_CONFIRM = "inventory:sale-return:confirm";
 
 }

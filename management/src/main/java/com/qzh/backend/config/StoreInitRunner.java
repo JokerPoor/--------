@@ -128,6 +128,7 @@ public class StoreInitRunner implements ApplicationRunner {
                 new PageSeed("商品管理", "/products", "pages/products/ProductsPage", 60, 1, "/goods"),
                 new PageSeed("仓库管理", "/warehouses", "pages/warehouses/WarehousesPage", 50, 1, "/goods"),
                 new PageSeed("库存管理", "/inventory", "pages/inventory/InventoryPage", 25, 1, "/goods"),
+                new PageSeed("库存明细", "/inventory/details", "pages/inventory/InventoryDetailPage", 22, 1, "/goods"),
                 new PageSeed("调拨记录", "/inventory/transfer-logs", "pages/inventory/TransferLogPage", 20, 1, "/goods"),
 
                 // 采购管理
@@ -221,7 +222,7 @@ public class StoreInitRunner implements ApplicationRunner {
             List<String> storeAdminPagePaths = List.of(
                 "/dashboard",
                 "/system", "/supplier", "/customer", // 供应商和客户管理
-                "/goods", "/products", "/warehouses", "/inventory", "/inventory/transfer-logs", // 商品库存
+                "/goods", "/products", "/warehouses", "/inventory", "/inventory/transfer-logs", "/inventory/details", // 商品库存
                 "/purchase", "/purchase/order", "/purchase/return", // 采购
                 "/sale", "/sale/order", "/sale/return", // 销售
                 "/amount", "/amount/orders", // 资金管理
@@ -250,7 +251,8 @@ public class StoreInitRunner implements ApplicationRunner {
         // 5.3 给其他角色（客户）分配业务页面
         List<String> customerPagePaths = List.of(
             "/dashboard", "/customer/shopping",
-            "/amount", "/amount/orders"
+            "/amount", "/amount/orders",
+            "/sale", "/sale/order", "/sale/return"
         );
         
         List<String> otherRoles = List.of(RoleNameConstant.CUSTOMER);
@@ -288,7 +290,7 @@ public class StoreInitRunner implements ApplicationRunner {
                 ButtonPermissionConstant.PURCHASE_ORDER_ADD, ButtonPermissionConstant.PURCHASE_ORDER_SHIP, ButtonPermissionConstant.PURCHASE_ORDER_STOCK_IN, ButtonPermissionConstant.PURCHASE_RETURN_ADD, ButtonPermissionConstant.PURCHASE_RETURN_CONFIRM,
 
                 // 按钮权限 - 销售管理
-                ButtonPermissionConstant.SALE_ORDER_CREATE, ButtonPermissionConstant.SALE_ORDER_CONFIRM, ButtonPermissionConstant.INVENTORY_SALE_ORDER_SHIP, ButtonPermissionConstant.SALE_RETURN_ADD,
+                ButtonPermissionConstant.SALE_ORDER_CREATE, ButtonPermissionConstant.SALE_ORDER_CONFIRM, ButtonPermissionConstant.INVENTORY_SALE_ORDER_SHIP, ButtonPermissionConstant.SALE_RETURN_ADD, ButtonPermissionConstant.INVENTORY_SALE_RETURN_CONFIRM,
 
                 // 用户接口权限
                 UserInterfaceConstant.USER_LIST_GET,
@@ -439,7 +441,7 @@ public class StoreInitRunner implements ApplicationRunner {
                 ButtonPermissionConstant.PURCHASE_ORDER_ADD, ButtonPermissionConstant.PURCHASE_ORDER_STOCK_IN, ButtonPermissionConstant.PURCHASE_RETURN_ADD, ButtonPermissionConstant.PURCHASE_RETURN_CONFIRM,
 
                 // 按钮权限 - 销售管理
-                ButtonPermissionConstant.SALE_ORDER_CREATE, ButtonPermissionConstant.SALE_ORDER_CONFIRM, ButtonPermissionConstant.INVENTORY_SALE_ORDER_SHIP, ButtonPermissionConstant.SALE_RETURN_ADD,
+                ButtonPermissionConstant.SALE_ORDER_CREATE, ButtonPermissionConstant.SALE_ORDER_CONFIRM, ButtonPermissionConstant.INVENTORY_SALE_ORDER_SHIP, ButtonPermissionConstant.SALE_RETURN_ADD, ButtonPermissionConstant.INVENTORY_SALE_RETURN_CONFIRM,
 
                 // 用户接口权限
                 UserInterfaceConstant.USER_LIST_GET,
@@ -555,6 +557,36 @@ public class StoreInitRunner implements ApplicationRunner {
                 .filter(p -> supplierPermNames.contains(p.getName()))
                 .collect(Collectors.toList());
             assignPermissionsToRole(supplierRole, supplierPerms, createBy);
+        }
+
+        // 10. 分配权限给客户
+        Role customerRole = roleService.getOne(new LambdaQueryWrapper<Role>().eq(Role::getRoleName, RoleNameConstant.CUSTOMER));
+        if (customerRole != null) {
+            List<String> customerPermNames = List.of(
+                // 按钮权限
+                ButtonPermissionConstant.SALE_ORDER_CREATE, ButtonPermissionConstant.SALE_ORDER_CONFIRM, ButtonPermissionConstant.SALE_RETURN_ADD,
+
+                // 销售订单接口权限
+                SaleOrderInterfaceConstant.SALE_ORDER_CREATE_POST,
+                SaleOrderInterfaceConstant.SALE_ORDER_MY_GET,
+                SaleOrderInterfaceConstant.SALE_ORDER_DETAIL_GET,
+                SaleOrderInterfaceConstant.SALE_ORDER_CONFIRM_POST,
+
+                // 销售退货接口权限
+                SaleReturnInterfaceConstant.SALE_RETURN_CREATE_POST,
+                SaleReturnInterfaceConstant.SALE_RETURN_MY_GET,
+                SaleReturnInterfaceConstant.SALE_RETURN_DETAIL_GET,
+
+                // 资金管理接口权限
+                AmountOrderInterfaceConstant.AMOUNT_ORDER_LIST_PAYER_GET,
+                AmountOrderInterfaceConstant.AMOUNT_ORDER_PAY_POST,
+                AmountOrderInterfaceConstant.AMOUNT_ORDER_DETAIL_GET,
+                AmountOrderInterfaceConstant.AMOUNT_ORDER_NOTIFY_POST
+            );
+            List<Permission> customerPerms = perms.stream()
+                .filter(p -> customerPermNames.contains(p.getName()))
+                .collect(Collectors.toList());
+            assignPermissionsToRole(customerRole, customerPerms, createBy);
         }
     }
 

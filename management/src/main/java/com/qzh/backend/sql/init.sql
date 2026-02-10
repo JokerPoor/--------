@@ -236,7 +236,7 @@ CREATE TABLE `sys_inventory_detail` (
                                         `updateTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                         KEY `idx_orderId_productId` (`productId`,`orderId`),
                                         KEY `idx_product_warehouse` (`productId`,`warehouseId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='库存表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='库存变化记录表';
 
 CREATE TABLE `sys_operation_log` (
                                      `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '日志唯一标识',
