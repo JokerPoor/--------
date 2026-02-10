@@ -138,6 +138,11 @@ public class StoreInitRunner implements ApplicationRunner {
                 new PageSeed("销售管理", "/sale", null, 60, 1),
                 new PageSeed("销售订单", "/sale/order", "pages/sale/SaleOrderPage", 10, 1, "/sale"),
                 new PageSeed("销售退货", "/sale/return", "pages/sale/SaleReturnPage", 5, 1, "/sale"),
+                
+                // 资金管理
+                new PageSeed("资金管理", "/amount", null, 65, 1),
+                new PageSeed("金额订单", "/amount/orders", "pages/amount/AmountOrderPage", 100, 1, "/amount"),
+
                 // 供应商端
                 new PageSeed("我的商品", "/supplier/products", "pages/supplier/MyProductsPage", 100, 1),
                 new PageSeed("采购订单", "/supplier/orders", "pages/supplier/SupplierOrderPage", 90, 1),
@@ -218,6 +223,7 @@ public class StoreInitRunner implements ApplicationRunner {
                 "/goods", "/products", "/warehouses", "/inventory", // 商品库存
                 "/purchase", "/purchase/order", "/purchase/return", // 采购
                 "/sale", "/sale/order", "/sale/return", // 销售
+                "/amount", "/amount/orders", // 资金管理
                 "/ai", "/ai/chat", "/ai/inventory-warning", "/ai/sales-forecast", "/ai/sales-stats" // AI 智能决策
             );
             List<PageInfo> storeAdminPages = allPages.stream()
@@ -231,7 +237,8 @@ public class StoreInitRunner implements ApplicationRunner {
         if (supplierRole != null) {
             List<String> supplierPagePaths = List.of(
                 "/dashboard",
-                "/supplier/products", "/supplier/orders", "/supplier/returns"
+                "/supplier/products", "/supplier/orders", "/supplier/returns",
+                "/amount", "/amount/orders"
             );
             List<PageInfo> supplierPages = allPages.stream()
                 .filter(p -> supplierPagePaths.contains(p.getPath()))
@@ -239,32 +246,20 @@ public class StoreInitRunner implements ApplicationRunner {
             assignPagesToRole(supplierRole, supplierPages, createBy);
         }
 
-        // 5.3 给其他角色（客户）分配首页
-        // 获取首页ID
-        Long dashboardPageId = allPages.stream()
-                .filter(p -> "/dashboard".equals(p.getPath()))
-                .findFirst()
-                .map(PageInfo::getId)
-                .orElse(null);
-
-        if (dashboardPageId != null) {
-            List<String> otherRoles = List.of(RoleNameConstant.CUSTOMER);
-            for (String rName : otherRoles) {
-                Role role = roleService.getOne(new LambdaQueryWrapper<Role>().eq(Role::getRoleName, rName));
-                if (role != null) {
-                    boolean hasDashboard = roleRelatedPageService.count(
-                            new LambdaQueryWrapper<RoleRelatedPage>()
-                                    .eq(RoleRelatedPage::getRoleId, role.getId())
-                                    .eq(RoleRelatedPage::getPageId, dashboardPageId)
-                    ) > 0;
-                    if (!hasDashboard) {
-                        RoleRelatedPage rp = new RoleRelatedPage();
-                        rp.setRoleId(role.getId());
-                        rp.setPageId(dashboardPageId);
-                        rp.setCreateBy(createBy);
-                        roleRelatedPageService.save(rp);
-                    }
-                }
+        // 5.3 给其他角色（客户）分配业务页面
+        List<String> customerPagePaths = List.of(
+            "/dashboard", "/customer/shopping",
+            "/amount", "/amount/orders"
+        );
+        
+        List<String> otherRoles = List.of(RoleNameConstant.CUSTOMER);
+        for (String rName : otherRoles) {
+            Role role = roleService.getOne(new LambdaQueryWrapper<Role>().eq(Role::getRoleName, rName));
+            if (role != null) {
+                List<PageInfo> customerPages = allPages.stream()
+                    .filter(p -> customerPagePaths.contains(p.getPath()))
+                    .collect(Collectors.toList());
+                assignPagesToRole(role, customerPages, createBy);
             }
         }
 

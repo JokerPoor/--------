@@ -30,11 +30,13 @@ public class AmountOrderController {
     private final GetLoginUserUtil getLoginUserUtil;
 
     /**
-     * 分页查询门店下的所有金额单
+     * 分页查询金额单（智能权限控制）
+     * 门店管理员：查看门店所有
+     * 其他用户：查看自己相关
      */
     @GetMapping("/list")
-    public BaseResponse<Page<AmountOrder>> listAmountOrders(AmountOrderQueryDTO queryDTO) {
-        Page<AmountOrder> amountOrderPage = amountOrderService.listAmountOrdersByStoreId(queryDTO);
+    public BaseResponse<Page<AmountOrder>> listAmountOrders(AmountOrderQueryDTO queryDTO, HttpServletRequest request) {
+        Page<AmountOrder> amountOrderPage = amountOrderService.listPermittedAmountOrders(queryDTO, request);
         return ResultUtils.success(amountOrderPage);
     }
 

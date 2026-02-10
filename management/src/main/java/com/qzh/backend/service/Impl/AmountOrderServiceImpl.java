@@ -6,6 +6,10 @@ import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradePagePayRequest;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qzh.backend.config.AliPayConfig;
@@ -67,6 +71,39 @@ public class AmountOrderServiceImpl extends ServiceImpl<AmountOrderMapper, Amoun
     @Resource
     @Lazy
     private SaleReturnServiceImpl saleReturnService;
+
+    @Override
+    public Page<AmountOrder> listPermittedAmountOrders(AmountOrderQueryDTO queryDTO, HttpServletRequest request) {
+        ThrowUtils.throwIf(queryDTO == null, ErrorCode.PARAMS_ERROR);
+        int current = queryDTO.getCurrent();
+        int size = queryDTO.getSize();
+        ThrowUtils.throwIf(size <= 0 || size > 1000, ErrorCode.PARAMS_ERROR);
+
+        User loginUser = getLoginUserUtil.getLoginUser(request);
+        Long userId = loginUser.getId();
+        Long managerId = appGlobalConfig.getManagerId();
+        boolean isManager = userId.equals(managerId);
+
+        QueryWrapper<AmountOrder> wrapper = new QueryWrapper<>();
+        wrapper.eq(ObjectUtil.isNotNull(queryDTO.getType()), "type", queryDTO.getType());
+        wrapper.eq(ObjectUtil.isNotNull(queryDTO.getStatus()), "status", queryDTO.getStatus());
+        wrapper.ge(ObjUtil.isNotEmpty(queryDTO.getStartTime()), "createTime", queryDTO.getStartTime());
+        wrapper.lt(ObjUtil.isNotEmpty(queryDTO.getEndTime()), "createTime", queryDTO.getEndTime());
+        wrapper.orderBy(StrUtil.isNotEmpty(queryDTO.getSortField()), "ascend".equals(queryDTO.getSortOrder()), queryDTO.getSortField());
+        
+        // 如果有ID搜索（假设Search通常搜ID或订单号）
+        // DTO没有通用keyword，假设只用以上字段。如果DTO有变化，需要同步。
+
+        if (isManager) {
+            // 门店管理员：查看当前门店所有
+            wrapper.eq("storeId", appGlobalConfig.getCurrentStoreId());
+        } else {
+            // 供应商/客户：查看自己相关（作为付款人或收款人）
+            wrapper.and(w -> w.eq("payerId", userId).or().eq("payeeId", userId));
+        }
+
+        return this.page(new Page<>(current, size), wrapper);
+    }
 
     @Override
     public Page<AmountOrder> listAmountOrdersByStoreId(AmountOrderQueryDTO queryDTO) {

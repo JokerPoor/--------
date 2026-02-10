@@ -156,6 +156,10 @@ function getMenuPages() {
     .sort((a, b) => (b.orderNum || 0) - (a.orderNum || 0))
 }
 
+function getUser() {
+  return state.user
+}
+
 export default {
   state,
   login,
@@ -165,5 +169,6 @@ export default {
   ensureDynamicRoutes,
   ensureInited,
   getMenuPages,
-  hasPermission
+  hasPermission,
+  getUser
 }

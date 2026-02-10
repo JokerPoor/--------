@@ -20,6 +20,7 @@ const routes = [
   { path: "/supplier/products", component: () => import("../pages/supplier/MyProductsPage.vue") },
   { path: "/supplier/orders", component: () => import("../pages/supplier/SupplierOrderPage.vue") },
   { path: "/customer/shopping", component: () => import("../pages/customer/ShoppingPage.vue") },
+  { path: "/amount/orders", component: () => import("../pages/amount/AmountOrderPage.vue") },
 ];
 
 const router = createRouter({
