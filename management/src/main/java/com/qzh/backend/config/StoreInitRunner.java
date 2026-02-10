@@ -271,6 +271,9 @@ public class StoreInitRunner implements ApplicationRunner {
                 // 按钮权限 - 仓库管理
                 ButtonPermissionConstant.WAREHOUSE_ADD, ButtonPermissionConstant.WAREHOUSE_EDIT, ButtonPermissionConstant.WAREHOUSE_DELETE,
 
+                // 按钮权限 - 库存管理
+                ButtonPermissionConstant.INVENTORY_UPDATE,
+
                 // 按钮权限 - 采购管理
                 ButtonPermissionConstant.PURCHASE_ORDER_ADD, ButtonPermissionConstant.PURCHASE_ORDER_SHIP, ButtonPermissionConstant.PURCHASE_ORDER_STOCK_IN,
 
@@ -419,6 +422,9 @@ public class StoreInitRunner implements ApplicationRunner {
                 // 按钮权限 - 仓库管理
                 ButtonPermissionConstant.WAREHOUSE_ADD, ButtonPermissionConstant.WAREHOUSE_EDIT, ButtonPermissionConstant.WAREHOUSE_DELETE,
 
+                // 按钮权限 - 库存管理
+                ButtonPermissionConstant.INVENTORY_UPDATE,
+
                 // 按钮权限 - 采购管理
                 ButtonPermissionConstant.PURCHASE_ORDER_ADD, ButtonPermissionConstant.PURCHASE_ORDER_STOCK_IN,
 
@@ -504,6 +510,35 @@ public class StoreInitRunner implements ApplicationRunner {
                 .filter(p -> storeAdminPermNames.contains(p.getName()))
                 .collect(Collectors.toList());
             assignPermissionsToRole(storeAdminRole, storeAdminPerms, createBy);
+        }
+
+        // 9. 分配权限给供应商
+        Role supplierRole = roleService.getOne(new LambdaQueryWrapper<Role>().eq(Role::getRoleName, RoleNameConstant.SUPPLIER));
+        if (supplierRole != null) {
+            List<String> supplierPermNames = List.of(
+                // 按钮权限
+                ButtonPermissionConstant.PURCHASE_ORDER_SHIP,
+
+                // 接口权限
+                PurchaseOrderInterfaceConstant.PURCHASE_ORDER_SHIP_POST,
+                PurchaseOrderInterfaceConstant.PURCHASE_ORDER_SUPPLIER_LIST_GET,
+
+                // 商品管理相关
+                ButtonPermissionConstant.PRODUCT_ADD, ButtonPermissionConstant.PRODUCT_EDIT, ButtonPermissionConstant.PRODUCT_DELETE, ButtonPermissionConstant.PRODUCT_UPDATE,
+                ProductInterfaceConstant.PRODUCT_ADD_POST,
+                ProductInterfaceConstant.PRODUCT_UPDATE_PUT,
+                ProductInterfaceConstant.PRODUCT_DELETE_DELETE,
+                ProductInterfaceConstant.PRODUCT_DETAIL_GET,
+                ProductInterfaceConstant.PRODUCT_LIST_OWN_GET,
+                
+                // 销售退货相关 (供应商可能需要查看销售退货申请)
+                SaleReturnInterfaceConstant.SALE_RETURN_MY_GET,
+                SaleReturnInterfaceConstant.SALE_RETURN_DETAIL_GET
+            );
+            List<Permission> supplierPerms = perms.stream()
+                .filter(p -> supplierPermNames.contains(p.getName()))
+                .collect(Collectors.toList());
+            assignPermissionsToRole(supplierRole, supplierPerms, createBy);
         }
     }
 

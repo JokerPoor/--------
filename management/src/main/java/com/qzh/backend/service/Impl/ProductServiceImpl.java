@@ -2,6 +2,7 @@ package com.qzh.backend.service.Impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.qzh.backend.config.AppGlobalConfig;
 import com.qzh.backend.exception.BusinessException;
 import com.qzh.backend.exception.ErrorCode;
 import com.qzh.backend.mapper.ProductMapper;
@@ -24,6 +25,7 @@ import java.math.BigDecimal;
 public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> implements ProductService {
 
     private final GetLoginUserUtil getLoginUserUtil;
+    private final AppGlobalConfig appGlobalConfig;
 
     @Override
     public Long addProduct(ProductAddDTO productAddDTO, HttpServletRequest request) {
@@ -52,7 +54,8 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "商品不存在");
         }
         User loginUser = getLoginUserUtil.getLoginUser(request);
-        if (!loginUser.getId().equals(existingProduct.getSupplierId())) {
+        // 允许供应商本人 或 门店管理员 修改商品
+        if (!loginUser.getId().equals(existingProduct.getSupplierId()) && !loginUser.getId().equals(appGlobalConfig.getManagerId())) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR,"禁止修改他人商品数据");
         }
         existingProduct.setName(productUpdateDTO.getName());

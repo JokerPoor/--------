@@ -31,6 +31,9 @@ public interface ButtonPermissionConstant {
     String WAREHOUSE_EDIT = "warehouse:edit";
     String WAREHOUSE_DELETE = "warehouse:delete";
 
+    // 库存管理
+    String INVENTORY_UPDATE = "inventory:update";
+
     // 采购管理
     String PURCHASE_ORDER_ADD = "purchase:order:add";
     String PURCHASE_ORDER_SHIP = "purchase:order:ship";

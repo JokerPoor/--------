@@ -272,8 +272,8 @@ public class InventoryServiceImpl extends ServiceImpl<InventoryMapper, Inventory
                 inventory.setProductName(purchaseOrder.getProductName());
                 inventory.setProductDescription(purchaseOrder.getProductDescription());
                 inventory.setProductUrl(purchaseOrder.getProductUrl());
-                // 出售价格默认比进货价多1
-                inventory.setProductPrice(purchaseOrder.getProductPrice().add(new BigDecimal(1)));
+                // 出售价格默认与进货价一致
+                inventory.setProductPrice(purchaseOrder.getProductPrice());
                 inventory.setStoreId(purchaseOrder.getStoreId());
                 inventory.setWarehouseId(warehouseId); // 设置仓库ID
                 inventory.setWarningThreshold(10); // 默认预警阈值
