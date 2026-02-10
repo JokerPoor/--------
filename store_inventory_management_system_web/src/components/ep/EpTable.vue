@@ -7,9 +7,9 @@
       </div>
       <el-button type="primary" @click="$emit('refresh')"><el-icon><Refresh /></el-icon><span>刷新</span></el-button>
     </div>
-    <el-table ref="tableRef" :data="rows" border stripe @selection-change="onSelectionChange">
+    <el-table ref="tableRef" :data="rows" border stripe @selection-change="onSelectionChange" style="width: 100%">
       <el-table-column type="selection" width="48" />
-      <el-table-column v-for="c in columns" :key="c.prop" :prop="c.prop" :label="c.label" :width="c.width">
+      <el-table-column v-for="c in columns" :key="c.prop" :prop="c.prop" :label="c.label" :min-width="c.width || 120">
         <template #default="{ row }">
           <slot v-if="c.slot" :name="c.slot" :row="row"></slot>
           <span v-else>{{ row[c.prop] }}</span>

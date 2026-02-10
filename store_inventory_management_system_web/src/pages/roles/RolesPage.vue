@@ -67,9 +67,10 @@
     </el-dialog>
     <el-dialog v-model="assignPermVisible" title="给角色分配权限" width="520px">
       <el-checkbox-group v-model="assignPermIds">
-        <el-checkbox v-for="p in permList" :key="p.id" :label="p.id">{{
-          p.name
-        }}</el-checkbox>
+        <el-checkbox v-for="p in permList" :key="p.id" :label="p.id" style="width: 100%; margin-right: 0; margin-bottom: 8px;">
+          <span :title="p.name">{{ p.description || p.name }}</span>
+          <span class="text-gray-400 text-xs ml-2">({{ p.name }})</span>
+        </el-checkbox>
       </el-checkbox-group>
       <template #footer>
         <el-button @click="assignPermVisible = false">取消</el-button>

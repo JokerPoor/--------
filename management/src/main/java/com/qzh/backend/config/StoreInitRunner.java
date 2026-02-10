@@ -24,6 +24,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -267,6 +268,159 @@ public class StoreInitRunner implements ApplicationRunner {
         }
 
         // 6. 初始化权限（保持原有逻辑）
+        // 定义权限名称与中文描述的映射
+        Map<String, String> permDescMap = new HashMap<>();
+        // 基础角色与权限
+        permDescMap.put(ButtonPermissionConstant.ROLE_MANAGE, "角色管理页面访问");
+        permDescMap.put(ButtonPermissionConstant.PERM_ASSIGN, "权限分配操作");
+
+        // 用户管理
+        permDescMap.put(ButtonPermissionConstant.USER_ADD, "新增用户按钮");
+        permDescMap.put(ButtonPermissionConstant.USER_EDIT, "编辑用户按钮");
+        permDescMap.put(ButtonPermissionConstant.USER_DELETE, "删除用户按钮");
+        permDescMap.put(ButtonPermissionConstant.USER_RESET_PASSWORD, "重置密码按钮");
+
+        // 角色管理
+        permDescMap.put(ButtonPermissionConstant.ROLE_ADD, "新增角色按钮");
+        permDescMap.put(ButtonPermissionConstant.ROLE_EDIT, "编辑角色按钮");
+        permDescMap.put(ButtonPermissionConstant.ROLE_DELETE, "删除角色按钮");
+
+        // 商品管理
+        permDescMap.put(ButtonPermissionConstant.PRODUCT_ADD, "新增商品按钮");
+        permDescMap.put(ButtonPermissionConstant.PRODUCT_EDIT, "编辑商品按钮");
+        permDescMap.put(ButtonPermissionConstant.PRODUCT_DELETE, "删除商品按钮");
+        permDescMap.put(ButtonPermissionConstant.PRODUCT_UPDATE, "更新商品按钮");
+
+        // 仓库管理
+        permDescMap.put(ButtonPermissionConstant.WAREHOUSE_ADD, "新增仓库按钮");
+        permDescMap.put(ButtonPermissionConstant.WAREHOUSE_EDIT, "编辑仓库按钮");
+        permDescMap.put(ButtonPermissionConstant.WAREHOUSE_DELETE, "删除仓库按钮");
+
+        // 库存管理
+        permDescMap.put(ButtonPermissionConstant.INVENTORY_UPDATE, "更新库存按钮");
+
+        // 采购管理
+        permDescMap.put(ButtonPermissionConstant.PURCHASE_ORDER_ADD, "新建采购单按钮");
+        permDescMap.put(ButtonPermissionConstant.PURCHASE_ORDER_SHIP, "采购发货按钮");
+        permDescMap.put(ButtonPermissionConstant.PURCHASE_ORDER_STOCK_IN, "采购入库按钮");
+        permDescMap.put(ButtonPermissionConstant.PURCHASE_RETURN_ADD, "新建采退单按钮");
+        permDescMap.put(ButtonPermissionConstant.PURCHASE_RETURN_CONFIRM, "确认采退按钮");
+
+        // 销售管理
+        permDescMap.put(ButtonPermissionConstant.SALE_ORDER_CREATE, "新建销售单按钮");
+        permDescMap.put(ButtonPermissionConstant.SALE_ORDER_CONFIRM, "确认销售单按钮");
+        permDescMap.put(ButtonPermissionConstant.INVENTORY_SALE_ORDER_SHIP, "销售发货按钮");
+        permDescMap.put(ButtonPermissionConstant.SALE_RETURN_ADD, "新建销退单按钮");
+        permDescMap.put(ButtonPermissionConstant.INVENTORY_SALE_RETURN_CONFIRM, "确认销退按钮");
+
+        // 用户接口
+        permDescMap.put(UserInterfaceConstant.USER_LIST_GET, "查询用户列表");
+        permDescMap.put(UserInterfaceConstant.USER_DETAIL_GET, "查询用户详情");
+        permDescMap.put(UserInterfaceConstant.USER_CREATE_POST, "创建用户");
+        permDescMap.put(UserInterfaceConstant.USER_UPDATE_PUT, "更新用户信息");
+        permDescMap.put(UserInterfaceConstant.USER_RESET_PASSWORD_POST, "重置用户密码");
+        permDescMap.put(UserInterfaceConstant.USER_BATCH_STATUS_POST, "批量修改用户状态");
+        permDescMap.put(UserInterfaceConstant.USER_DELETE_DELETE, "删除用户");
+        permDescMap.put(UserInterfaceConstant.USER_LOGIN_POST, "用户登录");
+        permDescMap.put(UserInterfaceConstant.USER_REGISTER_POST, "用户注册");
+
+        // 仓库接口
+        permDescMap.put(WarehouseInterfaceConstant.WAREHOUSE_ADD_POST, "新增仓库");
+        permDescMap.put(WarehouseInterfaceConstant.WAREHOUSE_DETAIL_GET, "查询仓库详情");
+        permDescMap.put(WarehouseInterfaceConstant.WAREHOUSE_UPDATE_PUT, "更新仓库信息");
+        permDescMap.put(WarehouseInterfaceConstant.WAREHOUSE_DELETE_DELETE, "删除仓库");
+        permDescMap.put(WarehouseInterfaceConstant.WAREHOUSE_LIST_GET, "查询仓库列表");
+        permDescMap.put(WarehouseInterfaceConstant.WAREHOUSE_PAGE_GET, "分页查询仓库");
+
+        // 门店接口
+        permDescMap.put(StoreInterfaceConstant.STORE_DETAIL_GET, "查询门店详情");
+        permDescMap.put(StoreInterfaceConstant.STORE_UPDATE_PUT, "更新门店信息");
+
+        // 销售退货接口
+        permDescMap.put(SaleReturnInterfaceConstant.SALE_RETURN_CREATE_POST, "创建销退单");
+        permDescMap.put(SaleReturnInterfaceConstant.SALE_RETURN_MY_GET, "查询我的销退单");
+        permDescMap.put(SaleReturnInterfaceConstant.SALE_RETURN_STORE_GET, "查询门店销退单");
+        permDescMap.put(SaleReturnInterfaceConstant.SALE_RETURN_DETAIL_GET, "查询销退单详情");
+
+        // 销售订单接口
+        permDescMap.put(SaleOrderInterfaceConstant.SALE_ORDER_CREATE_POST, "创建销售订单");
+        permDescMap.put(SaleOrderInterfaceConstant.SALE_ORDER_MY_GET, "查询我的销售订单");
+        permDescMap.put(SaleOrderInterfaceConstant.SALE_ORDER_DETAIL_GET, "查询销售订单详情");
+        permDescMap.put(SaleOrderInterfaceConstant.SALE_ORDER_STORE_GET, "查询门店销售订单");
+        permDescMap.put(SaleOrderInterfaceConstant.SALE_ORDER_CONFIRM_POST, "确认销售订单");
+
+        // 角色接口
+        permDescMap.put(RoleInterfaceConstant.ROLE_LIST_GET, "查询角色列表");
+        permDescMap.put(RoleInterfaceConstant.ROLE_CREATE_POST, "创建角色");
+        permDescMap.put(RoleInterfaceConstant.ROLE_DETAIL_GET, "查询角色详情");
+        permDescMap.put(RoleInterfaceConstant.ROLE_UPDATE_PUT, "更新角色信息");
+        permDescMap.put(RoleInterfaceConstant.ROLE_DELETE_DELETE, "删除角色");
+        permDescMap.put(RoleInterfaceConstant.ROLE_ASSIGN_PERMISSION_PUT, "分配角色权限");
+        permDescMap.put(RoleInterfaceConstant.ROLE_ASSIGN_PAGE_POST, "分配角色页面");
+
+        // 采退订单接口
+        permDescMap.put(PurchaseReturnInterfaceConstant.PURCHASE_RETURN_LIST_GET, "查询采退单列表");
+        permDescMap.put(PurchaseReturnInterfaceConstant.PURCHASE_RETURN_CREATE_POST, "创建采退单");
+        permDescMap.put(PurchaseReturnInterfaceConstant.PURCHASE_RETURN_CONFIRM_POST, "确认采退单");
+
+        // 采购订单接口
+        permDescMap.put(PurchaseOrderInterfaceConstant.PURCHASE_ORDER_CREATE_POST, "创建采购订单");
+        permDescMap.put(PurchaseOrderInterfaceConstant.PURCHASE_ORDER_LIST_GET, "查询采购订单列表");
+        permDescMap.put(PurchaseOrderInterfaceConstant.PURCHASE_ORDER_DETAIL_GET, "查询采购订单详情");
+        permDescMap.put(PurchaseOrderInterfaceConstant.PURCHASE_ORDER_SUPPLIER_LIST_GET, "查询供应商采购单");
+        permDescMap.put(PurchaseOrderInterfaceConstant.PURCHASE_ORDER_SHIP_POST, "采购订单发货");
+
+        // 商品接口
+        permDescMap.put(ProductInterfaceConstant.PRODUCT_ADD_POST, "新增商品");
+        permDescMap.put(ProductInterfaceConstant.PRODUCT_UPDATE_PUT, "更新商品信息");
+        permDescMap.put(ProductInterfaceConstant.PRODUCT_DELETE_DELETE, "删除商品");
+        permDescMap.put(ProductInterfaceConstant.PRODUCT_DETAIL_GET, "查询商品详情");
+        permDescMap.put(ProductInterfaceConstant.PRODUCT_LIST_GET, "查询商品列表");
+        permDescMap.put(ProductInterfaceConstant.PRODUCT_LIST_OWN_GET, "查询我的商品");
+
+        // 权限接口
+        permDescMap.put(PermissionInterfaceConstant.PERMISSION_LIST_GET, "查询权限列表");
+        permDescMap.put(PermissionInterfaceConstant.PERMISSION_CREATE_POST, "创建权限");
+        permDescMap.put(PermissionInterfaceConstant.PERMISSION_UPDATE_PUT, "更新权限信息");
+        permDescMap.put(PermissionInterfaceConstant.PERMISSION_DELETE_DELETE, "删除权限");
+        permDescMap.put(PermissionInterfaceConstant.PERMISSION_DETAIL_GET, "查询权限详情");
+        permDescMap.put(PermissionInterfaceConstant.PERMISSION_USER_GET, "查询用户权限");
+
+        // 页面接口
+        permDescMap.put(PageInterfaceConstant.PAGE_LIST_GET, "查询页面列表");
+        permDescMap.put(PageInterfaceConstant.PAGE_DETAIL_GET, "查询页面详情");
+        permDescMap.put(PageInterfaceConstant.PAGE_CREATE_POST, "创建页面");
+        permDescMap.put(PageInterfaceConstant.PAGE_UPDATE_PUT, "更新页面信息");
+        permDescMap.put(PageInterfaceConstant.PAGE_DELETE_DELETE, "删除页面");
+        permDescMap.put(PageInterfaceConstant.PAGE_ALL_GET, "查询所有页面");
+        permDescMap.put(PageInterfaceConstant.PAGE_ASSIGN_SINGLE_PERMISSION_POST, "分配单页面权限");
+        permDescMap.put(PageInterfaceConstant.PAGE_ASSIGN_BATCH_PERMISSION_PUT, "批量分配页面权限");
+        permDescMap.put(PageInterfaceConstant.PAGE_USER_GET, "查询用户页面");
+
+        // 操作日志
+        permDescMap.put(OperationLogInterfaceConstant.OPERATION_LOG_PAGE_POST, "查询操作日志");
+
+        // 库存接口
+        permDescMap.put(InventoryInterfaceConstant.INVENTORY_LIST_GET, "分页查询库存");
+        permDescMap.put(InventoryInterfaceConstant.INVENTORY_DETAIL_GET, "查询库存详情");
+        permDescMap.put(InventoryInterfaceConstant.INVENTORY_UPDATE_POST, "更新库存");
+        permDescMap.put(InventoryInterfaceConstant.INVENTORY_STOCK_IN_POST, "库存入库");
+        permDescMap.put(InventoryInterfaceConstant.INVENTORY_SALE_ORDER_POST, "销售出库");
+        permDescMap.put(InventoryInterfaceConstant.INVENTORY_SALE_RETURN_CONFIRM_POST, "销退入库确认");
+
+        // 库存明细接口
+        permDescMap.put(InventoryDetailInterfaceConstant.INVENTORY_DETAIL_LIST_GET, "查询库存明细列表");
+        permDescMap.put(InventoryDetailInterfaceConstant.INVENTORY_DETAIL_DETAIL_GET, "查询库存明细详情");
+
+        // 金额单接口
+        permDescMap.put(AmountOrderInterfaceConstant.AMOUNT_ORDER_LIST_GET, "查询金额单列表");
+        permDescMap.put(AmountOrderInterfaceConstant.AMOUNT_ORDER_LIST_PAYER_GET, "查询付款金额单");
+        permDescMap.put(AmountOrderInterfaceConstant.AMOUNT_ORDER_LIST_PAYEE_GET, "查询收款金额单");
+        permDescMap.put(AmountOrderInterfaceConstant.AMOUNT_ORDER_DETAIL_GET, "查询金额单详情");
+        permDescMap.put(AmountOrderInterfaceConstant.AMOUNT_ORDER_PAY_POST, "支付金额单");
+        permDescMap.put(AmountOrderInterfaceConstant.AMOUNT_ORDER_CANCEL_POST, "取消金额单");
+        permDescMap.put(AmountOrderInterfaceConstant.AMOUNT_ORDER_NOTIFY_POST, "支付回调通知");
+
         List<String> basePermNames = List.of(
                 // 基础角色与权限
                 ButtonPermissionConstant.ROLE_MANAGE, ButtonPermissionConstant.PERM_ASSIGN,
@@ -405,12 +559,21 @@ public class StoreInitRunner implements ApplicationRunner {
         ).stream().collect(Collectors.toMap(Permission::getName, p -> p, (a, b) -> a));
 
         for (String permName : basePermNames) {
+            Permission permission;
             if (existingPermsByName.containsKey(permName)) {
+                permission = existingPermsByName.get(permName);
+                // 更新描述
+                String desc = permDescMap.getOrDefault(permName, permName);
+                if (!desc.equals(permission.getDescription())) {
+                    permission.setDescription(desc);
+                    permissionService.updateById(permission);
+                }
                 continue;
             }
-            Permission permission = new Permission();
+            permission = new Permission();
             permission.setName(permName);
-            permission.setDescription(permName);
+            // 使用映射的中文描述，如果没有则使用名称
+            permission.setDescription(permDescMap.getOrDefault(permName, permName));
             permission.setCreateBy(createBy);
             permissionService.save(permission);
         }

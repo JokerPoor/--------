@@ -61,7 +61,7 @@
         <el-tag v-else-if="row.amountOrderStatus === 2" type="info">已取消</el-tag>
       </template>
 
-      <template #actions="{ row }">
+      <template #row-actions="{ row }">
         <el-button 
           v-if="row.purchaseOrderStatus === 0 && row.amountOrderStatus === 1" 
           type="primary" 

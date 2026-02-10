@@ -27,7 +27,7 @@
             <el-tag v-else-if="row.status === 2" type="success">已完成</el-tag>
           </template>
 
-          <template #actions="{ row }">
+          <template #row-actions="{ row }">
             <el-button v-if="row.status === 1" link type="success" @click="onConfirmArrival(row)" v-perm="'sale:order:confirm'">确认收货</el-button>
             <el-button v-if="row.status === 2" link type="danger" @click="onReturn(row)" v-perm="'sale:return:add'">申请退货</el-button>
           </template>
@@ -56,7 +56,7 @@
             <el-tag v-else-if="row.status === 2" type="success">已完成</el-tag>
           </template>
 
-          <template #actions="{ row }">
+          <template #row-actions="{ row }">
             <el-button v-if="row.status === 0" link type="primary" @click="onShip(row)" v-perm="'inventory:sale-order:ship'">发货</el-button>
           </template>
         </EpTable>

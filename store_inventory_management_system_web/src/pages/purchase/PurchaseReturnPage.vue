@@ -30,7 +30,7 @@
         <el-tag v-else-if="row.amountOrderStatus === 2" type="info">已取消</el-tag>
       </template>
 
-      <template #actions="{ row }">
+      <template #row-actions="{ row }">
         <el-button v-if="row.amountOrderStatus === 0" link type="primary" @click="onPay(row.amountOrderId)" v-perm="'POST:/amount/order/payorder/:id'">退款</el-button>
         <el-button v-if="row.amountOrderStatus === 0" link type="warning" @click="onMockPay(row.amountOrderId)">一键退款</el-button>
         <el-button v-if="row.status === 0" link type="primary" @click="onConfirm(row)" v-perm="'purchase:return:confirm'">确认退货</el-button>

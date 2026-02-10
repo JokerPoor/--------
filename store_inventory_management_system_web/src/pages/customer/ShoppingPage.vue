@@ -51,9 +51,12 @@
                <span class="text-2xl font-bold text-red-600">¥{{ item.productPrice }}</span>
                <span class="text-xs text-gray-400">库存: {{ item.quantity }}</span>
              </div>
-             <el-button type="primary" class="w-full" @click="openBuy(item)" :disabled="item.quantity <= 0">
-                {{ item.quantity > 0 ? '立即购买' : '暂时缺货' }}
-             </el-button>
+             <div class="flex gap-2">
+                 <el-button class="flex-1" @click="openDetail(item)">详情</el-button>
+                 <el-button type="primary" class="flex-1" @click="openBuy(item)" :disabled="item.quantity <= 0">
+                    {{ item.quantity > 0 ? '购买' : '缺货' }}
+                 </el-button>
+             </div>
           </div>
         </div>
       </div>
@@ -77,6 +80,41 @@
         @current-change="onPageChange"
       />
     </div>
+
+    <!-- Detail Dialog -->
+    <el-dialog
+      v-model="detailVisible"
+      title="商品详情"
+      width="600px"
+      destroy-on-close
+      class="rounded-xl"
+    >
+      <div v-if="detailProduct" class="flex flex-col md:flex-row gap-6">
+         <div class="w-full md:w-1/2">
+             <img :src="detailProduct.productUrl || 'https://via.placeholder.com/300x300'" class="w-full h-64 object-cover rounded-lg shadow-sm" />
+         </div>
+         <div class="w-full md:w-1/2 flex flex-col">
+             <h2 class="text-xl font-bold text-gray-800 mb-2">{{ detailProduct.productName }}</h2>
+             <div class="flex items-center gap-2 mb-4">
+                 <span class="text-2xl font-bold text-red-600">¥{{ detailProduct.productPrice }}</span>
+                 <el-tag :type="detailProduct.quantity > 0 ? 'success' : 'danger'" size="small">
+                     {{ detailProduct.quantity > 0 ? '库存充足' : '暂时缺货' }}
+                 </el-tag>
+             </div>
+             
+             <div class="flex-1 overflow-y-auto max-h-48 mb-4">
+                 <p class="text-gray-600 text-sm leading-relaxed whitespace-pre-wrap">{{ detailProduct.productDescription || '暂无详细描述' }}</p>
+             </div>
+             
+             <div class="mt-auto pt-4 border-t border-gray-100">
+                 <p class="text-xs text-gray-400 mb-2">店铺: {{ detailProduct.storeName || '未知门店' }}</p>
+                 <el-button type="primary" class="w-full" @click="openBuyFromDetail" :disabled="detailProduct.quantity <= 0">
+                    立即购买
+                 </el-button>
+             </div>
+         </div>
+      </div>
+    </el-dialog>
 
     <!-- Buy Dialog -->
     <el-dialog
@@ -130,6 +168,10 @@ const selectedProduct = ref<any>(null);
 const buyQuantity = ref(1);
 const buying = ref(false);
 
+// Detail Logic
+const detailVisible = ref(false);
+const detailProduct = ref<any>(null);
+
 async function fetch() {
   loading.value = true;
   try {
@@ -153,6 +195,18 @@ async function fetch() {
 function onPageChange(p: number) {
   page.current = p;
   fetch();
+}
+
+function openDetail(item: any) {
+  detailProduct.value = item;
+  detailVisible.value = true;
+}
+
+function openBuyFromDetail() {
+  if (detailProduct.value) {
+    openBuy(detailProduct.value);
+    detailVisible.value = false;
+  }
 }
 
 function openBuy(item: any) {
