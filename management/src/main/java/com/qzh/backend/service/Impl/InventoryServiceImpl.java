@@ -345,6 +345,22 @@ public class InventoryServiceImpl extends ServiceImpl<InventoryMapper, Inventory
         if (!saleReturn.getStatus().equals(SaleReturnStatusEnum.UNFINISHED.getValue())) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "该销退订单已完成，无需重复操作");
         }
+        // 校验关联的金额订单是否已支付（确保用户已支付原销售订单，才能退款/退货）
+        // 注意：这里需要校验的是【销售订单】对应的金额订单是否已支付
+        // 逻辑：
+        // 1. 根据销退订单找到原销售订单ID (saleReturn.getSaleOrderId())
+        // 2. 根据销售订单ID查询金额订单 (type=SALE)
+        // 3. 校验金额订单状态 (status=PAID)
+        AmountOrder saleAmountOrder = amountOrderService.getOne(new LambdaQueryWrapper<AmountOrder>()
+                .eq(AmountOrder::getOrderId, saleReturn.getSaleOrderId())
+                .eq(AmountOrder::getType, OrderTypeEnum.SALE.getValue()));
+        if (saleAmountOrder == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "原销售订单关联的支付单不存在");
+        }
+        if (!saleAmountOrder.getStatus().equals(PayStatusEnum.PAID.getValue())) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "原销售订单未支付，无法办理退货");
+        }
+
         saleReturn.setStatus(SaleReturnStatusEnum.COMPLETED.getValue());
         boolean updateSuccess = saleReturnService.updateById(saleReturn);
         if (!updateSuccess) {

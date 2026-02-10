@@ -174,20 +174,31 @@ function onReset() {
 
 // Permission check helper
 function canPay(row: any) {
-    // Basic check: if status is unpaid (0) and I am the payer
+    // Basic check: if status is unpaid (0)
     if (row.status !== 0) return false
-    // If I am the payer
-    if (currentUser && row.payerId === currentUser.id) return true
     
-    // Store Manager bypass logic (handled in backend but useful to show button)
-    // We assume if backend allows it, we can try. 
-    // Ideally we should know if we are store manager. 
-    // For now, let's just show 'Pay' button for unpaid orders where payer is me OR type is purchase/threshold?
-    // Let's rely on backend error if not allowed, but try to hide if obviously not allowed.
-    // If payerId is not me, and I am not manager (hard to know in frontend without role flag), hide it?
-    // User requirement: "Store manager can view all".
-    // If I see it, I can view it. Payment is separate.
-    return true 
+    // 1. If I am the payer, I can pay
+    if (currentUser && String(row.payerId) === String(currentUser.id)) return true
+    
+    // 2. If I am Store Manager, I can pay orders where payer is the System Manager
+    // We check if current user has "门店管理员" role
+    // Note: currentUser structure depends on auth.ts. Assuming it has roles or we check implicit permission.
+    // If we can't check roles easily here, we might need to rely on the button being visible and backend handling the check,
+    // OR we allow the button if type is Sale Return (3) or Purchase Order (0) AND we suspect we are manager.
+    
+    // Let's check roles if available.
+    const roles = (currentUser as any)?.roles || [];
+    const isManager = roles.some((r: any) => r.roleName === '门店管理员' || r.roleName === '超级管理员');
+    
+    if (isManager) {
+        // Manager can pay Purchase Orders (0) and Sale Return Orders (3)
+        // Usually these have payerId = System Manager ID, which differs from current user ID
+        if (row.type === 0 || row.type === 3) {
+            return true;
+        }
+    }
+
+    return false
 }
 
 // Detail Logic
@@ -241,7 +252,9 @@ async function onPay(id: number) {
         
         // The backend returns the Alipay form. We can append it to document and submit it.
         const div = document.createElement('div')
-        div.innerHTML = res.data
+        // Note: http interceptor returns response.data directly. 
+        // If responseType is text, res is the HTML string.
+        div.innerHTML = (res as any) 
         document.body.appendChild(div)
         const form = div.querySelector('form')
         if (form) {

@@ -40,6 +40,11 @@ public class InventoryDetailQueryDTO extends PageRequest implements Serializable
     private Integer orderType;
 
     /**
+     * 仓库ID
+     */
+    private Long warehouseId;
+
+    /**
      * 开始时间 (创建时间 >= startTime)
      */
     private Date startTime;
@@ -58,6 +63,7 @@ public class InventoryDetailQueryDTO extends PageRequest implements Serializable
         Long orderId = dto.getOrderId();
         Integer type = dto.getType();
         Integer orderType = dto.getOrderType();
+        Long warehouseId = dto.getWarehouseId();
         Date startTime = dto.getStartTime();
         Date endTime = dto.getEndTime();
         String sortField = dto.getSortField();
@@ -66,6 +72,7 @@ public class InventoryDetailQueryDTO extends PageRequest implements Serializable
         queryWrapper.eq(ObjectUtil.isNotNull(orderId), "orderId", orderId);
         queryWrapper.eq(ObjectUtil.isNotNull(orderType), "orderType", orderType);
         queryWrapper.eq(ObjectUtil.isNotNull(type), "type", type);
+        queryWrapper.eq(ObjectUtil.isNotNull(warehouseId), "warehouseId", warehouseId);
         queryWrapper.ge(ObjectUtil.isNotNull(startTime), "createTime", startTime);
         queryWrapper.le(ObjectUtil.isNotNull(endTime), "createTime", endTime);
         queryWrapper.orderBy(StrUtil.isNotBlank(sortField), sortOrder.equals("ascend"), sortField);

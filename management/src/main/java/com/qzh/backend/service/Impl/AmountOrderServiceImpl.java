@@ -19,6 +19,9 @@ import com.qzh.backend.exception.ErrorCode;
 import com.qzh.backend.mapper.AmountOrderMapper;
 import com.qzh.backend.model.dto.product.AmountOrderQueryDTO;
 import com.qzh.backend.model.entity.*;
+import com.qzh.backend.constants.RoleNameConstant;
+import com.qzh.backend.model.entity.Role;
+import com.qzh.backend.model.enums.OrderTypeEnum;
 import com.qzh.backend.model.enums.PayStatusEnum;
 import com.qzh.backend.model.enums.PurchaseOrderTypeEnum;
 import com.qzh.backend.model.vo.AmountOrderDetailVO;
@@ -38,6 +41,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -81,24 +85,22 @@ public class AmountOrderServiceImpl extends ServiceImpl<AmountOrderMapper, Amoun
 
         User loginUser = getLoginUserUtil.getLoginUser(request);
         Long userId = loginUser.getId();
-        Long managerId = appGlobalConfig.getManagerId();
-        boolean isManager = userId.equals(managerId);
-
-        QueryWrapper<AmountOrder> wrapper = new QueryWrapper<>();
-        wrapper.eq(ObjectUtil.isNotNull(queryDTO.getType()), "type", queryDTO.getType());
-        wrapper.eq(ObjectUtil.isNotNull(queryDTO.getStatus()), "status", queryDTO.getStatus());
-        wrapper.ge(ObjUtil.isNotEmpty(queryDTO.getStartTime()), "createTime", queryDTO.getStartTime());
-        wrapper.lt(ObjUtil.isNotEmpty(queryDTO.getEndTime()), "createTime", queryDTO.getEndTime());
-        wrapper.orderBy(StrUtil.isNotEmpty(queryDTO.getSortField()), "ascend".equals(queryDTO.getSortOrder()), queryDTO.getSortField());
         
-        // 如果有ID搜索（假设Search通常搜ID或订单号）
-        // DTO没有通用keyword，假设只用以上字段。如果DTO有变化，需要同步。
+        // 判断是否为门店管理员（通过角色判断，而非ID硬匹配）
+        boolean isManager = false;
+        List<Role> roles = getLoginUserUtil.getRoleList(userId);
+        if (roles != null) {
+            isManager = roles.stream()
+                    .anyMatch(r -> RoleNameConstant.STORE_ADMIN.equals(r.getRoleName()) 
+                                || RoleNameConstant.ADMIN.equals(r.getRoleName()));
+        }
+
+        QueryWrapper<AmountOrder> wrapper = AmountOrderQueryDTO.getQueryWrapper(queryDTO);
 
         if (isManager) {
             // 门店管理员：查看当前门店所有
             wrapper.eq("storeId", appGlobalConfig.getCurrentStoreId());
         } else {
-            // 供应商/客户：查看自己相关（作为付款人或收款人）
             wrapper.and(w -> w.eq("payerId", userId).or().eq("payeeId", userId));
         }
 
@@ -133,12 +135,30 @@ public class AmountOrderServiceImpl extends ServiceImpl<AmountOrderMapper, Amoun
         Long payerId = amountOrder.getPayerId();
         User loginUser = getLoginUserUtil.getLoginUser(request);
         boolean canPay = payerId.equals(loginUser.getId());
+        
         if (!canPay) {
-            // 如果是阈值触发的采购订单，允许门店管理员支付
+            // 如果不是直接付款人，检查是否为门店管理员
+            // 门店管理员可以支付 PayerID 为系统配置店长ID 的订单（如销退订单、采购订单）
+            List<Role> roles = getLoginUserUtil.getRoleList(loginUser.getId());
+            boolean isManager = false;
+            if (roles != null) {
+                isManager = roles.stream()
+                        .anyMatch(r -> RoleNameConstant.STORE_ADMIN.equals(r.getRoleName()) 
+                                    || RoleNameConstant.ADMIN.equals(r.getRoleName()));
+            }
+            
+            if (isManager && payerId.equals(appGlobalConfig.getManagerId())) {
+                canPay = true;
+            }
+        }
+        
+        if (!canPay) {
+            // 最后的兼容：如果是阈值触发的采购订单（且上面逻辑未通过），允许支付（通常上面的Manager检查应该覆盖了）
             if (amountOrder.getType() == 0) {
                 canPay = true;
             }
         }
+        
         if (!canPay) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "该订单不由你支付");
         }

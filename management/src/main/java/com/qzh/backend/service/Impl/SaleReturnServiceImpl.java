@@ -1,5 +1,6 @@
 package com.qzh.backend.service.Impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qzh.backend.config.AppGlobalConfig;
@@ -52,6 +53,13 @@ public class SaleReturnServiceImpl extends ServiceImpl<SaleReturnMapper, SaleRet
         // 校验订单归属（只能退自己的订单）
         if (!saleOrder.getUserId().equals(loginUser.getId())) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "无权操作他人订单");
+        }
+        // 校验是否存在未完成的销退订单
+        Long count = saleReturnMapper.selectCount(new LambdaQueryWrapper<SaleReturn>()
+                .eq(SaleReturn::getSaleOrderId, dto.getSaleOrderId())
+                .ne(SaleReturn::getStatus, 2)); // 排除已取消状态（假设2=已取消），或者简单判断是否存在记录
+        if (count > 0) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "该订单已存在退货申请，请勿重复提交");
         }
         // 计算退货金额（销售单价 × 退货数量）
         BigDecimal returnAmount = saleOrder.getProductPrice().multiply(BigDecimal.valueOf(saleOrder.getProductQuantity()));

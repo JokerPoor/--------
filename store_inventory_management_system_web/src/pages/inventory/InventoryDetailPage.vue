@@ -8,7 +8,7 @@
         </el-form-item>
         <el-form-item label="仓库">
           <el-select v-model="query.warehouseId" placeholder="选择仓库" clearable class="w-40">
-            <el-option v-for="w in warehouses" :key="w.id" :label="w.warehouseName" :value="w.id" />
+            <el-option v-for="w in warehouses" :key="w.id" :label="w.name" :value="w.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="变动类型">
@@ -62,7 +62,7 @@
         
         <el-table-column prop="warehouseId" label="所属仓库" min-width="120">
           <template #default="{ row }">
-            <el-tag effect="plain" type="info">{{ getWarehouseName(row.warehouseId) }}</el-tag>
+            {{ getWarehouseName(row.warehouseId) }}
           </template>
         </el-table-column>
 
@@ -169,7 +169,7 @@ async function fetchWarehouses() {
 
 function getWarehouseName(id: number) {
   const w = warehouses.value.find(item => item.id === id)
-  return w ? w.warehouseName : `仓库#${id}`
+  return w ? w.name : `仓库#${id}`
 }
 
 async function fetchData() {
