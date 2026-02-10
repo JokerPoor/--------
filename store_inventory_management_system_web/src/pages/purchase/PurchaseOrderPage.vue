@@ -1,12 +1,37 @@
 <template>
   <div>
+    <div class="mb-4 bg-white p-4 rounded shadow-sm">
+      <el-form :inline="true" :model="searchForm" class="demo-form-inline">
+        <el-form-item label="商品名称">
+          <el-input v-model="searchForm.productName" placeholder="输入商品名称" clearable />
+        </el-form-item>
+        <el-form-item label="物流状态">
+          <el-select v-model="searchForm.status" placeholder="全部" clearable style="width: 120px">
+            <el-option label="待发货" :value="0" />
+            <el-option label="已发货" :value="1" />
+            <el-option label="已入库" :value="2" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="订单类型">
+          <el-select v-model="searchForm.type" placeholder="全部" clearable style="width: 120px">
+            <el-option label="手动发起" :value="0" />
+            <el-option label="阈值触发" :value="1" />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSearch">查询</el-button>
+          <el-button @click="onReset">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+
     <EpTable
       :rows="rows"
       :columns="cols"
       :loading="loading"
       :pagination="pagination"
+      :show-search="false"
       @refresh="fetch"
-      @search="onSearch"
       @update:current="pagination.current = $event; fetch()"
       @update:size="pagination.size = $event; fetch()"
     >
@@ -141,7 +166,11 @@ console.log('[PurchaseOrderPage] Component script loaded')
 const rows = ref([])
 const loading = ref(false)
 const pagination = reactive({ current: 1, size: 10, total: 0 })
-const keyword = ref('')
+const searchForm = reactive({
+  productName: '',
+  status: undefined as number | undefined,
+  type: undefined as number | undefined
+})
 
 const cols = [
   { prop: 'purchaseOrderId', label: 'ID', width: 80 },
@@ -164,7 +193,9 @@ async function fetch() {
       params: {
         current: pagination.current,
         size: pagination.size,
-        productName: keyword.value
+        productName: searchForm.productName,
+        status: searchForm.status,
+        type: searchForm.type
       }
     })
     if (res.data) {
@@ -177,10 +208,16 @@ async function fetch() {
   }
 }
 
-function onSearch(k: string) {
-  keyword.value = k
+function onSearch() {
   pagination.current = 1
   fetch()
+}
+
+function onReset() {
+  searchForm.productName = ''
+  searchForm.status = undefined
+  searchForm.type = undefined
+  onSearch()
 }
 
 // Create Logic

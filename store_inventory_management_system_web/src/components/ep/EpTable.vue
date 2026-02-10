@@ -2,7 +2,7 @@
   <div class="ep-card" v-loading="loading" element-loading-text="加载中..." element-loading-background="rgba(255,255,255,0.6)">
     <div class="flex justify-between mb-3">
       <div class="flex gap-2">
-        <el-input v-model="keyword" placeholder="搜索" clearable @input="onSearch" style="width:220px" />
+        <el-input v-if="isSearchVisible" v-model="keyword" placeholder="搜索" clearable @input="onSearch" style="width:220px" />
         <slot name="toolbar"></slot>
       </div>
       <el-button type="primary" @click="$emit('refresh')"><el-icon><Refresh /></el-icon><span>刷新</span></el-button>
@@ -55,12 +55,16 @@ const props = defineProps<{
   pagination: { total: number, current: number, size: number },
   editPerm?: string,
   removePerm?: string,
-  resetPerm?: string
+  resetPerm?: string,
+  showSearch?: boolean
 }>()
 const emit = defineEmits(['refresh','edit','remove','reset','search','update:current','update:size','selection-change'])
 const keyword = ref('')
 const onSearch = debounce(() => { emit('search', keyword.value) }, 300)
 const tableRef = ref<InstanceType<typeof ElTable>>()
+
+// 默认显示搜索框，除非显式设置为 false
+const isSearchVisible = computed(() => props.showSearch !== false)
 
 // 只有当至少有一个权限被定义时才显示默认操作列
 const hasDefaultActions = computed(() => {

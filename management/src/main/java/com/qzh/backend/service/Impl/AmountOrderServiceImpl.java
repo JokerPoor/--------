@@ -16,6 +16,7 @@ import com.qzh.backend.mapper.AmountOrderMapper;
 import com.qzh.backend.model.dto.product.AmountOrderQueryDTO;
 import com.qzh.backend.model.entity.*;
 import com.qzh.backend.model.enums.PayStatusEnum;
+import com.qzh.backend.model.enums.PurchaseOrderTypeEnum;
 import com.qzh.backend.model.vo.AmountOrderDetailVO;
 import com.qzh.backend.service.AmountOrderService;
 import com.qzh.backend.service.PurchaseOrderService;
@@ -94,8 +95,15 @@ public class AmountOrderServiceImpl extends ServiceImpl<AmountOrderMapper, Amoun
         ThrowUtils.throwIf(amountOrder == null, ErrorCode.NOT_FOUND_ERROR,"订单不存在");
         Long payerId = amountOrder.getPayerId();
         User loginUser = getLoginUserUtil.getLoginUser(request);
-        if(!payerId.equals(loginUser.getId())){
-            throw new BusinessException(ErrorCode.PARAMS_ERROR,"该订单不由你支付");
+        boolean canPay = payerId.equals(loginUser.getId());
+        if (!canPay) {
+            // 如果是阈值触发的采购订单，允许门店管理员支付
+            if (amountOrder.getType() == 0) {
+                canPay = true;
+            }
+        }
+        if (!canPay) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "该订单不由你支付");
         }
         AlipayClient aliPayClient = new DefaultAlipayClient(GATEWAY_URL,aliPayConfig.getAppId(),aliPayConfig.getAppPrivateKey(),FORMAT,CHARSET,aliPayConfig.getAlipayPublicKey(),SIGN_TYPE);
         AlipayTradePagePayRequest req = new AlipayTradePagePayRequest();

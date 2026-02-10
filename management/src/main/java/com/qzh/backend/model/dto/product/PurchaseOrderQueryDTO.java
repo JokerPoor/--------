@@ -35,6 +35,9 @@ public class PurchaseOrderQueryDTO extends PageRequest implements Serializable {
     /** 订单状态（0-待发货，1-已发货，2-已入库） */
     private Integer status;
 
+    /** 订单类型（0-手动发起，1-阈值触发） */
+    private Integer type;
+
     /** 下单时间-开始 */
     private Date startTime;
 
@@ -51,6 +54,7 @@ public class PurchaseOrderQueryDTO extends PageRequest implements Serializable {
         Long storeId = dto.getStoreId();
         Long supplierId = dto.getSupplierId();
         Integer status = dto.getStatus();
+        Integer type = dto.getType();
         Date startTime = dto.getStartTime();
         Date endTime = dto.getEndTime();
         String sortField = dto.getSortField();
@@ -60,6 +64,7 @@ public class PurchaseOrderQueryDTO extends PageRequest implements Serializable {
         queryWrapper.eq(ObjectUtil.isNotNull(storeId),"storeId", storeId);
         queryWrapper.eq(ObjectUtil.isNotNull(supplierId),"supplierId", supplierId);
         queryWrapper.eq(ObjectUtil.isNotNull(status),"status", status);
+        queryWrapper.eq(ObjectUtil.isNotNull(type),"type", type);
         queryWrapper.ge(ObjUtil.isNotEmpty(startTime), "createTime", startTime);
         queryWrapper.lt(ObjUtil.isNotEmpty(endTime), "createTime", endTime);
         queryWrapper.orderBy(StrUtil.isNotEmpty(sortField), sortOrder.equals("ascend"), sortField);
