@@ -128,6 +128,7 @@ public class StoreInitRunner implements ApplicationRunner {
                 new PageSeed("商品管理", "/products", "pages/products/ProductsPage", 60, 1, "/goods"),
                 new PageSeed("仓库管理", "/warehouses", "pages/warehouses/WarehousesPage", 50, 1, "/goods"),
                 new PageSeed("库存管理", "/inventory", "pages/inventory/InventoryPage", 25, 1, "/goods"),
+                new PageSeed("调拨记录", "/inventory/transfer-logs", "pages/inventory/TransferLogPage", 20, 1, "/goods"),
 
                 // 采购管理
                 new PageSeed("采购管理", "/purchase", null, 70, 1),
@@ -220,7 +221,7 @@ public class StoreInitRunner implements ApplicationRunner {
             List<String> storeAdminPagePaths = List.of(
                 "/dashboard",
                 "/system", "/supplier", "/customer", // 供应商和客户管理
-                "/goods", "/products", "/warehouses", "/inventory", // 商品库存
+                "/goods", "/products", "/warehouses", "/inventory", "/inventory/transfer-logs", // 商品库存
                 "/purchase", "/purchase/order", "/purchase/return", // 采购
                 "/sale", "/sale/order", "/sale/return", // 销售
                 "/amount", "/amount/orders", // 资金管理

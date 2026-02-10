@@ -103,7 +103,18 @@
         </el-form-item>
         
         <el-form-item label="商品售价" required>
-          <el-input-number v-model="form.price" :precision="2" :step="0.1" :min="0.01" class="w-full" size="large" controls-position="right" />
+          <el-input-number 
+            v-model="form.price" 
+            :precision="2" 
+            :step="0.1" 
+            :min="0.01" 
+            class="w-full" 
+            size="large" 
+            controls-position="right" 
+            :disabled="!!form.id"
+            :title="form.id ? '商品发布后不可修改价格' : ''"
+          />
+          <div v-if="form.id" class="text-xs text-red-400 mt-1">商品发布后，不可修改价格</div>
         </el-form-item>
 
         <el-form-item label="商品图片URL">

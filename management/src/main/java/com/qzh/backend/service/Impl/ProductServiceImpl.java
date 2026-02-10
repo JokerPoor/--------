@@ -61,7 +61,12 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         existingProduct.setName(productUpdateDTO.getName());
         existingProduct.setDescription(productUpdateDTO.getDescription());
         existingProduct.setUrl(productUpdateDTO.getUrl());
-//        existingProduct.setPrice(productUpdateDTO.getPrice());
+        // 只有门店管理员可以修改价格，供应商不能修改
+        if (loginUser.getId().equals(appGlobalConfig.getManagerId())) {
+             if (productUpdateDTO.getPrice() != null && productUpdateDTO.getPrice().compareTo(BigDecimal.ZERO) > 0) {
+                 existingProduct.setPrice(productUpdateDTO.getPrice());
+             }
+        }
         existingProduct.setStatus(productUpdateDTO.getStatus());
         return this.updateById(existingProduct);
     }

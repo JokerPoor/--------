@@ -131,7 +131,7 @@ public class AutoReplenishment {
             transferLog.setTransferOrderId(orderId);
             transferLog.setTransferQuantity(actualTransferQty);
             transferLog.setSourceWarehouseId(source.getWarehouseId());
-            transferLog.setTransferOrderId(targetWarehouseId);
+            transferLog.setTargetWarehouseId(targetWarehouseId);
             transferLog.setRemark("定时任务自动调拨");
             boolean save = transferLogService.save(transferLog);
             ThrowUtils.throwIf(!save, ErrorCode.SYSTEM_ERROR,"调拨日志记录异常");
