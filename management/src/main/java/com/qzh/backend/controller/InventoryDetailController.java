@@ -1,6 +1,7 @@
 package com.qzh.backend.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.qzh.backend.annotation.AuthCheck;
 import com.qzh.backend.common.BaseResponse;
 import com.qzh.backend.common.ResultUtils;
 import com.qzh.backend.model.dto.product.InventoryDetailQueryDTO;
@@ -11,6 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import static com.qzh.backend.constants.Interface.InventoryDetailInterfaceConstant.INVENTORY_DETAIL_DETAIL_GET;
+import static com.qzh.backend.constants.Interface.InventoryDetailInterfaceConstant.INVENTORY_DETAIL_LIST_GET;
 
 @RestController
 @RequestMapping("/api/inventory/detail")
@@ -23,12 +27,14 @@ public class InventoryDetailController {
      * 分页查询库存明细
      */
     @GetMapping("/list")
+    @AuthCheck(interfaceName = INVENTORY_DETAIL_LIST_GET)
     public BaseResponse<Page<InventoryDetailVO>> listInventoryDetails(InventoryDetailQueryDTO queryDTO) {
         Page<InventoryDetailVO> page = inventoryDetailService.listInventoryDetailsVO(queryDTO);
         return ResultUtils.success(page);
     }
 
     @GetMapping("/{id}")
+    @AuthCheck(interfaceName = INVENTORY_DETAIL_DETAIL_GET)
     public BaseResponse<InventoryDetailVO> getInventoryDetailById(@PathVariable Long id) {
         InventoryDetailVO detailVO = inventoryDetailService.getInventoryDetailVOById(id);
         return ResultUtils.success(detailVO);

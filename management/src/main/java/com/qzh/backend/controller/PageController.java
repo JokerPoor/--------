@@ -1,6 +1,7 @@
 package com.qzh.backend.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.qzh.backend.annotation.AuthCheck;
 import com.qzh.backend.annotation.LogInfoRecord;
 import com.qzh.backend.common.BaseResponse;
 import com.qzh.backend.common.ResultUtils;
@@ -34,6 +35,7 @@ public class PageController {
      * 分页查询页面列表
      */
     @GetMapping("/list")
+    @AuthCheck(interfaceName = PAGE_LIST_GET)
     public BaseResponse<Page<PageVO>> getPageList(PageQueryDTO dto) {
         Page<PageVO> pagePage = pageService.getPageList(dto);
         return ResultUtils.success(pagePage);
@@ -43,6 +45,7 @@ public class PageController {
      * 根据ID查询页面详情
      */
     @GetMapping("/{id}")
+    @AuthCheck(interfaceName = PAGE_DETAIL_GET)
     public BaseResponse<PageVO> getPageById(@PathVariable Long id) {
         ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
         PageVO pageVO = pageService.getPageDetailById(id);
@@ -53,6 +56,7 @@ public class PageController {
      * 创建页面
      */
     @PostMapping
+    @AuthCheck(interfaceName = PAGE_CREATE_POST)
     @LogInfoRecord(SystemModule = PAGE_MODULE + ":" + PAGE_CREATE_POST)
     public BaseResponse<Long> createPage(@Valid @RequestBody PageCreateDTO dto,HttpServletRequest request) {
         ThrowUtils.throwIf(dto == null, ErrorCode.PARAMS_ERROR);
@@ -64,6 +68,7 @@ public class PageController {
      * 更新页面
      */
     @PutMapping("/{id}")
+    @AuthCheck(interfaceName = PAGE_UPDATE_PUT)
     @LogInfoRecord(SystemModule = PAGE_MODULE + ":" + PAGE_UPDATE_PUT)
     public BaseResponse<Void> updatePage(@PathVariable Long id, @Valid @RequestBody PageUpdateDTO dto) {
         Boolean result = pageService.updatePage(id, dto);
@@ -75,6 +80,7 @@ public class PageController {
      * 删除页面
      */
     @DeleteMapping("/{id}")
+    @AuthCheck(interfaceName = PAGE_DELETE_DELETE)
     @LogInfoRecord(SystemModule = PAGE_MODULE + ":" + PAGE_DELETE_DELETE)
     public BaseResponse<Void> deletePage(@PathVariable Long id) {
         Boolean result = pageService.deletePage(id);
@@ -86,6 +92,7 @@ public class PageController {
      * 返回所有页面数据
      */
     @GetMapping("all")
+    @AuthCheck(interfaceName = PAGE_ALL_GET)
     public BaseResponse<List<PageVO>> getAllPage() {
         return ResultUtils.success(pageService.getAllPageWithPermissions());
     }
@@ -94,6 +101,7 @@ public class PageController {
      * 给页面赋权
      */
     @PostMapping("/{pageId}/permission/{permissionId}")
+    @AuthCheck(interfaceName = PAGE_ASSIGN_SINGLE_PERMISSION_POST)
     @LogInfoRecord(SystemModule = PAGE_MODULE + ":" + PAGE_ASSIGN_SINGLE_PERMISSION_POST)
     public BaseResponse<Void> addPagePermission(@PathVariable Long pageId, @PathVariable Long permissionId,HttpServletRequest request) {
         boolean success = pageService.addPagePermission(pageId, permissionId,request);
@@ -105,6 +113,7 @@ public class PageController {
      * 页面权限批量编辑
      */
     @PutMapping("/{pageId}/permission")
+    @AuthCheck(interfaceName = PAGE_ASSIGN_BATCH_PERMISSION_PUT)
     @LogInfoRecord(SystemModule = PAGE_MODULE + ":" + PAGE_ASSIGN_BATCH_PERMISSION_PUT)
     public BaseResponse<Void> updatePagePermissions(@PathVariable Long pageId, @RequestBody PageEditPermissionDTO permissionDTO,HttpServletRequest request) {
         boolean success = pageService.updatePagePermissions(pageId, permissionDTO,request);

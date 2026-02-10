@@ -1,6 +1,7 @@
 package com.qzh.backend.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.qzh.backend.annotation.AuthCheck;
 import com.qzh.backend.annotation.LogInfoRecord;
 import com.qzh.backend.common.BaseResponse;
 import com.qzh.backend.common.ResultUtils;
@@ -42,6 +43,7 @@ public class StoreController {
      * 更新门店信息
      */
     @PutMapping
+    @AuthCheck(interfaceName = STORE_UPDATE_PUT)
     @LogInfoRecord(SystemModule = STORE_MODULE + ":" + STORE_UPDATE_PUT)
     public BaseResponse<Void> updateStore(@RequestBody @Valid StoreUpdateDTO storeUpdateDTO) {
         ThrowUtils.throwIf(storeUpdateDTO == null, ErrorCode.PARAMS_ERROR);

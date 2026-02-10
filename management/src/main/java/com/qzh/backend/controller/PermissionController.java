@@ -1,6 +1,7 @@
 package com.qzh.backend.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.qzh.backend.annotation.AuthCheck;
 import com.qzh.backend.annotation.LogInfoRecord;
 import com.qzh.backend.common.BaseResponse;
 import com.qzh.backend.common.ResultUtils;
@@ -33,6 +34,7 @@ public class PermissionController {
      * 获取权限列表
      */
     @GetMapping("/list")
+    @AuthCheck(interfaceName = PERMISSION_LIST_GET)
     public BaseResponse<Page<PermissionVO>> getPermissionList(PermissionQueryDto dto) {
         Page<PermissionVO> permissionPage = permissionService.getPermissionList(dto);
         return ResultUtils.success(permissionPage);
@@ -42,6 +44,7 @@ public class PermissionController {
      * 添加权限
      */
     @PostMapping
+    @AuthCheck(interfaceName = PERMISSION_CREATE_POST)
     @LogInfoRecord(SystemModule = PERMISSION_MODULE + ":" + PERMISSION_CREATE_POST)
     public BaseResponse<Long> createPermission(@Valid @RequestBody PermissionCreateDTO dto,HttpServletRequest request) {
         ThrowUtils.throwIf(dto == null, ErrorCode.PARAMS_ERROR);
@@ -53,6 +56,7 @@ public class PermissionController {
      * 编辑权限
      */
     @LogInfoRecord(SystemModule = PERMISSION_MODULE + ":" + PERMISSION_UPDATE_PUT)
+    @AuthCheck(interfaceName = PERMISSION_UPDATE_PUT)
     @PutMapping("/{id}")
     public BaseResponse<Void> updatePermission(@PathVariable Long id, @Valid @RequestBody PermissionUpdateDTO dto) {
         Boolean result = permissionService.updatePermission(id, dto);
@@ -64,6 +68,7 @@ public class PermissionController {
      * 删除权限
      */
     @DeleteMapping("/{id}")
+    @AuthCheck(interfaceName = PERMISSION_DELETE_DELETE)
     @LogInfoRecord(SystemModule = PERMISSION_MODULE + ":" + PERMISSION_DELETE_DELETE)
     public BaseResponse<Void> deletePermission(@PathVariable Long id) {
         Boolean result = permissionService.deletePermission(id);
@@ -72,6 +77,7 @@ public class PermissionController {
     }
 
     @GetMapping("/{id}")
+    @AuthCheck(interfaceName = PERMISSION_DETAIL_GET)
     public BaseResponse<PermissionVO> getPermissionDetail(@PathVariable Long id) {
         PermissionVO permissionVO = permissionService.getPermissionDetailById(id);
         return ResultUtils.success(permissionVO);

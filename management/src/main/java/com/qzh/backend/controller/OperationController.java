@@ -1,6 +1,7 @@
 package com.qzh.backend.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.qzh.backend.annotation.AuthCheck;
 import com.qzh.backend.common.BaseResponse;
 import com.qzh.backend.common.ResultUtils;
 import com.qzh.backend.exception.ErrorCode;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.qzh.backend.constants.Interface.OperationLogInterfaceConstant.OPERATION_LOG_PAGE_POST;
+
 @RestController
 @RequestMapping("log")
 @RequiredArgsConstructor
@@ -22,6 +25,7 @@ public class OperationController {
     private final OperationLogService operationLogService;
 
     @PostMapping
+    @AuthCheck(interfaceName = OPERATION_LOG_PAGE_POST)
     public BaseResponse<Page<OperationLog>> getOperationLogPage(@RequestBody OperationLogQueryDTO dto) {
         ThrowUtils.throwIf(dto == null, ErrorCode.PARAMS_ERROR);
         int current = dto.getCurrent();
