@@ -53,6 +53,8 @@ public class InventoryServiceImpl extends ServiceImpl<InventoryMapper, Inventory
     @Lazy
     private SaleReturnService saleReturnService;
 
+    private final StoreService storeService;
+
     @Override
     public Page<InventoryVO> listInventoriesWithQuantity(InventoryQueryDTO queryDTO) {
         int current = queryDTO.getCurrent();
@@ -78,11 +80,18 @@ public class InventoryServiceImpl extends ServiceImpl<InventoryMapper, Inventory
                         .in("CONCAT(productId, '_', warehouseId)", productWarehouseKeys)
         );
         Map<String, Integer> quantityMap = calculateQuantityByProductStore(detailList);
+        
+        // 查询门店信息
+        List<Long> storeIds = inventoryList.stream().map(Inventory::getStoreId).distinct().toList();
+        Map<Long, String> storeNameMap = storeService.listByIds(storeIds).stream()
+                .collect(Collectors.toMap(Store::getId, Store::getStoreName));
+
         List<InventoryVO> voList = inventoryList.stream()
                 .map(inventory -> {
                     InventoryVO vo = new InventoryVO(inventory);
                     String key = String.format("%d_%d", inventory.getProductId(), inventory.getWarehouseId());
                     vo.setQuantity(quantityMap.getOrDefault(key, 0));
+                    vo.setStoreName(storeNameMap.getOrDefault(inventory.getStoreId(), "未知门店"));
                     return vo;
                 })
                 .toList();

@@ -35,6 +35,7 @@
         <el-button v-if="row.amountOrderStatus === 0" link type="warning" @click="onMockPay(row.amountOrderId)">一键支付</el-button>
         <el-button v-if="row.purchaseOrderStatus === 0" link type="primary" @click="onShip(row)" v-perm="'purchase:order:ship'">发货</el-button>
         <el-button v-if="row.purchaseOrderStatus === 1" link type="success" @click="openStockIn(row)" v-perm="'purchase:order:stock-in'">入库</el-button>
+        <el-button v-if="row.purchaseOrderStatus === 2" link type="danger" @click="openReturn(row)" v-perm="'purchase:return:add'">退货</el-button>
       </template>
     </EpTable>
 
@@ -96,6 +97,27 @@
       <template #footer>
         <el-button @click="stockInVisible = false">取消</el-button>
         <el-button type="primary" @click="submitStockIn" :loading="submitting" :disabled="remainingQty !== 0">确认入库</el-button>
+      </template>
+    </el-dialog>
+
+    <!-- Return Dialog -->
+    <el-dialog v-model="returnVisible" title="采购退货" width="500px">
+      <el-form :model="returnForm" label-width="100px">
+        <el-form-item label="退货仓库" required>
+          <el-select v-model="returnForm.warehouseId" placeholder="请选择退货仓库" style="width: 100%">
+            <el-option v-for="w in warehouses" :key="w.id" :label="w.name" :value="w.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="退货数量" required>
+          <el-input-number v-model="returnForm.returnQuantity" :min="1" :max="currentOrder?.productQuantity" style="width: 100%" />
+        </el-form-item>
+        <el-form-item label="退货原因">
+          <el-input v-model="returnForm.remark" type="textarea" placeholder="请输入退货原因" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="returnVisible = false">取消</el-button>
+        <el-button type="primary" @click="submitReturn" :loading="submitting">确认退货</el-button>
       </template>
     </el-dialog>
   </div>
@@ -299,6 +321,47 @@ async function submitStockIn() {
     })
     ElMessage.success('入库成功')
     stockInVisible.value = false
+    fetch()
+  } finally {
+    submitting.value = false
+  }
+}
+
+// Return Logic
+const returnVisible = ref(false)
+const returnForm = reactive({
+  productId: undefined as number | undefined,
+  warehouseId: undefined as number | undefined,
+  returnQuantity: 1,
+  remark: ''
+})
+
+async function openReturn(row: any) {
+  currentOrder.value = row
+  returnForm.productId = row.productId
+  returnForm.returnQuantity = row.productQuantity
+  returnForm.warehouseId = undefined
+  returnForm.remark = ''
+  
+  // Load warehouses if not loaded
+  if (warehouses.value.length === 0) {
+    const res = await http.get('/warehouse/list', { params: { size: 100 } })
+    warehouses.value = res.data?.records || []
+  }
+  returnVisible.value = true
+}
+
+async function submitReturn() {
+  if (!returnForm.warehouseId) return ElMessage.warning('请选择退货仓库')
+  submitting.value = true
+  try {
+    await http.post('/purchase/return/create', {
+      productId: returnForm.productId,
+      warehouseId: returnForm.warehouseId,
+      returnQuantity: returnForm.returnQuantity
+    })
+    ElMessage.success('退货申请已提交')
+    returnVisible.value = false
     fetch()
   } finally {
     submitting.value = false

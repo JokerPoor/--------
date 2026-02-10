@@ -275,7 +275,7 @@ public class StoreInitRunner implements ApplicationRunner {
                 ButtonPermissionConstant.INVENTORY_UPDATE,
 
                 // 按钮权限 - 采购管理
-                ButtonPermissionConstant.PURCHASE_ORDER_ADD, ButtonPermissionConstant.PURCHASE_ORDER_SHIP, ButtonPermissionConstant.PURCHASE_ORDER_STOCK_IN,
+                ButtonPermissionConstant.PURCHASE_ORDER_ADD, ButtonPermissionConstant.PURCHASE_ORDER_SHIP, ButtonPermissionConstant.PURCHASE_ORDER_STOCK_IN, ButtonPermissionConstant.PURCHASE_RETURN_ADD,
 
                 // 按钮权限 - 销售管理
                 ButtonPermissionConstant.SALE_ORDER_CREATE, ButtonPermissionConstant.SALE_ORDER_CONFIRM, ButtonPermissionConstant.INVENTORY_SALE_ORDER_SHIP, ButtonPermissionConstant.SALE_RETURN_ADD,
@@ -426,7 +426,7 @@ public class StoreInitRunner implements ApplicationRunner {
                 ButtonPermissionConstant.INVENTORY_UPDATE,
 
                 // 按钮权限 - 采购管理
-                ButtonPermissionConstant.PURCHASE_ORDER_ADD, ButtonPermissionConstant.PURCHASE_ORDER_STOCK_IN,
+                ButtonPermissionConstant.PURCHASE_ORDER_ADD, ButtonPermissionConstant.PURCHASE_ORDER_STOCK_IN, ButtonPermissionConstant.PURCHASE_RETURN_ADD,
 
                 // 按钮权限 - 销售管理
                 ButtonPermissionConstant.SALE_ORDER_CREATE, ButtonPermissionConstant.SALE_ORDER_CONFIRM, ButtonPermissionConstant.INVENTORY_SALE_ORDER_SHIP, ButtonPermissionConstant.SALE_RETURN_ADD,

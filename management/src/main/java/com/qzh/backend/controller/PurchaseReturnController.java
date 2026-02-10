@@ -30,7 +30,7 @@ public class PurchaseReturnController {
         return ResultUtils.success(returnPage);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public BaseResponse<Long> createPurchaseReturn(@Valid @RequestBody PurchaseReturnCreateDTO createDTO, HttpServletRequest request) {
         Long returnOrderId = purchaseReturnService.createPurchaseReturn(createDTO,request);
         return ResultUtils.success(returnOrderId);

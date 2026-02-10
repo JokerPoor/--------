@@ -37,4 +37,6 @@ public class InventoryVO extends Inventory implements Serializable {
 
     private Integer quantity;
 
+    private String storeName;
+
 }
