@@ -119,7 +119,10 @@ import http from '../../services/http'
 import { ElMessage } from 'element-plus'
 import { Refresh } from '@element-plus/icons-vue'
 import auth from '../../services/auth'
+import { useRoute, useRouter } from 'vue-router'
 
+const route = useRoute()
+const router = useRouter()
 const loading = ref(false)
 const pagination = reactive({ current: 1, size: 10, total: 0 })
 const rows = ref([])
@@ -279,8 +282,33 @@ async function onMockPay(id: number) {
     }
 }
 
+// Sync Status Logic (Triggered on return from Alipay)
+async function checkAlipayReturn() {
+    const { out_trade_no } = route.query
+    if (out_trade_no) {
+        try {
+            loading.value = true
+            const res = await http.post(`/amount/order/sync/${out_trade_no}`)
+            if (res.data) {
+                ElMessage.success('支付确认成功')
+            } else {
+                // ElMessage.warning('支付状态未更新，请稍后刷新')
+            }
+            // Clear query params to clean up URL
+            router.replace({ query: {} })
+        } catch (e) {
+            console.error(e)
+        } finally {
+            // Always fetch latest data
+            fetch()
+        }
+    } else {
+        fetch()
+    }
+}
+
 onMounted(() => {
-  fetch()
+  checkAlipayReturn()
 })
 </script>
 

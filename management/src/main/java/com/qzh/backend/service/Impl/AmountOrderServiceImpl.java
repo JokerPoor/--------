@@ -6,6 +6,8 @@ import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradePagePayRequest;
+import com.alipay.api.request.AlipayTradeQueryRequest;
+import com.alipay.api.response.AlipayTradeQueryResponse;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -23,6 +25,7 @@ import com.qzh.backend.constants.RoleNameConstant;
 import com.qzh.backend.model.entity.Role;
 import com.qzh.backend.model.enums.OrderTypeEnum;
 import com.qzh.backend.model.enums.PayStatusEnum;
+import com.qzh.backend.model.enums.PayTypeEnum;
 import com.qzh.backend.model.enums.PurchaseOrderTypeEnum;
 import com.qzh.backend.model.vo.AmountOrderDetailVO;
 import com.qzh.backend.service.AmountOrderService;
@@ -171,7 +174,8 @@ public class AmountOrderServiceImpl extends ServiceImpl<AmountOrderMapper, Amoun
         bizContent.put("subject","orderId" + amountOrder.getOrderId());
         bizContent.put("product_code","FAST_INSTANT_TRADE_PAY");
         req.setBizContent(bizContent.toString());
-//        req.setReturnUrl("http://localhost:9090/home/hello");
+        // 设置支付成功后的跳转地址
+        req.setReturnUrl(aliPayConfig.getReturnUrl());
         String form = "";
         try{
             form = aliPayClient.pageExecute(req).getBody();
@@ -310,5 +314,41 @@ public class AmountOrderServiceImpl extends ServiceImpl<AmountOrderMapper, Amoun
         if (!update) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "支付失败");
         }
+    }
+
+    @Override
+    public boolean syncOrderStatus(Long id) {
+        AmountOrder amountOrder = this.getById(id);
+        if (amountOrder == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "订单不存在");
+        }
+        if (PayStatusEnum.PAID.getValue() == amountOrder.getStatus()) {
+            return true;
+        }
+
+        AlipayClient aliPayClient = new DefaultAlipayClient(GATEWAY_URL, aliPayConfig.getAppId(),
+                aliPayConfig.getAppPrivateKey(), FORMAT, CHARSET, aliPayConfig.getAlipayPublicKey(), SIGN_TYPE);
+        AlipayTradeQueryRequest request = new AlipayTradeQueryRequest();
+        JSONObject bizContent = new JSONObject();
+        bizContent.put("out_trade_no", id);
+        request.setBizContent(bizContent.toString());
+
+        try {
+            AlipayTradeQueryResponse response = aliPayClient.execute(request);
+            if (response.isSuccess()) {
+                if ("TRADE_SUCCESS".equals(response.getTradeStatus()) || "TRADE_FINISHED".equals(response.getTradeStatus())) {
+                    // 更新订单状态
+                    amountOrder.setStatus(PayStatusEnum.PAID.getValue());
+                    amountOrder.setTradeNo(response.getTradeNo());
+                    amountOrder.setUpdateTime(new Date());
+                    amountOrder.setPayType(String.valueOf(PayTypeEnum.ALIPAY.getValue()));
+                    return this.updateById(amountOrder);
+                }
+            }
+        } catch (AlipayApiException e) {
+            e.printStackTrace();
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "查询支付宝订单状态失败");
+        }
+        return false;
     }
 }

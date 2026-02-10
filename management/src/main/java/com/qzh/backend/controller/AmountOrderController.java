@@ -101,4 +101,13 @@ public class AmountOrderController {
         amountOrderService.mockPay(id);
         return ResultUtils.success(null);
     }
+
+    /**
+     * 主动同步订单状态（用于前端支付回调后立即查询）
+     */
+    @PostMapping("/sync/{id}")
+    public BaseResponse<Boolean> syncOrderStatus(@PathVariable Long id) {
+        boolean success = amountOrderService.syncOrderStatus(id);
+        return ResultUtils.success(success);
+    }
 }

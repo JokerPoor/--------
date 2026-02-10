@@ -29,4 +29,9 @@ public interface AmountOrderService extends IService<AmountOrder> {
     void notifyOrder(HttpServletRequest request) throws AlipayApiException;
 
     void mockPay(Long id);
+
+    /**
+     * 主动同步订单状态（查询支付宝）
+     */
+    boolean syncOrderStatus(Long id);
 }

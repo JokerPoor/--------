@@ -13,5 +13,6 @@ public class AliPayConfig {
     private String appPrivateKey;
     private String alipayPublicKey;
     private String notifyUrl;
+    private String returnUrl;
 
 }
