@@ -22,4 +22,10 @@ public interface AmountOrderInterfaceConstant {
 
     // 金额单支付回调通知（POST /amount/order/notify）
     String AMOUNT_ORDER_NOTIFY_POST = "POST:/amount/order/notify";
+
+    // 模拟支付金额单（POST /amount/order/mock-pay/{id}）
+    String AMOUNT_ORDER_MOCK_PAY_POST = "POST:/amount/order/mock-pay/:id";
+
+    // 同步金额单状态（POST /amount/order/sync/{id}）
+    String AMOUNT_ORDER_SYNC_POST = "POST:/amount/order/sync/:id";
 }
