@@ -166,8 +166,17 @@ function openEdit(row: any) {
   visible.value = true;
 }
 async function submit() {
-  if (form.id) await http.put(`/role/${form.id}`, form);
-  else await http.post("/role", form);
+  if (!form.roleName || !form.roleName.trim()) {
+    ElMessageBox.alert("请输入角色名称", "提示", { type: "warning" });
+    return;
+  }
+  if (form.id) {
+    await http.put(`/role/${form.id}`, form);
+  } else {
+    // 新建时不传id字段
+    const { id, ...createData } = form;
+    await http.post("/role", createData);
+  }
   visible.value = false;
   fetch();
 }

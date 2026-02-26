@@ -36,7 +36,7 @@ public class RoleController {
     @PostMapping
     @AuthCheck(interfaceName = ROLE_CREATE_POST)
     @LogInfoRecord(SystemModule = ROLE_MODULE + ":" + ROLE_CREATE_POST)
-    public BaseResponse<Long> createRole(@Valid RoleCreateDTO dto, HttpServletRequest request) {
+    public BaseResponse<Long> createRole(@RequestBody @Valid RoleCreateDTO dto, HttpServletRequest request) {
         Long roleId = roleService.createRole(dto,request);
         return ResultUtils.success(roleId);
     }
