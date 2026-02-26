@@ -16,7 +16,7 @@
       <template #row-visible="{ row }">
         {{ visibleText(row.visible) }}
       </template>
-      <template #row-actions="{ row }">
+      <template #actions="{ row }">
           <el-button link type="primary" @click="openEdit(row)"><el-icon><Edit /></el-icon>编辑</el-button>
           <el-button link type="primary" @click="openPerm(row)"><el-icon><Key /></el-icon>权限设置</el-button>
           <el-button link type="danger" @click="remove(row)"><el-icon><Delete /></el-icon>删除</el-button>
@@ -80,7 +80,6 @@ const cols = [
   { prop: "component", label: "组件" },
   { prop: "orderNum", label: "排序", width: 100 },
   { prop: "visible", label: "可见", width: 100, slot: "row-visible" },
-  { prop: "actions", label: "操作", width: 280, slot: "row-actions" },
 ];
 
 const visible = ref(false)

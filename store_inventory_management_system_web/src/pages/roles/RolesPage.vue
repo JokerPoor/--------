@@ -15,7 +15,7 @@
       @update:current="onPageChange"
       @update:size="onSizeChange"
     >
-      <template #row-actions="{ row }">
+      <template #actions="{ row }">
         <el-button link type="primary" @click="openEdit(row)" v-perm="'role:edit'"
           ><el-icon><Edit /></el-icon>编辑</el-button
         >
@@ -96,7 +96,6 @@ const cols = [
   { prop: "roleName", label: "角色名称" },
   { prop: "description", label: "描述" },
   { prop: "updateTime", label: "更新时间" },
-  { prop: "actions", label: "操作", width: 340, slot: "row-actions" },
 ];
 
 const visible = ref(false);

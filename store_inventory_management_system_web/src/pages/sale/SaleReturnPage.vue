@@ -47,7 +47,7 @@
             <el-tag v-else-if="row.status === 2" type="info">已取消</el-tag>
           </template>
 
-          <template #row-actions="{ row }">
+          <template #actions="{ row }">
             <el-button v-if="row.status === 0" link type="success" @click="onConfirm(row)" v-perm="'inventory:sale-return:confirm'">确认退货</el-button>
           </template>
         </EpTable>

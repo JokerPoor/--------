@@ -15,7 +15,7 @@
       @update:current="onPager"
       @update:size="onSizeChange"
     >
-      <template #row-actions="{ row }">
+      <template #actions="{ row }">
           <el-button
             v-perm="'权限分配'"
             link
@@ -70,7 +70,6 @@ const cols = [
   { prop: "id", label: "ID", width: 80 },
   { prop: "name", label: "权限名称" },
   { prop: "description", label: "描述" },
-  { prop: "actions", label: "操作", width: 200, slot: "row-actions" },
 ];
 
 onMounted(() => {

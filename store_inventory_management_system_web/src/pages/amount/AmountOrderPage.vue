@@ -63,7 +63,7 @@
         <span class="font-bold">¥{{ row.amount }}</span>
       </template>
 
-      <template #row-actions="{ row }">
+      <template #actions="{ row }">
         <el-button link type="primary" @click="openDetail(row)">详情</el-button>
         <el-button v-if="row.status === 0 && canPay(row)" link type="success" @click="onPay(row.id)">支付</el-button>
         <el-button v-if="row.status === 0 && canPay(row)" link type="warning" @click="onMockPay(row.id)">一键支付</el-button>
