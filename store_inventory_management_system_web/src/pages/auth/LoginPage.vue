@@ -81,8 +81,7 @@ async function submit() {
   }
   await auth.refreshAccess();
   await auth.ensureDynamicRoutes(router);
-  const first = auth.getMenuPages()[0];
-  router.replace(first ? normalizeMenuPath(first.path) : "/users");
+  router.replace("/dashboard");
 }
 function toRegister() {
   router.push("/register");
