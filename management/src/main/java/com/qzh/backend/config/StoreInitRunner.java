@@ -421,6 +421,12 @@ public class StoreInitRunner implements ApplicationRunner {
         permDescMap.put(AmountOrderInterfaceConstant.AMOUNT_ORDER_CANCEL_POST, "取消金额单");
         permDescMap.put(AmountOrderInterfaceConstant.AMOUNT_ORDER_NOTIFY_POST, "支付回调通知");
 
+        // 仪表盘接口
+        permDescMap.put("dashboard:admin:stats", "查看管理员仪表盘统计");
+        permDescMap.put("dashboard:store:stats", "查看门店管理员仪表盘统计");
+        permDescMap.put("dashboard:supplier:stats", "查看供应商仪表盘统计");
+        permDescMap.put("dashboard:customer:stats", "查看客户仪表盘统计");
+
         List<String> basePermNames = List.of(
                 // 基础角色与权限
                 ButtonPermissionConstant.ROLE_MANAGE, ButtonPermissionConstant.PERM_ASSIGN,
@@ -552,7 +558,13 @@ public class StoreInitRunner implements ApplicationRunner {
                 AmountOrderInterfaceConstant.AMOUNT_ORDER_DETAIL_GET,
                 AmountOrderInterfaceConstant.AMOUNT_ORDER_PAY_POST,
                 AmountOrderInterfaceConstant.AMOUNT_ORDER_CANCEL_POST,
-                AmountOrderInterfaceConstant.AMOUNT_ORDER_NOTIFY_POST
+                AmountOrderInterfaceConstant.AMOUNT_ORDER_NOTIFY_POST,
+
+                // 仪表盘接口权限
+                "dashboard:admin:stats",
+                "dashboard:store:stats",
+                "dashboard:supplier:stats",
+                "dashboard:customer:stats"
         );
         Map<String, Permission> existingPermsByName = permissionService.list(
                 new LambdaQueryWrapper<Permission>().in(Permission::getName, basePermNames)
@@ -678,7 +690,10 @@ public class StoreInitRunner implements ApplicationRunner {
                 AmountOrderInterfaceConstant.AMOUNT_ORDER_DETAIL_GET,
                 AmountOrderInterfaceConstant.AMOUNT_ORDER_PAY_POST,
                 AmountOrderInterfaceConstant.AMOUNT_ORDER_CANCEL_POST,
-                AmountOrderInterfaceConstant.AMOUNT_ORDER_NOTIFY_POST
+                AmountOrderInterfaceConstant.AMOUNT_ORDER_NOTIFY_POST,
+
+                // 仪表盘接口权限
+                "dashboard:store:stats"
             );
 
             List<Permission> storeAdminPerms = perms.stream()
@@ -714,7 +729,10 @@ public class StoreInitRunner implements ApplicationRunner {
                 
                 // 销售退货相关 (供应商可能需要查看销售退货申请)
                 SaleReturnInterfaceConstant.SALE_RETURN_MY_GET,
-                SaleReturnInterfaceConstant.SALE_RETURN_DETAIL_GET
+                SaleReturnInterfaceConstant.SALE_RETURN_DETAIL_GET,
+
+                // 仪表盘接口权限
+                "dashboard:supplier:stats"
             );
             List<Permission> supplierPerms = perms.stream()
                 .filter(p -> supplierPermNames.contains(p.getName()))
@@ -744,7 +762,10 @@ public class StoreInitRunner implements ApplicationRunner {
                 AmountOrderInterfaceConstant.AMOUNT_ORDER_LIST_PAYER_GET,
                 AmountOrderInterfaceConstant.AMOUNT_ORDER_PAY_POST,
                 AmountOrderInterfaceConstant.AMOUNT_ORDER_DETAIL_GET,
-                AmountOrderInterfaceConstant.AMOUNT_ORDER_NOTIFY_POST
+                AmountOrderInterfaceConstant.AMOUNT_ORDER_NOTIFY_POST,
+
+                // 仪表盘接口权限
+                "dashboard:customer:stats"
             );
             List<Permission> customerPerms = perms.stream()
                 .filter(p -> customerPermNames.contains(p.getName()))
