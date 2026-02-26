@@ -230,7 +230,7 @@ async function submitCreate() {
     return ElMessage.warning("请补全信息");
   submitting.value = true;
   try {
-    await http.post("/purchase/return", {
+    await http.post("/purchase/return/create", {
       productId: createForm.productId,
       returnQuantity: createForm.returnQuantity,
       warehouseId: createForm.warehouseId,
