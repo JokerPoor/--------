@@ -1,28 +1,89 @@
 <template>
-  <div class="ep-card" v-loading="loading" element-loading-text="加载中..." element-loading-background="rgba(255,255,255,0.6)">
+  <div
+    class="ep-card"
+    v-loading="loading"
+    element-loading-text="加载中..."
+    element-loading-background="rgba(255,255,255,0.6)"
+  >
     <div class="flex justify-between mb-3">
       <div class="flex gap-2">
-        <el-input v-if="isSearchVisible" v-model="keyword" placeholder="搜索" clearable @input="onSearch" style="width:220px" />
+        <el-input
+          v-if="isSearchVisible"
+          v-model="keyword"
+          placeholder="搜索"
+          clearable
+          @input="onSearch"
+          style="width: 220px"
+        />
         <slot name="toolbar"></slot>
       </div>
-      <el-button type="primary" @click="$emit('refresh')"><el-icon><Refresh /></el-icon><span>刷新</span></el-button>
+      <el-button type="primary" @click="$emit('refresh')"
+        ><el-icon><Refresh /></el-icon><span>刷新</span></el-button
+      >
     </div>
-    <el-table ref="tableRef" :data="rows" border stripe @selection-change="onSelectionChange" style="width: 100%">
+    <el-table
+      ref="tableRef"
+      :data="rows"
+      border
+      stripe
+      @selection-change="onSelectionChange"
+      style="width: 100%"
+    >
       <el-table-column type="selection" width="48" />
-      <el-table-column v-for="c in columns" :key="c.prop" :prop="c.prop" :label="c.label" :min-width="c.width || 120">
+      <el-table-column
+        v-for="c in columns"
+        :key="c.prop"
+        :prop="c.prop"
+        :label="c.label"
+        :min-width="c.width || 120"
+      >
         <template #default="{ row }">
           <slot v-if="c.slot" :name="c.slot" :row="row"></slot>
           <span v-else>{{ row[c.prop] }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="hasDefaultActions" label="操作" width="200" fixed="right">
+      <el-table-column
+        v-if="hasDefaultActions"
+        label="操作"
+        width="200"
+        fixed="right"
+      >
         <template #default="scope">
-          <el-button v-if="editPerm" link type="primary" @click="$emit('edit', scope.row)" v-perm="editPerm"><el-icon><Edit /></el-icon>编辑</el-button>
-          <el-button v-if="removePerm" link type="danger" @click="$emit('remove', scope.row)" v-perm="removePerm"><el-icon><Delete /></el-icon>删除</el-button>
-          <el-button v-if="resetPerm" link type="warning" @click="$emit('reset', scope.row)" v-perm="resetPerm"><el-icon><Key /></el-icon>重置密码</el-button>
+          <el-button
+            v-if="editPerm"
+            plain
+            round
+            type="primary"
+            @click="$emit('edit', scope.row)"
+            v-perm="editPerm"
+            ><el-icon><Edit /></el-icon>编辑</el-button
+          >
+          <el-button
+            v-if="removePerm"
+            plain
+            round
+            type="danger"
+            @click="$emit('remove', scope.row)"
+            v-perm="removePerm"
+            ><el-icon><Delete /></el-icon>删除</el-button
+          >
+          <el-button
+            v-if="resetPerm"
+            plain
+            round
+            type="warning"
+            @click="$emit('reset', scope.row)"
+            v-perm="resetPerm"
+            ><el-icon><Key /></el-icon>重置密码</el-button
+          >
         </template>
       </el-table-column>
-      <el-table-column v-if="$slots.actions" label="操作" width="200" fixed="right">
+      <el-table-column
+        v-if="$slots.actions"
+        label="操作"
+        width="200"
+        fixed="right"
+      >
         <template #default="{ row }">
           <slot name="actions" :row="row"></slot>
         </template>
@@ -43,44 +104,55 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { debounce } from 'lodash-es'
-import { ElTable, ElIcon } from 'element-plus'
-import { Refresh, Edit, Delete, Key } from '@element-plus/icons-vue'
+import { ref, computed } from "vue";
+import { debounce } from "lodash-es";
+import { ElTable, ElIcon } from "element-plus";
+import { Refresh, Edit, Delete, Key } from "@element-plus/icons-vue";
 
 const props = defineProps<{
-  rows: any[],
-  columns: { prop: string, label: string, width?: number, slot?: string }[],
-  loading: boolean,
-  pagination: { total: number, current: number, size: number },
-  editPerm?: string,
-  removePerm?: string,
-  resetPerm?: string,
-  showSearch?: boolean
-}>()
-const emit = defineEmits(['refresh','edit','remove','reset','search','update:current','update:size','selection-change'])
-const keyword = ref('')
-const onSearch = debounce(() => { emit('search', keyword.value) }, 300)
-const tableRef = ref<InstanceType<typeof ElTable>>()
+  rows: any[];
+  columns: { prop: string; label: string; width?: number; slot?: string }[];
+  loading: boolean;
+  pagination: { total: number; current: number; size: number };
+  editPerm?: string;
+  removePerm?: string;
+  resetPerm?: string;
+  showSearch?: boolean;
+}>();
+const emit = defineEmits([
+  "refresh",
+  "edit",
+  "remove",
+  "reset",
+  "search",
+  "update:current",
+  "update:size",
+  "selection-change",
+]);
+const keyword = ref("");
+const onSearch = debounce(() => {
+  emit("search", keyword.value);
+}, 300);
+const tableRef = ref<InstanceType<typeof ElTable>>();
 
 // 默认显示搜索框，除非显式设置为 false
-const isSearchVisible = computed(() => props.showSearch !== false)
+const isSearchVisible = computed(() => props.showSearch !== false);
 
 // 只有当至少有一个权限被定义时才显示默认操作列
 const hasDefaultActions = computed(() => {
-  return !!(props.editPerm || props.removePerm || props.resetPerm)
-})
+  return !!(props.editPerm || props.removePerm || props.resetPerm);
+});
 
 function onSelectionChange(selection: any[]) {
-  emit('selection-change', selection)
+  emit("selection-change", selection);
 }
 
 function onSizeChange(size: number) {
-  emit('update:size', size)
+  emit("update:size", size);
 }
 
 function onCurrentChange(current: number) {
-  emit('update:current', current)
+  emit("update:current", current);
 }
 </script>
 

@@ -16,20 +16,40 @@
       @update:size="onSizeChange"
     >
       <template #actions="{ row }">
-        <el-button link type="primary" @click="openEdit(row)" v-perm="'role:edit'"
+        <el-button
+          plain
+          round
+          type="primary"
+          @click="openEdit(row)"
+          v-perm="'role:edit'"
           ><el-icon><Edit /></el-icon>编辑</el-button
         >
-        <el-button link type="primary" @click="openAssignPages(row)" v-perm="'role:edit'"
+        <el-button
+          plain
+          round
+          type="primary"
+          @click="openAssignPages(row)"
+          v-perm="'role:edit'"
           ><el-icon><Edit /></el-icon>页面分配</el-button
         >
-        <el-button link type="primary" @click="openAssignPerms(row)" v-perm="'权限分配'"
+        <el-button
+          plain
+          round
+          type="primary"
+          @click="openAssignPerms(row)"
+          v-perm="'权限分配'"
           ><el-icon><Key /></el-icon>权限分配</el-button
         >
         <el-button
           v-perm="'role:delete'"
-          link
+          plain
+          round
           type="danger"
-          :disabled="['超级管理员', '门店管理员', '供应商', '客户', 'admin'].includes(row.roleName) || row.id === 1"
+          :disabled="
+            ['超级管理员', '门店管理员', '供应商', '客户', 'admin'].includes(
+              row.roleName,
+            ) || row.id === 1
+          "
           @click="remove(row)"
           ><el-icon><Delete /></el-icon>删除</el-button
         >
@@ -67,7 +87,12 @@
     </el-dialog>
     <el-dialog v-model="assignPermVisible" title="给角色分配权限" width="520px">
       <el-checkbox-group v-model="assignPermIds">
-        <el-checkbox v-for="p in permList" :key="p.id" :label="p.id" style="width: 100%; margin-right: 0; margin-bottom: 8px;">
+        <el-checkbox
+          v-for="p in permList"
+          :key="p.id"
+          :label="p.id"
+          style="width: 100%; margin-right: 0; margin-bottom: 8px"
+        >
           <span :title="p.name">{{ p.description || p.name }}</span>
           <span class="text-gray-400 text-xs ml-2">({{ p.name }})</span>
         </el-checkbox>
@@ -196,4 +221,3 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss"></style>
-

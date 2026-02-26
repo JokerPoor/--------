@@ -16,20 +16,22 @@
       @update:size="onSizeChange"
     >
       <template #actions="{ row }">
-          <el-button
-            v-perm="'权限分配'"
-            link
-            type="primary"
-            @click="openEdit(row)"
-            ><el-icon><Edit /></el-icon>编辑</el-button
-          >
-          <el-button
-            v-perm="'权限分配'"
-            link
-            type="danger"
-            @click="remove(row)"
-            ><el-icon><Delete /></el-icon>删除</el-button
-          >
+        <el-button
+          v-perm="'权限分配'"
+          plain
+          round
+          type="primary"
+          @click="openEdit(row)"
+          ><el-icon><Edit /></el-icon>编辑</el-button
+        >
+        <el-button
+          v-perm="'权限分配'"
+          plain
+          round
+          type="danger"
+          @click="remove(row)"
+          ><el-icon><Delete /></el-icon>删除</el-button
+        >
       </template>
     </EpTable>
     <el-dialog
@@ -118,4 +120,3 @@ fetch();
 </script>
 
 <style scoped lang="scss"></style>
-
