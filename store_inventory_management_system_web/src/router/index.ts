@@ -2,12 +2,13 @@ import { createRouter, createWebHistory } from "vue-router";
 import auth from "../services/auth";
 
 const routes = [
-  { path: "/", redirect: "/users" },
+  { path: "/", redirect: "/dashboard" },
   { path: "/login", component: () => import("../pages/auth/LoginPage.vue") },
   {
     path: "/register",
     component: () => import("../pages/auth/RegisterPage.vue"),
   },
+  { path: "/dashboard", component: () => import("../pages/dashboard/DashboardPage.vue") },
   { path: "/users", component: () => import("../pages/users/UsersPage.vue") },
   { path: "/roles", component: () => import("../pages/roles/RolesPage.vue") },
   {
