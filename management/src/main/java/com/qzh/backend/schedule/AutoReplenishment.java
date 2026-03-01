@@ -37,6 +37,8 @@ public class AutoReplenishment {
 
     private final TransferLogService transferLogService;
 
+    private final SysMessageService sysMessageService;
+
     /**
      * 定时任务自动补货低于预警值的商品 每五分钟
      */
@@ -136,6 +138,20 @@ public class AutoReplenishment {
             boolean save = transferLogService.save(transferLog);
             ThrowUtils.throwIf(!save, ErrorCode.SYSTEM_ERROR,"调拨日志记录异常");
             log.info("调拨成功：从仓库ID: {} 调拨商品: {} 数量: {} 到仓库ID: {}", source.getWarehouseId(), productName, actualTransferQty, targetWarehouseId);
+            try {
+                // 消息类型：0-自动调拨
+                String messageType = "0";
+                // 消息内容
+                String content = String.format(
+                        "【自动调拨通知】商品「%s」（ID:%d）已从仓库ID:%d 调拨%d件至仓库ID:%d，调拨单ID:%d",
+                        productName, productId, source.getWarehouseId(), actualTransferQty, targetWarehouseId, orderId
+                );
+                // 发送消息（recipientId传null，因为内部会查询所有管理员）
+                sysMessageService.sendMessage(messageType, content, orderId, productId, null);
+                log.info("调拨消息发送成功：商品{} 调拨单{}", productName, orderId);
+            } catch (Exception e) {
+                log.error("调拨消息发送失败：商品{} 调拨单{}，异常：{}", productName, orderId, e.getMessage(), e);
+            }
             transferredQty += actualTransferQty;
         }
         // 调拨后仍有缺口，创建采购订单补充剩余数量
@@ -220,6 +236,7 @@ public class AutoReplenishment {
      */
     @lombok.Data
     public static class TransferSource {
+
         private final Long warehouseId; // 源仓库ID
         private final int realTimeQuantity; // 源仓库实时库存
         private final int warningThreshold; // 源仓库预警阈值

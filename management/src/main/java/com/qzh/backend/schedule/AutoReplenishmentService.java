@@ -5,10 +5,7 @@ import com.qzh.backend.exception.BusinessException;
 import com.qzh.backend.exception.ErrorCode;
 import com.qzh.backend.model.entity.*;
 import com.qzh.backend.model.enums.*;
-import com.qzh.backend.service.AmountOrderService;
-import com.qzh.backend.service.InventoryDetailService;
-import com.qzh.backend.service.ProductService;
-import com.qzh.backend.service.PurchaseOrderService;
+import com.qzh.backend.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +35,8 @@ public class AutoReplenishmentService {
     private final AmountOrderService amountOrderService;
 
     private final InventoryDetailService inventoryDetailService;
+
+    private final SysMessageService sysMessageService;
 
     public void createReplenishOrderWithCheck(Inventory inventory, int neededQty) {
         Long productId = inventory.getProductId();
@@ -105,6 +104,20 @@ public class AutoReplenishmentService {
         }
         log.info("成功为商品 [{}]（仓库ID: {}）创建采购订单，采购数量: {}",
                 product.getName(), inventory.getWarehouseId(), replenishQuantity);
+        try {
+            // 消息类型：1-自动购买
+            String messageType = "1";
+            // 消息内容（包含核心采购信息）
+            String content = String.format(
+                    "【自动采购通知】商品「%s」（ID:%d）仓库ID:%d 库存不足，已自动创建采购订单：采购数量%d件，订单ID:%d，状态：待发货",
+                    product.getName(), product.getId(), inventory.getWarehouseId(), replenishQuantity, purchaseOrder.getId()
+            );
+            sysMessageService.sendMessage(messageType, content, purchaseOrder.getId(), product.getId(), null);
+            log.info("采购消息发送成功：商品{} 采购订单{}", product.getName(), purchaseOrder.getId());
+        } catch (Exception e) {
+            // 消息发送失败不影响采购订单创建，仅打印日志
+            log.error("采购消息发送失败：商品{} 采购订单{}，异常：{}", product.getName(), purchaseOrder.getId(), e.getMessage(), e);
+        }
     }
 
     private AmountOrder getAmountOrder(PurchaseOrder purchaseOrder, Product product) {
