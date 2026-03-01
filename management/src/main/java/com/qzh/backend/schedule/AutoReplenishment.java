@@ -143,11 +143,12 @@ public class AutoReplenishment {
         if (remainingNeededQty > 0) {
             log.info("商品: {} 调拨后仍需补充: {}（当前已补: {}），创建采购订单",
                     productName, remainingNeededQty, transferredQty);
-            autoReplenishmentService.createReplenishOrders(lowStockInv, remainingNeededQty);
+            autoReplenishmentService.createReplenishOrderWithCheck(lowStockInv, remainingNeededQty);
         } else {
             log.info("商品: {} 已通过调拨填补完成（共补: {}），无需采购", productName, transferredQty);
         }
     }
+
 
     /**
      * 查询可调拨库存的来源仓库

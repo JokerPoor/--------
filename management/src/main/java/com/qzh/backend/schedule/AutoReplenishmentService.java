@@ -11,17 +11,23 @@ import com.qzh.backend.service.ProductService;
 import com.qzh.backend.service.PurchaseOrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class AutoReplenishmentService {
+
+    @Autowired
+    private AutoReplenishmentService self;
 
     private final AppGlobalConfig appGlobalConfig;
 
@@ -32,6 +38,36 @@ public class AutoReplenishmentService {
     private final AmountOrderService amountOrderService;
 
     private final InventoryDetailService inventoryDetailService;
+
+    public void createReplenishOrderWithCheck(Inventory inventory, int neededQty) {
+        Long productId = inventory.getProductId();
+        String productName = inventory.getProductName();
+        // 1. 查询该商品未支付的、阈值触发的采购订单
+        List<PurchaseOrder> unpaidOrders = purchaseOrderService.listByProductIdAndStatusAndType(
+                productId,
+                PurchaseOrderStatusEnum.PENDING.getValue(), // 未支付/待发货状态
+                PurchaseOrderTypeEnum.THRESHOLD.getValue()  // 阈值触发类型
+        );
+        // 2. 计算未支付订单的总采购数量
+        int totalUnpaidQty = 0;
+        if (!CollectionUtils.isEmpty(unpaidOrders)) {
+            for (PurchaseOrder order : unpaidOrders) {
+                totalUnpaidQty += order.getProductQuantity();
+            }
+            log.info("商品: {} 存在未支付的自动采购订单，总数量: {}", productName, totalUnpaidQty);
+        }
+        // 3. 计算还需要采购的数量（缺口 - 未支付订单数量）
+        int actualNeedPurchase = neededQty - totalUnpaidQty;
+        if (actualNeedPurchase <= 0) {
+            log.info("商品: {} 未支付采购订单数量({})已满足缺口({})，无需创建新订单",
+                    productName, totalUnpaidQty, neededQty);
+            return;
+        }
+        // 4. 实际需要采购的数量>0，创建新订单
+        log.info("商品: {} 未支付采购订单数量({})不足缺口({})，需新增采购数量: {}",
+                productName, totalUnpaidQty, neededQty, actualNeedPurchase);
+        self.createReplenishOrders(inventory, actualNeedPurchase);
+    }
 
     /**
      * 创建采购订单（库存不足且无调拨来源时）
