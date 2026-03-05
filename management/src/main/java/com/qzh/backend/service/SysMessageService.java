@@ -11,8 +11,6 @@ import java.util.List;
 /**
  * 系统消息通知 Service 接口
  *
- * @author 你的名字
- * @date 2026-03-01
  */
 public interface SysMessageService extends IService<SysMessage> {
 
