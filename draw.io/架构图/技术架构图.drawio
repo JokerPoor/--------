@@ -1,9 +1,93 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" version="29.6.1">
   <diagram name="第 1 页" id="tBjsOrc0A1sdg4T33x39">
-    <mxGraphModel>
+    <mxGraphModel dx="1869" dy="658" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-4" edge="1" parent="1" source="gpeJarkyIIyEpAZAqLOu-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;curved=1;" target="gpeJarkyIIyEpAZAqLOu-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="前端/浏览器" vertex="1">
+          <mxGeometry height="40" width="120" x="310" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-10" edge="1" parent="1" source="gpeJarkyIIyEpAZAqLOu-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;curved=1;" target="gpeJarkyIIyEpAZAqLOu-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-11" edge="1" parent="1" source="gpeJarkyIIyEpAZAqLOu-2" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;curved=1;" target="gpeJarkyIIyEpAZAqLOu-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-29" edge="1" parent="1" source="gpeJarkyIIyEpAZAqLOu-2" style="edgeStyle=orthogonalEdgeStyle;shape=connector;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" target="gpeJarkyIIyEpAZAqLOu-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Spring MVC Controller" vertex="1">
+          <mxGeometry height="40" width="150" x="295" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-5" edge="1" parent="1" source="gpeJarkyIIyEpAZAqLOu-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;curved=1;" target="gpeJarkyIIyEpAZAqLOu-6" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="370" y="100" as="sourcePoint" />
+            <mxPoint x="370" y="170" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-6" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="HTTP/JSON" vertex="1">
+          <mxGeometry height="30" width="60" x="340" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="参数校验/统一响应" vertex="1">
+          <mxGeometry height="40" width="120" x="160" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-21" edge="1" parent="1" source="gpeJarkyIIyEpAZAqLOu-8" style="edgeStyle=orthogonalEdgeStyle;shape=connector;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" target="gpeJarkyIIyEpAZAqLOu-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-23" edge="1" parent="1" source="gpeJarkyIIyEpAZAqLOu-8" style="edgeStyle=orthogonalEdgeStyle;shape=connector;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" target="gpeJarkyIIyEpAZAqLOu-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-24" edge="1" parent="1" source="gpeJarkyIIyEpAZAqLOu-8" style="edgeStyle=orthogonalEdgeStyle;shape=connector;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" target="gpeJarkyIIyEpAZAqLOu-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-27" edge="1" parent="1" source="gpeJarkyIIyEpAZAqLOu-8" style="edgeStyle=orthogonalEdgeStyle;shape=connector;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" target="gpeJarkyIIyEpAZAqLOu-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-28" edge="1" parent="1" source="gpeJarkyIIyEpAZAqLOu-8" style="edgeStyle=orthogonalEdgeStyle;shape=connector;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" target="gpeJarkyIIyEpAZAqLOu-26">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="业务服务层 Service" vertex="1">
+          <mxGeometry height="40" width="120" x="310" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="登录拦截器" vertex="1">
+          <mxGeometry height="40" width="120" x="470" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="权限校验 AOP" vertex="1">
+          <mxGeometry height="40" width="120" x="-40" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="操作日志 AOP" vertex="1">
+          <mxGeometry height="40" width="120" x="110" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-22" edge="1" parent="1" source="gpeJarkyIIyEpAZAqLOu-15" style="edgeStyle=orthogonalEdgeStyle;shape=connector;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" target="gpeJarkyIIyEpAZAqLOu-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="MyBatis-Plus Mapper" vertex="1">
+          <mxGeometry height="40" width="120" x="260" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Spring Session" vertex="1">
+          <mxGeometry height="40" width="120" x="400" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-17" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="MySQL" vertex="1">
+          <mxGeometry height="80" width="60" x="290" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-20" edge="1" parent="1" source="gpeJarkyIIyEpAZAqLOu-18" style="edgeStyle=orthogonalEdgeStyle;shape=connector;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" target="gpeJarkyIIyEpAZAqLOu-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-18" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="Redis" vertex="1">
+          <mxGeometry height="80" width="60" x="430" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-19" edge="1" parent="1" source="gpeJarkyIIyEpAZAqLOu-8" style="edgeStyle=orthogonalEdgeStyle;shape=connector;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" target="gpeJarkyIIyEpAZAqLOu-18">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-25" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="定时任务：自动补货/调拨" vertex="1">
+          <mxGeometry height="40" width="140" x="530" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="gpeJarkyIIyEpAZAqLOu-26" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Knife4j/OpenAPI" vertex="1">
+          <mxGeometry height="40" width="140" x="700" y="360" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
