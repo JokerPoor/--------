@@ -256,4 +256,13 @@ public class PurchaseOrderServiceImpl extends ServiceImpl<PurchaseOrderMapper, P
         boolean b = this.updateById(purchaseOrder);
         ThrowUtils.throwIf(!b,ErrorCode.SYSTEM_ERROR,"状态更新失败");
     }
+
+     @Override
+     public List<PurchaseOrder> listByProductIdAndStatusAndType(Long productId, Integer status, Integer type) {
+         LambdaQueryWrapper<PurchaseOrder> queryWrapper = new LambdaQueryWrapper<>();
+         queryWrapper.eq(PurchaseOrder::getProductId, productId)
+                     .eq(PurchaseOrder::getStatus, status)
+                     .eq(PurchaseOrder::getType, type);
+         return this.list(queryWrapper);
+     }
 }
