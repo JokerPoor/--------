@@ -1,9 +1,213 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" version="29.6.1">
   <diagram name="第 1 页" id="xFoD_jpspLeDMDeJt1yI">
-    <mxGraphModel>
+    <mxGraphModel dx="1042" dy="658" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-1" edge="1" parent="1" source="tAtemJ1fJ-DjbFwfZGaV-2" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;" target="tAtemJ1fJ-DjbFwfZGaV-3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="140" y="190" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="客户端" vertex="1">
+          <mxGeometry height="40" width="80" x="100" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="客户端" vertex="1">
+          <mxGeometry height="40" width="80" x="100" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="SaleOrderController" vertex="1">
+          <mxGeometry height="40" width="150" x="250" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-5" edge="1" parent="1" source="tAtemJ1fJ-DjbFwfZGaV-6" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.522;exitY=0.925;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="tAtemJ1fJ-DjbFwfZGaV-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="318" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="SaleOrderController" vertex="1">
+          <mxGeometry height="40" width="150" x="250" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-7" edge="1" parent="1" source="tAtemJ1fJ-DjbFwfZGaV-8" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.547;exitY=1.045;exitDx=0;exitDy=0;entryX=0.552;entryY=-0.035;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;entryPerimeter=0;exitPerimeter=0;" target="tAtemJ1fJ-DjbFwfZGaV-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="SaleOrderService" vertex="1">
+          <mxGeometry height="40" width="150" x="460" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="SaleOrderService" vertex="1">
+          <mxGeometry height="40" width="150" x="460" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-10" edge="1" parent="1" source="tAtemJ1fJ-DjbFwfZGaV-11" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" target="tAtemJ1fJ-DjbFwfZGaV-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="InventoryService" vertex="1">
+          <mxGeometry height="40" width="150" x="680" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="InventoryService" vertex="1">
+          <mxGeometry height="40" width="150" x="680" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-13" edge="1" parent="1" source="tAtemJ1fJ-DjbFwfZGaV-14" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" target="tAtemJ1fJ-DjbFwfZGaV-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="MySQL" vertex="1">
+          <mxGeometry height="40" width="80" x="1120" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="MySQL" vertex="1">
+          <mxGeometry height="40" width="80" x="1120" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-16" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="140" y="190" as="sourcePoint" />
+            <mxPoint x="330" y="190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-17" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="324" y="230" as="sourcePoint" />
+            <mxPoint x="544" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-18" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="540" y="270" as="sourcePoint" />
+            <mxPoint x="760" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-19" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="760" y="310" as="sourcePoint" />
+            <mxPoint x="1160" y="310" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-20" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="540" y="350" as="sourcePoint" />
+            <mxPoint x="1160" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-28" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="创建销售订单" vertex="1">
+          <mxGeometry height="30" width="160" x="150" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-29" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="createSaleOrder(dto)" vertex="1">
+          <mxGeometry height="30" width="150" x="370" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-30" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="查询库存并校验数量" vertex="1">
+          <mxGeometry height="30" width="190" x="550" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-31" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="查询库存视图/库存数据" vertex="1">
+          <mxGeometry height="30" width="180" x="860" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-32" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="插入sys_sale_order" vertex="1">
+          <mxGeometry height="30" width="160" x="770" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-43" edge="1" parent="1" source="tAtemJ1fJ-DjbFwfZGaV-44" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" target="tAtemJ1fJ-DjbFwfZGaV-45">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-44" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="AmountOrderService" vertex="1">
+          <mxGeometry height="40" width="150" x="900" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-45" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="AmountOrderService" vertex="1">
+          <mxGeometry height="40" width="150" x="900" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-47" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="540" y="390" as="sourcePoint" />
+            <mxPoint x="970" y="390" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-48" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="980" y="430" as="sourcePoint" />
+            <mxPoint x="1160" y="430" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-49" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;dashed=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="330" y="470" as="sourcePoint" />
+            <mxPoint x="140" y="470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-50" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="140" y="520" as="sourcePoint" />
+            <mxPoint x="320" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-51" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="330" y="560" as="sourcePoint" />
+            <mxPoint x="750" y="560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-52" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="760" y="600" as="sourcePoint" />
+            <mxPoint x="1160" y="600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-53" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="760" y="640" as="sourcePoint" />
+            <mxPoint x="1160" y="640" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-54" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="140" y="690" as="sourcePoint" />
+            <mxPoint x="320" y="690" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-55" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="330" y="730" as="sourcePoint" />
+            <mxPoint x="540" y="730" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-56" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="540" y="770" as="sourcePoint" />
+            <mxPoint x="1163.199951171875" y="770" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-57" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;dashed=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="320" y="800" as="sourcePoint" />
+            <mxPoint x="150" y="800" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-58" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="操作成功" vertex="1">
+          <mxGeometry height="30" width="140" x="160" y="770" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-59" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="确认收货" vertex="1">
+          <mxGeometry height="30" width="120" x="170" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-60" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="confirmOrderArrival(oerderId)" vertex="1">
+          <mxGeometry height="30" width="160" x="350" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-61" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="更新sys_sale_order状态" vertex="1">
+          <mxGeometry height="30" width="340" x="690" y="730" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-62" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="更新库存相关数据" vertex="1">
+          <mxGeometry height="30" width="180" x="870" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-63" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="插入sys_inventory_detail（销售出库）" vertex="1">
+          <mxGeometry height="30" width="240" x="850" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-64" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="saleOrder(orderId)" vertex="1">
+          <mxGeometry height="30" width="190" x="450" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-65" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="出库/发货触发（后台）" vertex="1">
+          <mxGeometry height="30" width="150" x="150" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-66" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="返回销售订单ID" vertex="1">
+          <mxGeometry height="30" width="160" x="150" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-67" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="插入sys_amount_order" vertex="1">
+          <mxGeometry height="30" width="150" x="990" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="tAtemJ1fJ-DjbFwfZGaV-68" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="创建金额订单（待支付）" vertex="1">
+          <mxGeometry height="30" width="170" x="640" y="360" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
