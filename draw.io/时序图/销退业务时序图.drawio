@@ -1,9 +1,150 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" version="29.6.1">
   <diagram name="第 1 页" id="T3iJcGgqK8vozNe7OwCc">
-    <mxGraphModel>
+    <mxGraphModel dx="1042" dy="792" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="8hcULI9wi210W9_uNmwN-1" edge="1" parent="1" source="8hcULI9wi210W9_uNmwN-2" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;" target="8hcULI9wi210W9_uNmwN-3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="150" y="180" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="客户端/管理端" vertex="1">
+          <mxGeometry height="40" width="80" x="110" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="客户端/管理端" vertex="1">
+          <mxGeometry height="40" width="80" x="110" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="SaleReturnController" vertex="1">
+          <mxGeometry height="40" width="150" x="260" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-5" edge="1" parent="1" source="8hcULI9wi210W9_uNmwN-6" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.522;exitY=0.925;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="8hcULI9wi210W9_uNmwN-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="328" y="540" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="SaleReturnController" vertex="1">
+          <mxGeometry height="40" width="150" x="260" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-7" edge="1" parent="1" source="8hcULI9wi210W9_uNmwN-8" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.547;exitY=1.045;exitDx=0;exitDy=0;entryX=0.552;entryY=-0.035;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;entryPerimeter=0;exitPerimeter=0;" target="8hcULI9wi210W9_uNmwN-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="SaleReturnService" vertex="1">
+          <mxGeometry height="40" width="150" x="470" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="SaleReturnService" vertex="1">
+          <mxGeometry height="40" width="150" x="470" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-10" edge="1" parent="1" source="8hcULI9wi210W9_uNmwN-11" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" target="8hcULI9wi210W9_uNmwN-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="InventoryService" vertex="1">
+          <mxGeometry height="40" width="150" x="690" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="InventoryService" vertex="1">
+          <mxGeometry height="40" width="150" x="690" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-13" edge="1" parent="1" source="8hcULI9wi210W9_uNmwN-14" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" target="8hcULI9wi210W9_uNmwN-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="MySQL" vertex="1">
+          <mxGeometry height="40" width="80" x="910" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="MySQL" vertex="1">
+          <mxGeometry height="40" width="80" x="910" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-16" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="150" y="180" as="sourcePoint" />
+            <mxPoint x="340" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-17" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="334" y="220" as="sourcePoint" />
+            <mxPoint x="554" y="220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-18" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="550" y="260" as="sourcePoint" />
+            <mxPoint x="950" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-21" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="创建销退订单" vertex="1">
+          <mxGeometry height="30" width="160" x="160" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-22" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="createSaleReturn(dto)" vertex="1">
+          <mxGeometry height="30" width="150" x="380" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-23" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="插入sys_sale_return" vertex="1">
+          <mxGeometry height="30" width="350" x="570" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-28" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;dashed=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="340" y="300" as="sourcePoint" />
+            <mxPoint x="150" y="300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-29" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="150" y="340" as="sourcePoint" />
+            <mxPoint x="340" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-30" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="340" y="380" as="sourcePoint" />
+            <mxPoint x="765" y="380" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-36" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;dashed=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="330" y="570" as="sourcePoint" />
+            <mxPoint x="150" y="570" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-37" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="确认成功" vertex="1">
+          <mxGeometry height="30" width="140" x="175" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-43" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="confirmSaleReturn(saleReturnId)" vertex="1">
+          <mxGeometry height="30" width="190" x="450" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-44" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="确认销退" vertex="1">
+          <mxGeometry height="30" width="150" x="175" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-45" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="返回销退订单ID" vertex="1">
+          <mxGeometry height="30" width="160" x="165" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-47" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="770" y="420" as="sourcePoint" />
+            <mxPoint x="950" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-48" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="770" y="470" as="sourcePoint" />
+            <mxPoint x="950" y="470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-49" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="770" y="520" as="sourcePoint" />
+            <mxPoint x="950" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-50" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="校验销退状态" vertex="1">
+          <mxGeometry height="30" width="130" x="790" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-51" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="插入sys_inventory_detail(销退入库)" vertex="1">
+          <mxGeometry height="30" width="200" x="755" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="8hcULI9wi210W9_uNmwN-52" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="更新sys_sale_return状态" vertex="1">
+          <mxGeometry height="30" width="150" x="780" y="480" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
