@@ -1,9 +1,183 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" version="29.6.1">
   <diagram name="第 1 页" id="pMpojYpWPvROkXy1Yhl9">
-    <mxGraphModel>
+    <mxGraphModel dx="1303" dy="823" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="HIhwzlukfieiUpkvl9sK-1" edge="1" parent="1" source="HIhwzlukfieiUpkvl9sK-2" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;" target="HIhwzlukfieiUpkvl9sK-3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="80" y="150" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Scheduler" vertex="1">
+          <mxGeometry height="40" width="80" x="40" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Scheduler" vertex="1">
+          <mxGeometry height="40" width="80" x="40" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="AutoReplenishment" vertex="1">
+          <mxGeometry height="40" width="150" x="190" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-5" edge="1" parent="1" source="HIhwzlukfieiUpkvl9sK-6" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.522;exitY=0.925;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="HIhwzlukfieiUpkvl9sK-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="258" y="510" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="AutoReplenishment" vertex="1">
+          <mxGeometry height="40" width="150" x="190" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-7" edge="1" parent="1" source="HIhwzlukfieiUpkvl9sK-8" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.547;exitY=1.045;exitDx=0;exitDy=0;entryX=0.552;entryY=-0.035;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;entryPerimeter=0;exitPerimeter=0;" target="HIhwzlukfieiUpkvl9sK-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="InventoryService" vertex="1">
+          <mxGeometry height="40" width="150" x="400" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="InventoryService" vertex="1">
+          <mxGeometry height="40" width="150" x="400" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-10" edge="1" parent="1" source="HIhwzlukfieiUpkvl9sK-11" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" target="HIhwzlukfieiUpkvl9sK-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="InventoryDetailService" vertex="1">
+          <mxGeometry height="40" width="150" x="620" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="InventoryDetailService" vertex="1">
+          <mxGeometry height="40" width="150" x="620" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-13" edge="1" parent="1" source="HIhwzlukfieiUpkvl9sK-14" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" target="HIhwzlukfieiUpkvl9sK-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="MySQL" vertex="1">
+          <mxGeometry height="40" width="80" x="1300" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="MySQL" vertex="1">
+          <mxGeometry height="40" width="80" x="1300" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-16" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="80" y="150" as="sourcePoint" />
+            <mxPoint x="270" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-17" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="264" y="190" as="sourcePoint" />
+            <mxPoint x="484" y="190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-18" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="480" y="230" as="sourcePoint" />
+            <mxPoint x="1340" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-19" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="270" y="270" as="sourcePoint" />
+            <mxPoint x="700" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-20" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="700" y="310" as="sourcePoint" />
+            <mxPoint x="1340" y="310" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-21" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="触发定时任务" vertex="1">
+          <mxGeometry height="30" width="160" x="90" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-22" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="查询库存主表" vertex="1">
+          <mxGeometry height="30" width="150" x="310" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-23" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="select_sys_inventory" vertex="1">
+          <mxGeometry height="30" width="600" x="610" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-24" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="select_sys_inventory_detail" vertex="1">
+          <mxGeometry height="30" width="160" x="950" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-25" edge="1" parent="1" source="HIhwzlukfieiUpkvl9sK-26" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;" target="HIhwzlukfieiUpkvl9sK-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-26" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="AutoReplenishmentService" vertex="1">
+          <mxGeometry height="40" width="150" x="840" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-27" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="AutoReplenishmentService" vertex="1">
+          <mxGeometry height="40" width="150" x="840" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-36" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;dashed=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="260" y="650" as="sourcePoint" />
+            <mxPoint x="80" y="650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-37" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="任务完成" vertex="1">
+          <mxGeometry height="30" width="140" x="105" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-46" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="计算实时库存（按明细汇总）" vertex="1">
+          <mxGeometry height="30" width="350" x="310" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-47" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="PurchaseOrderService" vertex="1">
+          <mxGeometry height="40" width="150" x="1070" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-48" edge="1" parent="1" source="HIhwzlukfieiUpkvl9sK-49" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.522;exitY=0.925;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="HIhwzlukfieiUpkvl9sK-47">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1138" y="510" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-49" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="PurchaseOrderService" vertex="1">
+          <mxGeometry height="40" width="150" x="1070" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-54" edge="1" parent="1" style="curved=1;endArrow=classicThin;html=1;rounded=0;endFill=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="270" y="350" />
+              <mxPoint x="320" y="400" />
+            </Array>
+            <mxPoint x="270" y="350" as="sourcePoint" />
+            <mxPoint x="270" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-55" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="筛选低库存仓库并计算缺口" vertex="1">
+          <mxGeometry height="30" width="160" x="210" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-56" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="270" y="440" as="sourcePoint" />
+            <mxPoint x="910" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-57" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="executeTransfer(优先调拨)" vertex="1">
+          <mxGeometry height="30" width="190" x="500" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-58" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="920" y="490" as="sourcePoint" />
+            <mxPoint x="1340" y="490" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-59" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="插入库存明细（调拨转出/转入）" vertex="1">
+          <mxGeometry height="30" width="190" x="1040" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-60" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="270" y="550" as="sourcePoint" />
+            <mxPoint x="1140" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-61" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="createPurchaseOrder（不足再采购）" vertex="1">
+          <mxGeometry height="30" width="320" x="540" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-62" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1150" y="600" as="sourcePoint" />
+            <mxPoint x="1340" y="600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HIhwzlukfieiUpkvl9sK-63" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="插入sys_purchase_order与sys_amount_order" vertex="1">
+          <mxGeometry height="30" width="290" x="1090" y="569.5" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
