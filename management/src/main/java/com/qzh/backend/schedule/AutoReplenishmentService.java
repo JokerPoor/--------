@@ -23,9 +23,6 @@ import java.util.UUID;
 @Slf4j
 public class AutoReplenishmentService {
 
-    @Autowired
-    private AutoReplenishmentService self;
-
     private final AppGlobalConfig appGlobalConfig;
 
     private final ProductService productService;
@@ -65,7 +62,7 @@ public class AutoReplenishmentService {
         // 4. 实际需要采购的数量>0，创建新订单
         log.info("商品: {} 未支付采购订单数量({})不足缺口({})，需新增采购数量: {}",
                 productName, totalUnpaidQty, neededQty, actualNeedPurchase);
-        self.createReplenishOrders(inventory, actualNeedPurchase);
+        createReplenishOrders(inventory, actualNeedPurchase);
     }
 
     /**

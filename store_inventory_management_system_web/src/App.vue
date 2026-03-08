@@ -14,6 +14,7 @@
           </div>
         </div>
         <div class="flex items-center gap-3">
+          <MessageNotification v-if="showMessageNotification" />
           <ThemeSwitcher @open-customizer="panelVisible = true" />
           <el-dropdown trigger="click">
             <el-button text class="min-w-0">
@@ -78,6 +79,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { gsap } from 'gsap'
 import ThemeSwitcher from './components/ThemeSwitcher.vue'
 import ThemeCustomizer from './components/ThemeCustomizer.vue'
+import MessageNotification from './components/MessageNotification.vue'
 import { ElMessageBox } from 'element-plus'
 import { Fold, Expand, ArrowDown, Menu as IconMenu, Warning } from '@element-plus/icons-vue'
 import auth from './services/auth'
@@ -126,6 +128,17 @@ const menuTree = computed(() => {
 })
 const isAuth = computed(() => route.path.startsWith('/login') || route.path.startsWith('/register'))
 const displayName = computed(() => auth.state.user?.userName || auth.state.user?.userAccount || '当前用户')
+
+// 判断是否显示消息通知（只对门店管理员和超级管理员显示）
+const showMessageNotification = computed(() => {
+  const roles = auth.state.user?.roles || []
+  return roles.some(role => 
+    role.roleName === '超级管理员' || 
+    role.roleName === '门店管理员' ||
+    role.roleName === 'Admin' ||
+    role.roleName === 'Store Admin'
+  )
+})
 
 async function handleLogout() {
   try {

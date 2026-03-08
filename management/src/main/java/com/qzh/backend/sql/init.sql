@@ -24,6 +24,7 @@ DROP TABLE IF EXISTS `sys_warehouse`;
 DROP TABLE IF EXISTS `sys_transfer_log`;
 DROP TABLE IF EXISTS `sys_sale_order`;
 DROP TABLE IF EXISTS `sys_sale_return`;
+DROP TABLE IF EXISTS `sys_message`;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -326,4 +327,19 @@ CREATE TABLE `sys_message` (
                                `createTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                `readTime` datetime DEFAULT NULL COMMENT '已读时间',
                                PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统定时任务消息通知表';
+
+CREATE TABLE `sys_message` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `messageType` VARCHAR(20) NOT NULL COMMENT '消息类型(0-自动调拨,1-自动购买)',
+    `content` TEXT NOT NULL COMMENT '消息内容',
+    `relatedId` BIGINT DEFAULT NULL COMMENT '关联业务ID(调拨单ID/采购单ID)',
+    `productId` BIGINT DEFAULT NULL COMMENT '关联商品ID',
+    `recipientId` BIGINT NOT NULL COMMENT '消息接收人ID',
+    `readStatus` TINYINT NOT NULL DEFAULT 0 COMMENT '已读状态(0-未读,1-已读)',
+    `createTime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `readTime` DATETIME DEFAULT NULL COMMENT '已读时间',
+    PRIMARY KEY (`id`),
+    KEY `idx_recipient_read` (`recipientId`, `readStatus`),
+    KEY `idx_create_time` (`createTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统定时任务消息通知表';
