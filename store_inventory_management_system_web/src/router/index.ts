@@ -38,10 +38,12 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   console.log('[Router] Navigating from', from.path, 'to', to.path)
   
+  // 登录和注册页面直接放行，不需要认证
   if (to.path.startsWith("/login") || to.path.startsWith("/register")) {
     next();
     return;
   }
+  
   try {
     const justInited = await auth.ensureInited(router);
     if (justInited) {

@@ -69,7 +69,7 @@ function onCaptchaSuccess() { sliderPassed.value = true }
 
 async function loadRoles() {
   try {
-    const res = await http.get('/role/list', { params: { current: 1, size: 20, excludeAdmin: true } })
+    const res = await http.get('/role/public/list', { params: { current: 1, size: 20, excludeAdmin: true } })
     roleOptions.value = res.data.records || []
     if (!form.roleId && roleOptions.value.length) form.roleId = roleOptions.value[0].id
   } catch (e: any) {

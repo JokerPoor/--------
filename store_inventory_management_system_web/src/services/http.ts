@@ -13,7 +13,10 @@ http.interceptors.response.use(
     if (payload && typeof payload.code === 'number') {
       if (payload.code === 40200) return payload
       if (payload.code === 40100) {
-        if (location.pathname !== '/login') location.href = '/login'
+        // 未登录错误，排除登录和注册页面
+        if (location.pathname !== '/login' && location.pathname !== '/register') {
+          location.href = '/login'
+        }
       }
       ElMessage.error(payload.message || '请求失败')
       return Promise.reject(new Error(payload.message || '请求失败'))

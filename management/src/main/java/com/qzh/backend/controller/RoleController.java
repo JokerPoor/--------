@@ -33,6 +33,18 @@ public class RoleController {
         return ResultUtils.success(rolePage);
     }
 
+    /**
+     * 获取可注册的角色列表（公开接口，无需登录）
+     * 用于注册页面的角色选择下拉框
+     */
+    @GetMapping("public/list")
+    public BaseResponse<Page<RoleVO>> getPublicRoleList(RoleQueryDTO dto) {
+        // 强制排除管理员角色
+        dto.setExcludeAdmin(true);
+        Page<RoleVO> rolePage = roleService.getRolePage(dto);
+        return ResultUtils.success(rolePage);
+    }
+
     @PostMapping
     @AuthCheck(interfaceName = ROLE_CREATE_POST)
     @LogInfoRecord(SystemModule = ROLE_MODULE + ":" + ROLE_CREATE_POST)
